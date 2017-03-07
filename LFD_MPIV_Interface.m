@@ -32,8 +32,11 @@ gui_State = struct('gui_Name',       mfilename, ...
     'gui_OutputFcn',  @LFD_MPIV_Interface_OutputFcn, ...
     'gui_LayoutFcn',  [], ...
     'gui_Callback',   []);
+
 if nargin && ischar(varargin{1})
-    gui_State.gui_Callback = str2func(varargin{1});
+    if ~isempty(strfind(varargin{1},'Callback')) || ~isempty(strfind(varargin{1},'CreateFcn'))
+        gui_State.gui_Callback = str2func(varargin{1});
+    end
 end
 
 if nargout
@@ -60,28 +63,24 @@ else
 handles.dflt_folder=varargin{1};
 end
 
-handles.output = hObject;
-handles.IntWin=[64 32 16 16];
-handles.overlap=repmat(50,[1 numel(handles.IntWin)]);
-handles.cumulcross=1;
-handles.ttl_folder='';
-handles.acq_freq=5;
-handles.act_freq=0;
-handles.nb_phases=1;
-handles.case_name='test_data';
-handles.roi=[];
-handles.deltat=3;
-handles.scale=0.0038;
-handles.the_date=datestr(now,'yyyymmdd');
-handles.export_folder=pwd;
-handles.export_vectors=handles.case_name;
-handles.flip_hor=0;
-handles.flip_ver=0;
-handles.dire=2;
-handles.rotation=0;
-handles.SubPixMode=1;
-handles.ImDeform='linear';
-handles.Verbose=1;
+[allowed_args,default]=default_parameters; 
+
+for i=1:length(allowed_args);
+    handles.(allowed_args{i})=default{i};
+end
+
+
+
+ handles.the_date=datestr(now,'yyyymmdd');
+ handles.export_folder=pwd;
+ handles.export_vectors=handles.case_name;
+% handles.flip_hor=0;
+% handles.flip_ver=0;
+% handles.dire=2;
+% handles.rotation=0;
+% handles.SubPixMode=1;
+% handles.ImDeform='linear';
+% handles.Verbose=1;
 
 handles.cxd_folder='';
 handles.cxd='';

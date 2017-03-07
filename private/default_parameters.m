@@ -18,7 +18,7 @@ function [allowed_args,default_args,allowed_types]=default_parameters(indices);
     
     %% PIV options
     args(:,i)={'IntWin',[64 32 16],'numeric'};i=i+1;
-    args(:,i)={'overlap',50,'numeric'};i=i+1;
+    args(:,i)={'overlap',[50 50 50],'numeric'};i=i+1;
     args(:,i)={'cumulcross',1,'numeric'};i=i+1;
     args(:,i)={'deltat',1,'numeric'};i=i+1;
     args(:,i)={'scale',1,'numeric'};i=i+1;
