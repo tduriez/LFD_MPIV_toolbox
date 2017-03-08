@@ -45,8 +45,25 @@ function data=LFD_MPIV_cxd_to_vectors(cxd_info,varargin)
 %
 %   See also LFD_MPIV_READ_CXD, LFD_MPIV_PIV, LFD_MPIV_CUT_IMAGES, LFD_MPIV_REMOVE_BACKGROUND
 %
-%   Copyrigth LFD/Thomas Duriez 2016
-%   Part of the LFD_MPIV toolbox
+%   Copyright (c) 2017, Thomas Duriez (Distributed under GPLv3)
+
+%% Copyright
+%    Copyright (c) 2017, Thomas Duriez
+%
+%    This program is free software: you can redistribute it and/or modify
+%    it under the terms of the GNU General Public License as published by
+%    the Free Software Foundation, either version 3 of the License, or
+%    (at your option) any later version.
+%
+%    This program is distributed in the hope that it will be useful,
+%    but WITHOUT ANY WARRANTY; without even the implied warranty of
+%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%    GNU General Public License for more details.
+%
+%    You should have received a copy of the GNU General Public License
+%    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+%% Start program
 t1=now;
 
 % If the experiment is GUI generated, an experiment object is created. This
