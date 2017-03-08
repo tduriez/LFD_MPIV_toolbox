@@ -138,17 +138,17 @@ function [parameters,errormsg]=param_parser(args, allowed_args, allowed_args_typ
 %% Default values 
 errormsg=[]; 
 parameters=struct;
-
+keyboard
 %% Dealing with one structure argument
 % Transforming structure args.parameter1: value1 in cell {'parameter1',value1,...}
 if isa(args,'cell') && numel(args)>0
-if isstruct(args{1}) && numel(args)==1
+if isa(args{1},'LFD_MPIV_parameters') && numel(args)==1
     args=args{1};
 end
 end
 
-if isstruct(args)
-    the_fields=fieldnames(args);
+if isa(args,'LFD_MPIV_parameters')
+    the_fields=properties(args);
     new_args=cell(1,numel(the_fields)*2);
     for i=1:numel(the_fields)
         new_args{2*i-1}=the_fields{i};
@@ -161,8 +161,8 @@ end
 %% Creating default args cell from default input
 
 if ~isempty(default)
-    if isstruct(default) % same as above for args. No check for number of args. (lazy: #FIXME)
-        the_fields=fieldnames(default);
+    if isa(default,'LFD_MPIV_parameters') % same as above for args. No check for number of args. (lazy: #FIXME)
+        the_fields=properties(default);
         new_def=cell(1,numel(the_fields)*2);
         for i=1:numel(the_fields)
             new_def{2*i-1}=the_fields{i};
@@ -171,6 +171,7 @@ if ~isempty(default)
         default=new_def;
         clear new_def
     else                % default given as cell (could check that too #FIXME)
+        
         if numel(default)==numel(allowed_args);
             new_def=cell(1,numel(default)*2);
             for i=1:numel(default) % use allowed_args for parameter name

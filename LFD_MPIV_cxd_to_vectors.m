@@ -72,51 +72,14 @@ t1=now;
 % will overwrite default or LFD_MPIV object given parameter.
 
 if isa(cxd_info,'char')
-    varargin=[varargin {'cxd_file',cxd_info}];
-elseif isa(cxd_info,'struct');
-    the_fields=fieldnames(cxd_info);
-    cxd_cell=cell(1,2*numel(the_fields));
-    for i=1:numel(the_fields)
-        cxd_cell{2*i-1}=the_fields{i};
-        cxd_cell{2*i}=cxd_info.(the_fields{i});
-    end
-    varargin=[varargin cxd_cell];    
-        
+    expe=LFD_MPIV_parameters; %load default_parameters
+    expe.cxd_file=cxd_info;
+    expe=expe.update(varargin{:});    %implement options
+elseif isa(cxd_info,'LFD_MPIV_parameters');
+    expe=cxd_info.update(varargin{:});  %implement options
 end
 
 
-%% Obtaining options and overwrite default or structure specified.
-% allowed_parameters={'cumulcross','cxd_file','ttl_folder','acq_freq','act_freq',...
-%     'nb_phases','IntWin','height','case_name','rotation','flip_hor','flip_ver',...
-%     'dire','Verbose','roi','scale','deltat','SubPixMode','ImDeform','overlap'};
-
- allowed_parameters={'IntWin','overlap','cumulcross','ttl_folder','acq_freq',...
-    'act_freq','nb_phases','roi','deltat','scale','dire','flip_hor',...
-    'flip_ver','rotation','SubPixMode','ImDeform','Verbose','im_step','im_mode',...
-    'source_frames','case_name','height','cxd_file'};
-
-% allowed_classes={'numeric','char','char','numeric','numeric',...
-%     'numeric','numeric','numeric','char','numeric','numeric','numeric',...}
-%     'numeric','numeric','numeric','numeric','numeric','numeric','char','numeric'};
-
-allowed_classes={'numeric','numeric','numeric','char','numeric',...
-        'numeric','numeric','numeric','numeric','numeric','numeric','numeric',...
-        'numeric','numeric','numeric','char','numeric','numeric','char',...
-        'numeric','char','numeric','char'};
-
-
-% default={1,'','',1,0,1,[64 32 16 16],0,sprintf('%s-data',datestr(now,'yyyymmdd-HHMMSS')),...
-%     0,0,0,2,1,[],1,1,1,'linear',50};
-
- default={[64 32 16],50,1,'',1,0,1,[],1,1,2,0,0,0,1,'linear',1,1,'AB',2,...
-     sprintf('%s-data',datestr(now,'yyyymmdd-HHMMSS')),0,''};
-
-[expe,errormsg]=parameters_parser(varargin,allowed_parameters,allowed_classes,default,0);
-
-if ~isempty(errormsg)
-    error(errormsg);
-    return;
-end
 
 
 

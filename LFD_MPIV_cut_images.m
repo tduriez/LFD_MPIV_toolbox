@@ -22,16 +22,17 @@ function [cut_images]=LFD_MPIV_cut_images(images,varargin)
 %    You should have received a copy of the GNU General Public License
 %    along with this program.  If not, see <http://www.gnu.org/licenses/>.  
     
-    
-    allowed_args  = {'dire'   ,'rotation','flip_ver','flip_hor','roi'    };
-    allowed_types = {'numeric','numeric' ,'numeric' ,'numeric' ,'numeric'};
-    default       = {2        ,0         ,0         ,0         ,[]       };
-    
-    
-    [options,errormsg]=parameters_parser(varargin,allowed_args,allowed_types,default,2);
-    if ~isempty(errormsg)
-        error(errormsg);
+    if nargin>1
+        if isa(varargin{1},'LFD_MPIV_parameters')
+            options=varargin{1};
+        else
+            options=LFD_MPIV_parameters;
+            options.update(varargin{:});
+        end
+    else
+        options=LFD_MPIV_parameters;
     end
+    
     
     shiftblock=[circshift([1 2],[0 options.dire]) 3];
     

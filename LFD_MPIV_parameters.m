@@ -33,6 +33,7 @@ classdef LFD_MPIV_parameters < handle
     dire
     flip_hor
     flip_ver
+    rotation
     
     %% PIV options
     IntWin
@@ -63,6 +64,13 @@ classdef LFD_MPIV_parameters < handle
             for i=1:length(allowed_args)
                 obj.(allowed_args{i})=default_args{i};
             end
+        end
+        
+        function obj=update(obj,varargin)
+            [allowed_args,~,allowed_classes]=default_parameters();
+            %keyboard
+            
+            obj=parameters_parser(varargin, allowed_args, allowed_classes,obj,1);
         end
             
     end
