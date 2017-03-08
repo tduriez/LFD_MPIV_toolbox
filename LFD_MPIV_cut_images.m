@@ -21,7 +21,7 @@ function [cut_images]=LFD_MPIV_cut_images(images,varargin)
 %
 %    You should have received a copy of the GNU General Public License
 %    along with this program.  If not, see <http://www.gnu.org/licenses/>.  
-    
+
     if nargin>1
         if isa(varargin{1},'LFD_MPIV_parameters')
             options=varargin{1};

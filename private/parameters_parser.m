@@ -138,7 +138,7 @@ function [parameters,errormsg]=param_parser(args, allowed_args, allowed_args_typ
 %% Default values 
 errormsg=[]; 
 parameters=struct;
-keyboard
+
 %% Dealing with one structure argument
 % Transforming structure args.parameter1: value1 in cell {'parameter1',value1,...}
 if isa(args,'cell') && numel(args)>0

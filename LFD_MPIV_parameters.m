@@ -69,8 +69,11 @@ classdef LFD_MPIV_parameters < handle
         function obj=update(obj,varargin)
             [allowed_args,~,allowed_classes]=default_parameters();
             %keyboard
-            
-            obj=parameters_parser(varargin, allowed_args, allowed_classes,obj,1);
+            params=parameters_parser(varargin, allowed_args, allowed_classes,obj,1);
+            thefields=fieldnames(params);
+            for i=1:length(thefields)
+                obj.(thefields{i})=params.(thefields{i});
+            end
         end
             
     end

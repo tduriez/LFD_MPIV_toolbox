@@ -81,7 +81,7 @@ end
 
 
 
-
+class(expe)
 
 %% Start PIV
 fprintf('case: %s, z= %d (mum)\n',expe.case_name,expe.height);
