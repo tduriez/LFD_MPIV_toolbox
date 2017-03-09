@@ -22,17 +22,17 @@ function  LFD_MPIV_CommandLine(the_input,varargin)
 
 %% three cases for THE_INPUT: structure, structure+options, file+options
 
-% Loading default parameters from private/default_parameters.m   
-[allowed_args,default,allowed_types]=default_parameters; 
+
 
 if ischar(the_input) % if THE_INPUT is a CXD file route
-    expe=parameters_parser(varargin,allowed_args,allowed_types,default,1);
+    expe=LFD_MPIV_parameters;
     expe.cxd_file=the_input;
-elseif isstruct(the_input) % THE_INPUT is an array of structures
+    expe.update(varargin{:});
+elseif isa(the_input,'LFD_MPIV_parameters') % THE_INPUT is an array of LFD_MPIV objects
     for i=1:numel(the_input)
         % THE_INPUT is used as default so it can be overridden by specified
         % parameters in varargin
-        expe(i)=parameters_parser(varargin,allowed_args,allowed_types,the_input(i),2);
+        expe(i)=expe(i).update(varargin{:});
     end  
 end
 

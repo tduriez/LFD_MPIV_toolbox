@@ -19,7 +19,11 @@ function [data]=LFD_MPIV_PIV(images,varargin)
 
 t1=now;
 % parameters contains all possible option
+
 [parameters,errormsg]=get_options(varargin);
+
+
+
 if ~isempty(errormsg)
     error(errormsg)
 end

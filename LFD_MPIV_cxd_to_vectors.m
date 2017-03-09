@@ -77,9 +77,11 @@ if isa(cxd_info,'char')
     expe=expe.update(varargin{:});    %implement options
 elseif isa(cxd_info,'LFD_MPIV_parameters');
     expe=cxd_info.update(varargin{:});  %implement options
+else
+    error('I don''t know what to do with a parameter of class %s.',class(cxd_info));
 end
 
-
+keyboard
 
 class(expe)
 
