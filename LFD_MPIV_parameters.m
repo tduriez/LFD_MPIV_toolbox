@@ -17,7 +17,7 @@ classdef LFD_MPIV_parameters < handle
 %    You should have received a copy of the GNU General Public License
 %    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    properties
+    properties (SetObservable)
         
     %% File options
     cxd_file
@@ -59,16 +59,21 @@ classdef LFD_MPIV_parameters < handle
     end
     
     methods
+        
+            
+        
+        
         function obj=LFD_MPIV_parameters(varargin)
             [allowed_args,default_args]=default_parameters();
             for i=1:length(allowed_args)
                 obj.(allowed_args{i})=default_args{i};
             end
+            addlistener(obj,'IntWin','PostSet',@LFD_MPIV_parameters.IntWinChange);
+            addlistener(obj,'overlap','PostSet',@LFD_MPIV_parameters.IntWinChange);
         end
         
         function obj=update(obj,varargin)
             [allowed_args,~,allowed_classes]=default_parameters();
-            %keyboard
             params=parameters_parser(varargin, allowed_args, allowed_classes,obj,1);
             thefields=fieldnames(params);
             for i=1:length(thefields)
@@ -77,6 +82,16 @@ classdef LFD_MPIV_parameters < handle
         end
             
     end
+    
+    methods (Static) %% all ####ing checks 
+        function IntWinChange(metaProp,eventData)
+            h=eventData.AffectedObject;
+            h.overlap=50*ones(1,length(h.IntWin));
+        end
+         
+        
+    end
+            
     
 end
 

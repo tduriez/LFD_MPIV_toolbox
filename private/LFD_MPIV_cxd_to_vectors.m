@@ -77,11 +77,13 @@ if isa(cxd_info,'char')
     expe=expe.update(varargin{:});    %implement options
 elseif isa(cxd_info,'LFD_MPIV_parameters');
     expe=cxd_info.update(varargin{:});  %implement options
+else
+    error('I don''t know what to do with a parameter of class %s.',class(cxd_info));
 end
 
 
 
-class(expe)
+
 
 %% Start PIV
 fprintf('case: %s, z= %d (mum)\n',expe.case_name,expe.height);

@@ -1,4 +1,4 @@
-function  LFD_MPIV_CommandLine(the_input,varargin)
+function  data_PIV=LFD_MPIV_CommandLine(the_input,varargin)
 %LFD_MPIV_CommandLine
 %    FIXME: redact help
 %
@@ -22,17 +22,17 @@ function  LFD_MPIV_CommandLine(the_input,varargin)
 
 %% three cases for THE_INPUT: structure, structure+options, file+options
 
-% Loading default parameters from private/default_parameters.m   
-[allowed_args,default,allowed_types]=default_parameters; 
+
 
 if ischar(the_input) % if THE_INPUT is a CXD file route
-    expe=parameters_parser(varargin,allowed_args,allowed_types,default,1);
+    expe=LFD_MPIV_parameters;
     expe.cxd_file=the_input;
-elseif isstruct(the_input) % THE_INPUT is an array of structures
+    expe.update(varargin{:});
+elseif isa(the_input,'LFD_MPIV_parameters') % THE_INPUT is an array of LFD_MPIV objects
     for i=1:numel(the_input)
         % THE_INPUT is used as default so it can be overridden by specified
         % parameters in varargin
-        expe(i)=parameters_parser(varargin,allowed_args,allowed_types,the_input(i),2);
+        expe(i)=expe(i).update(varargin{:});
     end  
 end
 
@@ -74,20 +74,22 @@ if ~isempty(expe)
            
             data=LFD_MPIV_cxd_to_vectors(this_case_expe(i_height));
             if i_height==1
-                data_3D_phase.x=repmat(data.x,[1 1 length(this_z)]);
-                data_3D_phase.y=repmat(data.y,[1 1 length(this_z)]);
-                data_3D_phase.z=repmat(permute(this_z,[1 3 2]),...
-                    [size(data_3D_phase.x,1) size(data_3D_phase.x,2)]);
-                data_3D_phase.u=repmat(data_3D_phase.y*0,[1 1 1 size(data.u,3)]);
-                data_3D_phase.v=repmat(data_3D_phase.y*0,[1 1 1 size(data.u,3)]);
-                data_3D_phase.w=repmat(data_3D_phase.y*0,[1 1 1 size(data.u,3)]);
+                data_PIV.x=repmat(data.x,[1 1 length(this_z)]);
+                data_PIV.y=repmat(data.y,[1 1 length(this_z)]);
+                data_PIV.z=repmat(permute(this_z,[1 3 2]),...
+                    [size(data_PIV.x,1) size(data_PIV.x,2)]);
+                data_PIV.u=repmat(data_PIV.y*0,[1 1 1 size(data.u,3)]);
+                data_PIV.v=repmat(data_PIV.y*0,[1 1 1 size(data.u,3)]);
+                data_PIV.w=repmat(data_PIV.y*0,[1 1 1 size(data.u,3)]);
             end
-            data_3D_phase.u(:,:,i_height,:)=permute(data.u,[1 2 4 3]);
-            data_3D_phase.v(:,:,i_height,:)=permute(data.v,[1 2 4 3]);
+            data_PIV.u(:,:,i_height,:)=permute(data.u,[1 2 4 3]);
+            data_PIV.v(:,:,i_height,:)=permute(data.v,[1 2 4 3]);
         end
         
-        save(sprintf('%s.mat',case_name_collection{i_case}),'data_3D_phase');
-        clear data_3D_phase
+        
+        
+        save(sprintf('%s.mat',case_name_collection{i_case}),'data_PIV');
+        clear data_PIV
         
         
     end
