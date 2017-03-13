@@ -1,4 +1,4 @@
-function  LFD_MPIV_CommandLine(the_input,varargin)
+function  data_PIV=LFD_MPIV_CommandLine(the_input,varargin)
 %LFD_MPIV_CommandLine
 %    FIXME: redact help
 %

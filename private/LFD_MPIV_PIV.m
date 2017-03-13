@@ -75,13 +75,27 @@ for current_pass=1:length(parameters.IntWin)
        
     end
     surf(data.x,data.y,data.x*0-1,sqrt(data.u.^2+data.v.^2));hold on
-        nx_vectors=50;
-        ny_vectors=50;
+        vector_concentration=50;
+        if max(data.x(:))>=max(data.y(:))
+        ny_vectors=vector_concentration;
+        nx_vectors=round(vector_concentration/max(data.x(:))*max(data.y(:)));
+        else
+            nx_vectors=vector_concentration;
+        ny_vectors=round(vector_concentration/max(data.y(:))*max(data.x(:)));
+        end
         ix_vectors=round(linspace(1,size(data.x,1),nx_vectors));
         iy_vectors=round(linspace(1,size(data.x,2),ny_vectors));
         q=quiver(data.x(ix_vectors,iy_vectors),data.y(ix_vectors,iy_vectors),...
             data.u(ix_vectors,iy_vectors),data.v(ix_vectors,iy_vectors),5);shading interp;view(0,90);
         set(q,'color','k')
+        
+        [hg,bins]=hist(sqrt(data.u(:).^2+data.v(:).^2),1000);
+        levels=cumsum(hg)/sum(hg);
+        p_threshold=0.05;
+        [~,idx_minclim]=min(abs(p_threshold-levels));
+        [~,idx_maxclim]=min(abs(1-p_threshold-levels));
+        set(gca,'clim',[bins(idx_minclim) bins(idx_maxclim)])
+        
         set(gca,'xlim',[min(data.x(:)) max(data.x(:))],'ylim',[min(data.y(:)) max(data.y(:))])
         daspect([1 1 1])
         hold off
