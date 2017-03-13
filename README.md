@@ -1,5 +1,6 @@
-LFD_MPIV_Toolbox v1.2
+### LFD_MPIV_Toolbox v1.2
 
+## Description
 LFD_MPIV_Toolbox is a Matlab (R) Toolbox aimed at obtaining tomographic - phase
 averaged PIV fields from Hamamatsu CXD files. The application for which it is
 developped is micro fluidic (imaging through inverted microscope) and thus some
@@ -7,28 +8,45 @@ default choice reflect that. This toolbox is heavily inspired by (and some files
 are portion of) the PIVlab Toolbox (http://pivlab.blogspot.com/), which might be
 a better choice as a generic solution for PIV.
 
+## Features
 The main features that commended the devellopment of this package over the use
 of PIVlab are:
 
 - Support of CXD files (for the moment, the only format accepted).
+
 - Phase reconstruction using frequencies or matlab files with time stamps for
   actuation and acquisition.
+
 - Cumulative cross-correlation for phase averaging.
+
 - Most options supported in PIVlab are supported here.
+
+## Installation
+
+- clone or download and unzip the repository
+
+- add path of LFD_MPIV_TOOLBOX to MATLAB path
+
+- LFD_MPIV_Interface or LFD_MPIV_CommandLine('my_cxd_file.cxd')
+
+## Issues
 
   Many bugs are still present, please report at:
 
   https://github.com/tduriez/LFD_MPIV_Toolbox/issues
 
-  Have Fun! T.
+## Copyright and License
 
   All files in this toolbox are Copyright (c) 2017, Thomas Duriez at the
   exception of:
 
-  -dctn.m (Damien Garcia -- 2008/06)
-  -idctn.m (Damien Garcia -- 2009/04)
-  -inpaint_nans.m (John D'Errico 2006)
-  -smoothn.m (Damien Garcia -- 2009/03, http://www.biomecardio.com/matlab/smoothn.html)
+- dctn.m (Damien Garcia -- 2008/06)
+
+- idctn.m (Damien Garcia -- 2009/04)
+
+- inpaint_nans.m (John D'Errico 2006)
+
+- smoothn.m (Damien Garcia -- 2009/03, http://www.biomecardio.com/matlab/smoothn.html)
 
   and
 
@@ -38,9 +56,12 @@ of PIVlab are:
 
   Which contains parts copied from the PIVlab Toolbox (see in files for license).
 
+  The toolbox is distributed under the GPLv3 License.
+
+  Have fun. T.
 
 --------------------------------------------------------------------------------
-Copyright (c) 2017, Thomas Duriez
+    Copyright (c) 2017, Thomas Duriez
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
