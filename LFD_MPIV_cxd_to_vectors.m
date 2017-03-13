@@ -81,9 +81,9 @@ else
     error('I don''t know what to do with a parameter of class %s.',class(cxd_info));
 end
 
-keyboard
 
-class(expe)
+
+
 
 %% Start PIV
 fprintf('case: %s, z= %d (mum)\n',expe.case_name,expe.height);
