@@ -50,8 +50,13 @@ classdef LFD_MPIV_parameters < handle
     nb_phases
      
     %% Tomography option
-    case_name
     height
+    
+    %% Export options
+    case_name
+    the_date
+    export_folder
+    export_filename
     
     %% Global options    
     Verbose
@@ -61,6 +66,7 @@ classdef LFD_MPIV_parameters < handle
     end
     
     methods
+        
         
             
         
@@ -72,6 +78,8 @@ classdef LFD_MPIV_parameters < handle
             end
             addlistener(obj,'IntWin','PostSet',@LFD_MPIV_parameters.IntWinChange);
             addlistener(obj,'overlap','PostSet',@LFD_MPIV_parameters.IntWinChange);
+            addlistener(obj,'the_date','PostSet',@LFD_MPIV_parameters.FileNameChange);
+            addlistener(obj,'case_name','PostSet',@LFD_MPIV_parameters.FileNameChange);
         end
         
         function obj=update(obj,varargin)
@@ -89,6 +97,16 @@ classdef LFD_MPIV_parameters < handle
         function IntWinChange(metaProp,eventData)
             h=eventData.AffectedObject;
             h.overlap=50*ones(1,length(h.IntWin));
+        end
+        
+        function FileNameChange(metaProp,eventData)
+            h=eventData.AffectedObject;
+            if ~isempty(h.the_date)
+                h.export_filename=sprintf('%s_%s',h.the_date,h.case_name);
+            else
+                h.export_filename=h.case_name;
+            end
+                
         end
          
         

@@ -49,9 +49,14 @@ function [allowed_args,default_args,allowed_types]=default_parameters(indices);
     args(:,i)={'nb_phases',1,'numeric'};i=i+1;
      
     %% Tomography option
-    args(:,i)={'case_name',sprintf('%s_default',...
-        datestr(now,'yyyymmdd-HHMMSS')),'char'};i=i+1;
     args(:,i)={'height',0,'numeric'};i=i+1;
+    
+    %% Export options
+    args(:,i)={'case_name','default','char'};i=i+1;
+    args(:,i)={'the_date',datestr(now,'yyyymmdd-HHMMSS'),'char'};i=i+1;
+    args(:,i)={'export_folder',pwd,'char'};i=i+1;
+    args(:,i)={'export_filename',sprintf('%s_%s',datestr(now,'yyyymmdd-HHMMSS'),'default'),'char'};i=i+1;
+    
     
     %% Global options    
     args(:,i)={'Verbose',1,'numeric'};i=i+1;

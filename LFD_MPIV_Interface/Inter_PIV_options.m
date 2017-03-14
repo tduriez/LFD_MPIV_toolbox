@@ -19,6 +19,23 @@ function varargout = Inter_PIV_options(varargin)
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
+%   Copyright (c) 2017, Thomas Duriez (Distributed under GPLv3)
+
+%% Copyright
+%    Copyright (c) 2017, Thomas Duriez
+%
+%    This program is free software: you can redistribute it and/or modify
+%    it under the terms of the GNU General Public License as published by
+%    the Free Software Foundation, either version 3 of the License, or
+%    (at your option) any later version.
+%
+%    This program is distributed in the hope that it will be useful,
+%    but WITHOUT ANY WARRANTY; without even the implied warranty of
+%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%    GNU General Public License for more details.
+%
+%    You should have received a copy of the GNU General Public License
+%    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 % Edit the above text to modify the response to help Inter_PIV_options
 
@@ -53,17 +70,7 @@ function Inter_PIV_options_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to Inter_PIV_options (see VARARGIN)
 
 % Choose default command line output for Inter_PIV_options
-handles.output = hObject;
-if numel(varargin)<1
-    IntWin=[];
-else
-    IntWin=varargin{1};
-end
-if isempty(IntWin);
-    IntWin=[64,32,16,16];
-end
-handles.IntWin=IntWin;
-handles.overlap=repmat(50,[1 length(IntWin)]);
+handles.parameters=varargin{1};
   populate_list(handles);
   
 
@@ -87,10 +94,7 @@ function varargout = Inter_PIV_options_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 %keyboard
 set(hObject,'closeRequestFcn','closereq');
-PIV_options.IntWin=handles.IntWin;
-PIV_options.overlap=handles.overlap;
-PIV_options.cumul_crosscor=get(handles.cumulcross,'Value');
-varargout{1} = PIV_options;
+varargout{1} = handles.parameters;
 close(hObject);
 
 
@@ -169,8 +173,8 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 function populate_list(handles)
-    IntWin=handles.IntWin;
-    overlap=handles.overlap;
+    IntWin=handles.parameters.IntWin;
+    overlap=handles.parameters.overlap;
     text_list=cell(1,numel(IntWin));
     for i=1:numel(IntWin)
         text_list{i}=sprintf('   %d           %d%',IntWin(i),overlap(i));
@@ -204,8 +208,8 @@ function add_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
-handles.IntWin=sort([handles.IntWin, str2double(get(handles.IntWin_edt,'String'))],'descend');
-handles.overlap=repmat(str2double(get(handles.overlap_edt,'String')),[1 numel(handles.IntWin)]);
+handles.parameters.IntWin=sort([handles.parameters.IntWin, str2double(get(handles.IntWin_edt,'String'))],'descend');
+handles.parameters.overlap=repmat(str2double(get(handles.overlap_edt,'String')),[1 numel(handles.parameters.IntWin)]);
 populate_list(handles);
 guidata(hObject,handles);
 
@@ -218,10 +222,10 @@ function remove_buttn_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 idx=get(handles.listbox1,'Value');
-handles.IntWin(idx)=0;
-handles.overlap(idx)=0;
-handles.IntWin=handles.IntWin(handles.IntWin~=0);
-handles.overlap=handles.overlap(handles.overlap~=0);
+handles.parameters.IntWin(idx)=0;
+handles.parameters.overlap(idx)=0;
+handles.parameters.IntWin=handles.parameters.IntWin(handles.parameters.IntWin~=0);
+handles.parameters.overlap=handles.parameters.overlap(handles.parameters.overlap~=0);
 populate_list(handles)
 guidata(hObject,handles);
 

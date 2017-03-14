@@ -57,7 +57,7 @@ cxd=varargin{1};
 ttl_folder=varargin{2};
 
 d=dir(ttl_folder);
-length(cxd)
+
 
 for i=1:length(cxd)
     [~,patter,~]=fileparts(cxd{i});
@@ -69,8 +69,9 @@ for i=1:length(cxd)
     end
     [~,k]=max(simi);
     ttl{i}=d(k).name;
-    list_check{i}=sprintf('%s:    %s',patter,ttl{i})
+    list_check{i}=sprintf('%s:    %s',patter,ttl{i});
     set(handles.list_check,'String',list_check);
+    set(handles.list_check,'Value',1);
     handles.ttl_file{i}=fullfile(ttl_folder,ttl{i});
 end
 set(hObject,'closeRequestFcn',[])

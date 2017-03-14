@@ -53,30 +53,9 @@ function Inter_im_options_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to Inter_im_options (see VARARGIN)
 
 % Choose default command line output for Inter_synchro
+handles.output=varargin{1};
+handles.cxd=varargin{2};
 
-handles.output.case_name=varargin{1};
-handles.output.deltat=varargin{2};
-handles.output.scale=varargin{3};
-handles.output.roi=varargin{4};
-handles.output.the_date=varargin{5};
-handles.output.flip_hor=varargin{6};
-handles.output.flip_ver=varargin{7};
-handles.output.rotation=varargin{8};
-handles.output.dire=varargin{9};
-handles.cxd=varargin{10};
-
-
-
-if ~isempty(handles.output.the_date)
-set(handles.the_date_edt,'String',handles.output.the_date);
-
-else
-    set(handles.the_date_edt,'String',datestr(now,'yyyymmdd'));
-    
-   set(handles.check_date,'Value',0);
-   set(handles.the_date_edt,'Enable','off');
-   
-end
 set(handles.scale_edt,'String',handles.output.scale);
 set(handles.delta_edt,'String',handles.output.deltat);
 
@@ -148,32 +127,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-
-function case_edt_Callback(hObject, eventdata, handles)
-% hObject    handle to case_edt (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-handles.output.case_name=get(hObject,'String');
-
-guidata(hObject,handles);
-% Hints: get(hObject,'String') returns contents of case_edt as text
-%        str2double(get(hObject,'String')) returns contents of case_edt as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function case_edt_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to case_edt (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
 function delta_edt_Callback(hObject, eventdata, handles)
 % hObject    handle to delta_edt (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -195,27 +148,6 @@ function delta_edt_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-
-% --- Executes on button press in check_date.
-function check_date_Callback(hObject, eventdata, handles)
-% hObject    handle to check_date (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
- handles.the_date=get(handles.the_date_edt,'String');
-    handles.output.case_name=get(handles.case_edt,'String');
-if get(hObject,'Value')
-    set(handles.the_date_edt,'enable','on')
-    handles.output.case_name=sprintf('%s_%s',handles.the_date,handles.output.case_name);
-else
-    set(handles.the_date_edt,'enable','off')
-    handles.output.case_name=sprintf('%s',handles.output.case_name);
-end
-
-guidata(hObject,handles)
-% Hint: get(hObject,'Value') returns toggle state of check_date
-
-
 
 
 function roi_edt_Callback(hObject, eventdata, handles)
@@ -283,30 +215,6 @@ function close_bttn_Callback(hObject, eventdata, handles)
 uiresume
 
 
-
-function the_date_edt_Callback(hObject, eventdata, handles)
-% hObject    handle to the_date_edt (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-handles.the_date=get(hObject,'String');
-    handles.output.case_name=get(handles.case_edt,'String');
-    handles.output.case_name=sprintf('%s_%s',handles.the_date,handles.output.case_name);
-guidata(hObject,handles);
-% Hints: get(hObject,'String') returns contents of the_date_edt as text
-%        str2double(get(hObject,'String')) returns contents of the_date_edt as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function the_date_edt_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to the_date_edt (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
 
 
 % --- Executes on button press in hor_flip.
