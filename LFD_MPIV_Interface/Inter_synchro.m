@@ -53,11 +53,8 @@ function Inter_synchro_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to Inter_synchro (see VARARGIN)
 
 % Choose default command line output for Inter_synchro
-handles.output.ttl_folder=varargin{1};
-handles.output.acq_freq=varargin{2};
-handles.output.act_freq=varargin{3};
-handles.output.nb_phases=varargin{4};
-handles.cxd=varargin{5};
+handles.output=varargin{1};
+handles.cxd=varargin{2};
 
 set(handles.folder_txt,'String',handles.output.ttl_folder);
 if isempty(handles.output.ttl_folder)
@@ -222,6 +219,5 @@ function checkit_bttn_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 [ttl]=Inter_check_my_TTL(handles.cxd,handles.output.ttl_folder);
-handles.output.ttl_file=ttl;
 guidata(hObject,handles);
 

@@ -74,37 +74,26 @@ function LFD_MPIV_Interface_OpeningFcn(hObject, eventdata, handles, varargin)
 %            command line (see VARARGIN)
 
 % Choose default command line output for LFD_MPIV_Interface
-if numel(varargin)<1
-handles.dflt_folder=[];
+if numel(varargin)
+    if ischar(varargin{1})
+        handles.dflt_folder=varargin{1};
+    else
+        handles.dflt_folder=[];
+    end
 else
-handles.dflt_folder=varargin{1};
+    handles.dflt_folder=[];
 end
 
-[allowed_args,default]=default_parameters; 
-
-for i=1:length(allowed_args);
-    handles.(allowed_args{i})=default{i};
-end
+handles.current_parameters=LFD_MPIV_parameters;
 
 
+%handles.cxd_folder='';
+%handles.cxd='';
 
- handles.the_date=datestr(now,'yyyymmdd');
- handles.export_folder=pwd;
- handles.export_vectors=handles.case_name;
-% handles.flip_hor=0;
-% handles.flip_ver=0;
-% handles.dire=2;
-% handles.rotation=0;
-% handles.SubPixMode=1;
-% handles.ImDeform='linear';
-% handles.Verbose=1;
+handles.parameters=[];
 
-handles.cxd_folder='';
-handles.cxd='';
-
-handles.expe=[];
 if numel(varargin)==2
-    handles.expe=varargin{2};
+    handles.parameters=varargin{2};
     display_expe(handles);
 end
 
@@ -114,6 +103,7 @@ update_PIV_options(handles);
 update_synchro_options(handles);
 update_images_options(handles);
 update_export_options(handles);
+
 % Update handles structure
 guidata(hObject, handles);
 set(hObject,'closeRequestFcn',[])
@@ -212,24 +202,20 @@ function edt_PIV_Callback(hObject, eventdata, handles)
 % hObject    handle to edt_PIV (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-options=Inter_PIV_options(handles.IntWin,handles.overlap);
-opt_fields=fieldnames(options);
-for i=1:numel(opt_fields);
-    handles.(opt_fields{i})=options.(opt_fields{i});
-end
+handles.current_parameters=Inter_PIV_options(handles.current_parameters);
 update_PIV_options(handles);
 guidata(hObject,handles);
 
 function update_PIV_options(handles);
-if handles.cumulcross==1
+if handles.current_parameters.cumulcross==1
     PIV_mode='Cumulative';
 else
     PIV_mode='Single';
 end
 text_PIV=sprintf('%s cross-correlation\n%d passes\n',...
-    PIV_mode,numel(handles.IntWin));
-for i=1:numel(handles.IntWin)
-    text_PIV=sprintf('%s %dx%d %d%% overlap\n',text_PIV,handles.IntWin(i),handles.IntWin(i),handles.overlap(i));
+    PIV_mode,numel(handles.current_parameters.IntWin));
+for i=1:numel(handles.current_parameters.IntWin)
+    text_PIV=sprintf('%s %dx%d %d%% overlap\n',text_PIV,handles.current_parameters.IntWin(i),handles.current_parameters.IntWin(i),handles.current_parameters.overlap(i));
 end
 
 set(handles.text_PIV_options,'String',text_PIV);
@@ -244,31 +230,28 @@ function synchro_bttn_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 idx_selected_cxd=get(handles.list_cxd,'Value');
 cxd=get(handles.list_cxd,'String');
-if isempty(handles.ttl_folder);
-    handles.ttl_folder=pwd;
+if isempty(handles.current_parameters.ttl_folder);
+    handles.current_parameters.ttl_folder=pwd;
 end
-options=Inter_synchro(handles.ttl_folder,handles.acq_freq,handles.act_freq,handles.nb_phases,cxd(idx_selected_cxd));
-opt_fields=fieldnames(options);
-for i=1:numel(opt_fields);
-    handles.(opt_fields{i})=options.(opt_fields{i});
-end
+%handles.current_parameters=Inter_synchro(handles.current_parameters,cxd(idx_selected_cxd));
+Inter_synchro(handles.current_parameters,cxd(idx_selected_cxd));
 update_synchro_options(handles);
 guidata(hObject,handles);
 
 function update_synchro_options(handles);
-if ~isempty(handles.ttl_folder)
+if ~isempty(handles.current_parameters.ttl_folder)
     synchro_mode='TTL';
 else
     synchro_mode='Frequency';
 end
 text_PIV=sprintf('%s synchronisation\n%d passes\n',synchro_mode);
 if strcmp(synchro_mode,'TTL')
-text_PIV=sprintf('%sFolder: %s\n',text_PIV,handles.ttl_folder);
+text_PIV=sprintf('%sFolder: %s\n',text_PIV,handles.current_parameters.ttl_folder);
 else
-text_PIV=sprintf('%sAcq. Freq: %5.2f Hz\n',text_PIV,handles.acq_freq);
+text_PIV=sprintf('%sAcq. Freq: %5.2f Hz\n',text_PIV,handles.current_parameters.acq_freq);
 end
-text_PIV=sprintf('%sAct. Freq: %5.2f Hz\n',text_PIV,handles.act_freq);
-text_PIV=sprintf('%sNb of phases: %d',text_PIV,handles.nb_phases);
+text_PIV=sprintf('%sAct. Freq: %5.2f Hz\n',text_PIV,handles.current_parameters.act_freq);
+text_PIV=sprintf('%sNb of phases: %d',text_PIV,handles.current_parameters.nb_phases);
 set(handles.synchro_txt,'String',text_PIV);
 
 
@@ -279,30 +262,34 @@ function im_setting_bttn_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 selected_cxd=get(handles.list_cxd,'Value');
 cxd_files=get(handles.list_cxd,'String');
-options=Inter_im_options(handles.case_name,handles.deltat,handles.scale,...
-    handles.roi,handles.the_date,...
-    handles.flip_hor,handles.flip_ver,handles.rotation,...
-    handles.dire,fullfile(handles.cxd_folder,cxd_files{selected_cxd(1)}));
-opt_fields=fieldnames(options);
-for i=1:numel(opt_fields);
-    handles.(opt_fields{i})=options.(opt_fields{i});
-end
+Inter_im_options(handles.current_parameters,fullfile(handles.cxd_folder,cxd_files{selected_cxd(1)}));
 update_images_options(handles);
 guidata(hObject,handles);
 
 function update_images_options(handles);
-if ~isempty(handles.the_date)
-    case_name=sprintf('%s-%s',handles.the_date,handles.case_name);
+text_PIV=[];
+text_PIV=sprintf('%sScale (mum/pixel): %f\n',text_PIV,handles.current_parameters.scale);
+text_PIV=sprintf('%sDelta t (mus): %f\n',text_PIV,handles.current_parameters.deltat);
+if ~isempty(handles.current_parameters.roi)
+    text_PIV=sprintf('%sROI: %s \n',text_PIV,sprintf('%d ',handles.current_parameters.roi));
 else
-     case_name=handles.case_name;
+    text_PIV=sprintf('%sROI: %s \n',text_PIV,'full frame');
 end
-text_PIV=sprintf('Name: %s\n',case_name);
 
-text_PIV=sprintf('%sScale (mum/pixel): %f\n',text_PIV,handles.scale);
+switch handles.current_parameters.flip_hor*2^0 + handles.current_parameters.flip_ver*2^1
+    case 0
+        the_flip='none';
+    case 1
+        the_flip='horizontal';
+    case 2
+        the_flip='vertical';
+    case 3
+        the_flip='horizontal and vertical';
+end
 
-text_PIV=sprintf('%sDelta t (mus): %f\n',text_PIV,handles.deltat);
+text_PIV=sprintf('%sFlip: %s \n',text_PIV,the_flip);
+text_PIV=sprintf('%sRotation: %d%c  \n',text_PIV,handles.current_parameters.rotation*90,char(176));
 
-text_PIV=sprintf('%sROI: %s \n',text_PIV,sprintf('%d ',handles.roi));
 set(handles.im_list,'String',text_PIV);
 
 % --- Executes on selection change in im_list.
@@ -416,17 +403,15 @@ function export_bttn_Callback(hObject, eventdata, handles)
 % hObject    handle to im_setting_bttn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-options=Inter_export(handles.export_folder,handles.export_vectors,handles.case_name);
-opt_fields=fieldnames(options);
-for i=1:numel(opt_fields);
-    handles.(opt_fields{i})=options.(opt_fields{i});
-end
+Inter_export(handles.parameters);
 update_export_options(handles);
 guidata(hObject,handles);
 
 function update_export_options(handles);
-text_PIV=sprintf('Folder: %s\n',handles.export_folder);
-text_PIV=sprintf('%sFilename: %s\n',text_PIV,handles.export_vectors);
+text_PIV=sprintf('Folder: %s\n',handles.current_parameters.export_folder);
+text_PIV=sprintf('%sCase name: %s\n',text_PIV,handles.current_parameters.case_name);
+text_PIV=sprintf('%sDate: %s\n',text_PIV,handles.current_parameters.the_date);
+text_PIV=sprintf('%sFilename: %s\n',text_PIV,handles.current_parameters.export_filename);
 
 set(handles.export_list,'String',text_PIV);
 

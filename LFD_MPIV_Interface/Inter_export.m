@@ -22,7 +22,7 @@ function varargout = Inter_export(varargin)
 
 % Edit the above text to modify the response to help Inter_export
 
-% Last Modified by GUIDE v2.5 09-Feb-2017 14:22:26
+% Last Modified by GUIDE v2.5 14-Mar-2017 17:31:38
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -58,7 +58,7 @@ handles.case_name=varargin{3};
 
 set_selections(handles);
 set(handles.folder_txt,'String',handles.output.export_folder);
-set(handles.edt_vec,'Enable','off','String',handles.output.export_vectors);
+set(handles.case_name_edt,'Enable','off','String',handles.output.export_vectors);
 
 
 
@@ -142,10 +142,10 @@ function pop_vec_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 idx=get(hObject,'Value');
 if idx==3
-    set(handles.edt_vec,'enable','on');
-    custom=get(handles.edt_vec,'String');
+    set(handles.case_name_edt,'enable','on');
+    custom=get(handles.case_name_edt,'String');
     [~,custom,~] = fileparts(custom);
-    set(handles.edt_vec,'String',custom);
+    set(handles.case_name_edt,'String',custom);
     idx_ext=get(handles.pop_exten,'Value');
     switch idx_ext
         case 1
@@ -158,9 +158,9 @@ if idx==3
 
     handles.output.export_vectors=sprintf('%s%s',custom,extension);
 else
-    set(handles.edt_vec,'enable','off');
+    set(handles.case_name_edt,'enable','off');
     contents=cellstr(get(hObject,'String'));
-    set(handles.edt_vec,'String',contents{idx});
+    set(handles.case_name_edt,'String',contents{idx});
     handles.output.export_vectors=contents{idx};
 end
 guidata(hObject,handles);
@@ -184,18 +184,18 @@ end
 
 
 
-function edt_vec_Callback(hObject, eventdata, handles)
-% hObject    handle to edt_vec (see GCBO)
+function case_name_edt_Callback(hObject, eventdata, handles)
+% hObject    handle to case_name_edt (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edt_vec as text
-%        str2double(get(hObject,'String')) returns contents of edt_vec as a double
+% Hints: get(hObject,'String') returns contents of case_name_edt as text
+%        str2double(get(hObject,'String')) returns contents of case_name_edt as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function edt_vec_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edt_vec (see GCBO)
+function case_name_edt_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to case_name_edt (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -240,6 +240,52 @@ function edt_date_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function the_date_edt_Callback(hObject, eventdata, handles)
+% hObject    handle to the_date_edt (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of the_date_edt as text
+%        str2double(get(hObject,'String')) returns contents of the_date_edt as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function the_date_edt_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to the_date_edt (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in popup_date.
+function popup_date_Callback(hObject, eventdata, handles)
+% hObject    handle to popup_date (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popup_date contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popup_date
+
+
+% --- Executes during object creation, after setting all properties.
+function popup_date_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popup_date (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
