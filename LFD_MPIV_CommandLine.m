@@ -69,8 +69,8 @@ end
 if ~isempty(expe)
     case_name_collection={};
     for i=1:length(expe);
-        if ~any(strcmp(case_name_collection,expe(i).case_name))
-        case_name_collection{numel(case_name_collection)+1}=expe(i).case_name;        
+        if ~any(strcmp(case_name_collection,expe(i).export_filename))
+        case_name_collection{numel(case_name_collection)+1}=expe(i).export_filename;        
         end
     end
     
@@ -78,7 +78,7 @@ if ~isempty(expe)
         this_expe_idx=zeros(1,length(expe));
         this_z=zeros(1,length(expe));
         for i=1:length(expe);
-            if strcmp(case_name_collection{i_case},expe(i).case_name)
+            if strcmp(case_name_collection{i_case},expe(i).export_filename)
                 this_expe_idx(i)=1;
                 this_z(i)=expe(i).height;
             end

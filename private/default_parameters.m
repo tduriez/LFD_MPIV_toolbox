@@ -57,7 +57,7 @@ function [allowed_args,default_args,allowed_types]=default_parameters(indices);
     args(:,i)={'case_name','data','char'};i=i+1;
     args(:,i)={'the_date',datestr(now,'yyyymmdd-HHMMSS'),'char'};i=i+1;
     args(:,i)={'export_folder',pwd,'char'};i=i+1;
-    args(:,i)={'export_filename',sprintf('%s_%s',datestr(now,'yyyymmdd-HHMMSS'),'default'),'char'};i=i+1;
+    args(:,i)={'export_filename',sprintf('%s_%s',datestr(now,'yyyymmdd-HHMMSS'),'data'),'char'};i=i+1;
     
     
     %% Global options    

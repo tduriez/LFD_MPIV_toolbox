@@ -107,9 +107,10 @@ update_export_options(handles);
 % Update handles structure
 guidata(hObject, handles);
 set(hObject,'closeRequestFcn',[])
-
+set(hObject, 'Position', get(0,'Screensize')); % Maximize figure. 
 % UIWAIT makes LFD_MPIV_Interface wait for user response (see UIRESUME)
  uiwait(handles.figure1);
+
 
 
 % --- Outputs from this function are returned to the command line.
