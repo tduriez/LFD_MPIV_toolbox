@@ -56,6 +56,7 @@ if ischar(the_input) % if THE_INPUT is a CXD file route
     expe.cxd_file=the_input;
     expe.update(varargin{:});
 elseif isa(the_input,'LFD_MPIV_parameters') % THE_INPUT is an array of LFD_MPIV objects
+expe=the_input;
     for i=1:numel(the_input)
         % THE_INPUT is used as default so it can be overridden by specified
         % parameters in varargin

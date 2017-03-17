@@ -120,7 +120,7 @@ function varargout = LFD_MPIV_Interface_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 set(hObject,'closeRequestFcn','closereq');
 % Get default command line output from handles structure
-varargout{1} = handles.expe;
+varargout{1} = handles.parameters;
 close(hObject);
 
 
@@ -321,45 +321,41 @@ function add_selec_bttn_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.height=Inter_field_height(handles.cxd,get(handles.list_cxd,'Value'));
-handles.expe=add_expe_structure(handles.expe,handles);
+handles.parameters=add_expe_structure(handles);
 display_expe(handles);
 guidata(hObject,handles);
 
 
 
-function expe=add_expe_structure(old_expe,handles)
+function parameters=add_expe_structure(handles)
 %get number of cxd files
 idx=get(handles.list_cxd,'Value');
-expe=repmat(struct,[1 numel(idx)]);
+new_parameters=repmat(LFD_MPIV_parameters,[1 numel(idx)]);
 
-%create structure
-fields_to_include={'IntWin','overlap','cumulcross','ttl_folder','acq_freq',...
-    'act_freq','nb_phases','roi','deltat','scale','dire','flip_hor',...
-    'flip_ver','rotation','SubPixMode','ImDeform','Verbose'};
-for i=1:numel(idx)
-    if ~isempty(handles.the_date)
-        expe(i).case_name=sprintf('%s-%s',handles.the_date,handles.case_name);
-    else
-        expe(i).case_name=handles.case_name;
+if numel(idx)>1
+    for i=2:numel(idx)
+        new_parameters(i)=LFD_MPIV_parameters;
     end
-    for j=1:numel(fields_to_include);
-        expe(i).(fields_to_include{j})=handles.(fields_to_include{j});
-    end
-    expe(i).height=handles.height(i);
-    expe(i).cxd_file=fullfile(handles.cxd_folder,handles.cxd{idx(i)});
 end
-expe=[old_expe expe];
+
+for i=1:numel(idx)
+    new_parameters(i).update(handles.current_parameters);
+    new_parameters(i).height=handles.height(i);
+    new_parameters(i).cxd_file=fullfile(handles.cxd_folder,handles.cxd{idx(i)});
+end
+
+parameters=[handles.parameters new_parameters];
 
 function display_expe(handles)
-expe_list=cell(1,numel(handles.expe));
-for i=1:numel(handles.expe);
-    [~,cxd,~]=fileparts(handles.expe(i).cxd_file);
+expe_list=cell(1,numel(handles.parameters));
+for i=1:numel(handles.parameters);
+    [~,cxd,~]=fileparts(handles.parameters(i).cxd_file);
     expe_list{i}=sprintf('%d: %s,',i,cxd);
-    expe_list{i}=sprintf('%s %s',expe_list{i},handles.expe(i).case_name);
-    expe_list{i}=sprintf('%s y=%.2f',expe_list{i},handles.expe(i).height);
-    expe_list{i}=sprintf('%s (IntWin:%s, %d%% ',expe_list{i},sprintf('%d ',handles.expe(i).IntWin),handles.expe(i).overlap(1));
-    if isempty(handles.expe(i).ttl_folder)
-        expe_list{i}=sprintf('%s Acq. Feq.: %.2f',expe_list{i},handles.expe(i).acq_freq);
+    expe_list{i}=sprintf('%s %s',expe_list{i},handles.parameters(i).case_name);
+    expe_list{i}=sprintf('%s y=%.2f',expe_list{i},handles.parameters(i).height);
+    expe_list{i}=sprintf('%s (IntWin:%s, %d%% ',expe_list{i},sprintf('%d ',handles.parameters(i).IntWin),handles.parameters(i).overlap(1));
+    if isempty(handles.parameters(i).ttl_folder)
+        expe_list{i}=sprintf('%s Acq. Feq.: %.2f',expe_list{i},handles.parameters(i).acq_freq);
     else
         expe_list{i}=sprintf('%s Acq. Sync. TTL',expe_list{i});
     end
@@ -369,7 +365,7 @@ for i=1:numel(handles.expe);
 end
 
 idx=get(handles.list_expe,'Value');
-idx(idx>numel(handles.expe))=numel(handles.expe);
+idx(idx>numel(handles.parameters))=numel(handles.parameters);
 idx(idx<1)=1;
 idx=unique(idx);
 set(handles.list_expe,'String',expe_list,'Value',idx,'Max',numel(expe_list));
@@ -381,7 +377,7 @@ function remove_bttn_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 idx=get(handles.list_expe,'Value');
-handles.expe=handles.expe(setxor(idx,1:numel(handles.expe)));
+handles.parameters=handles.parameters(setxor(idx,1:numel(handles.parameters)));
 
 display_expe(handles);
 guidata(hObject,handles);
@@ -403,7 +399,7 @@ function export_bttn_Callback(hObject, eventdata, handles)
 % hObject    handle to im_setting_bttn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-Inter_export(handles.parameters);
+Inter_export(handles.current_parameters);
 update_export_options(handles);
 guidata(hObject,handles);
 
@@ -444,54 +440,11 @@ function PIV_bttn_Callback(hObject, eventdata, handles)
 % hObject    handle to PIV_bttn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-expe=handles.expe;
-if ~isempty(expe)
-    case_name_collection={};
-    for i=1:length(expe);
-        if ~any(strcmp(case_name_collection,expe(i).case_name))
-        case_name_collection{numel(case_name_collection)+1}=expe(i).case_name;        
-        end
-    end
-    
-    for i_case=1:length(case_name_collection)
-        this_expe_idx=zeros(1,length(expe));
-        this_z=zeros(1,length(expe));
-        for i=1:length(expe);
-            if strcmp(case_name_collection{i_case},expe(i).case_name)
-                this_expe_idx(i)=1;
-                this_z(i)=expe(i).height;
-            end
-        end
-        this_case_expe=expe(this_expe_idx>0);
-        [this_z,sort_idx]=sort(this_z(this_expe_idx>0));
-        this_case_expe=this_case_expe(sort_idx);
-        
-        for i_height = 1:numel(this_z)
-            setappdata(0,'LFD_MPIV_gui',gcf);
-           
-            data=LFD_MPIV_cxd_to_vectors(this_case_expe(i_height));
-            if i_height==1
-                data_3D_phase.x=repmat(data.x,[1 1 length(this_z)]);
-                data_3D_phase.y=repmat(data.y,[1 1 length(this_z)]);
-                data_3D_phase.z=repmat(permute(this_z,[1 3 2]),[size(data_3D_phase.x,1) size(data_3D_phase.x,2)]);
-                data_3D_phase.u=repmat(data_3D_phase.y*0,[1 1 1 size(data.u,3)]);
-                data_3D_phase.v=repmat(data_3D_phase.y*0,[1 1 1 size(data.u,3)]);
-                data_3D_phase.w=repmat(data_3D_phase.y*0,[1 1 1 size(data.u,3)]);
-            end
-            data_3D_phase.u(:,:,i_height,:)=permute(data.u,[1 2 4 3]);
-            data_3D_phase.v(:,:,i_height,:)=permute(data.v,[1 2 4 3]);
-        end
-        
-        save(sprintf('%s.mat',case_name_collection{i_case}),'data_3D_phase');
-        clear data_3D_phase
-        
-        
-    end
-        
+LFD_MPIV_CommandLine(handles.parameters);        
                 
         
     
-end
+
 
 
 
