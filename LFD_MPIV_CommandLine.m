@@ -1,7 +1,34 @@
 function  data_PIV=LFD_MPIV_CommandLine(the_input,varargin)
-%LFD_MPIV_CommandLine
-%    FIXME: redact help
+%LFD_MPIV_COMMANDLINE computes PIV fields from CXD file(s).
+%   
+%   DATA=LFD_MPIV_COMMANDLINE(CXD_FILENAME) returns the DATA structure
+%   containing the result of the PIV computation using default <a href="matlab:help LFD_MPIV_parameters">parameters</a>
+%   for the PIV computations of images included in CXD_FILENAME archive.
 %
+%   DATA=LFD_MPIV_COMMANDLINE(CXD_FILENAME,'arg1',value1,...) allows the use 
+%   of custom parameters. A full list of parameters is available <a href="matlab:help LFD_MPIV_parameters">here</a>.
+%
+%   DATA=LFD_MPIV_COMMANDLINE(LM_PARAMS) computes PIV according
+%   to the array LM_PARAMS of <a href="matlab:help LFD_MPIV_parameters">LFD_MPIV_parameters</a> objects provided. You
+%   can generate such an array using <a href="matlab:help LFD_MPIV_Interface">LFD_MPIV_Interface</a>
+%
+%   By default, single frame time series will be converted in double frame
+%   time series (1-2 2-3 3-4 ...) and cumulative cross-correlation will be
+%   performed. Three passes (64x64 32x32 and 16x16) are performed.
+%
+%   Quick option guide:
+%
+%   Parameter name    | Parameter values
+%   ------------------|-----------------
+%   IntWin            | [64 32 16]   array of interrogation window size.
+%   cumulcross        | 1            switch to 0 to deactive cumulative
+%                     |              cross-correlation
+%   image_indices     | []           indices of images to include. Empty
+%                     |              means all images are used.
+%
+%   See <a href="matlab:help LFD_MPIV_parameters">here</a> for a full option list and description.
+%   
+%   See also LFD_MPIV_INTERFACE, LFD_MPIV_READ_CXD
 %   Copyright (c) 2017, Thomas Duriez (Distributed under GPLv3)
 
 %% Copyright
@@ -90,6 +117,7 @@ if ~isempty(expe)
             data_PIV.u(:,:,i_height,:)=permute(data.u,[1 2 4 3]);
             data_PIV.v(:,:,i_height,:)=permute(data.v,[1 2 4 3]);
             data_PIV.s2n(:,:,i_height,:)=permute(data.s2n,[1 2 4 3]);
+            data_PIV.parameters(i_height)=this_case_expe(i_height);
         end
         
         

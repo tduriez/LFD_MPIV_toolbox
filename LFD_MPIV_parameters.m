@@ -61,7 +61,7 @@ classdef LFD_MPIV_parameters < handle
     
     %% Global options    
     Verbose
-    release=1.4
+    release=1.5
 	
     
     end

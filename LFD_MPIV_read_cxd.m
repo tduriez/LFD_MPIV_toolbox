@@ -1,17 +1,17 @@
 function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_name,indices,verb)
-%READ_CXD function that reads CXD files. Obviously.
+%LFD_MPIV_READ_CXD function that reads CXD files. Obviously.
 %
-%   IMAGES=READ_CXD(FILENAME);
+%   IMAGES=LFD_MPIV_READ_CXD(FILENAME);
 %   IMAGES is a IxJxN uint16 matrix where IxJ is the image size and N the
 %   number of images.
 %   FILENAME is a string containing the path to the .cxd file. 
 %
-%   IMAGES=READ_CXD(FILENAME,INDICES);
+%   IMAGES=LFD_MPIV_READ_CXD(FILENAME,INDICES);
 %   Only recover images specified in INDICES (integer array). The procedure
 %   still reads the file from the beginning, but stops at the last required
 %   image. Memory efficient, not speed efficient.
 %
-%   IMAGES=READ_CXD(FILENAME,INDICES,VERB);
+%   IMAGES=LFD_MPIV_READ_CXD(FILENAME,INDICES,VERB);
 %   achieves the same as before, with adjustable verbosity:
 %   VERB = 0: No output;
 %   VERB = 1: Displays image size and number of images (default);
@@ -19,6 +19,7 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
 %   VERB = 3: Displays images as they get extracted;
 %   VERB = 4: Debugging (step by step detection of features);
 %
+%   See also LFD_MPIV_COMMANDLINE, LFD_MPIV_INTERFACE
 %   Copyright (c) 2017, Thomas Duriez (Distributed under GPLv3)
 
 %% Copyright
