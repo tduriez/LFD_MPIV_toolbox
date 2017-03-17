@@ -24,9 +24,10 @@ classdef LFD_MPIV_parameters < handle
     ttl_folder
     
     %% Image import options
-    im_step
-    im_mode
+    frame_mode
+    frame_skip
     source_frames
+    image_indices
     
     %% Image display options
     roi
@@ -72,6 +73,7 @@ classdef LFD_MPIV_parameters < handle
             end
             addlistener(obj,'IntWin','PostSet',@LFD_MPIV_parameters.IntWinChange);
             addlistener(obj,'overlap','PostSet',@LFD_MPIV_parameters.IntWinChange);
+            addlistener(obj,'source_frames','PostSet',@LFD_MPIV_parameters.FrameChange);
         end
         
         function obj=update(obj,varargin)
@@ -89,6 +91,23 @@ classdef LFD_MPIV_parameters < handle
         function IntWinChange(metaProp,eventData)
             h=eventData.AffectedObject;
             h.overlap=50*ones(1,length(h.IntWin));
+        end
+        
+         function FrameChange(metaProp,eventData)
+            h=eventData.AffectedObject;
+            if h.source_frames==1
+                if strcmp(h.frame_mode,'AA') || strcmp(h.frame_mode,'Successive')
+                    h.frame_mode='Successive';
+                else
+                    h.frame_mode='TimeSeries';
+                end
+            else
+                if strcmp(h.frame_mode,'AA') || strcmp(h.frame_mode,'Successive')
+                    h.frame_mode='AA';
+                else
+                    h.frame_mode='AB';
+                end
+            end
         end
          
         

@@ -71,9 +71,13 @@ if ~isempty(expe)
         
         for i_height = 1:numel(this_z)
             setappdata(0,'LFD_MPIV_gui',gcf);
-           
+            
             data=LFD_MPIV_cxd_to_vectors(this_case_expe(i_height));
             if i_height==1
+                try
+                    clear data_PIV
+                catch
+                end
                 data_PIV.x=repmat(data.x,[1 1 length(this_z)]);
                 data_PIV.y=repmat(data.y,[1 1 length(this_z)]);
                 data_PIV.z=repmat(permute(this_z,[1 3 2]),...
@@ -81,15 +85,17 @@ if ~isempty(expe)
                 data_PIV.u=repmat(data_PIV.y*0,[1 1 1 size(data.u,3)]);
                 data_PIV.v=repmat(data_PIV.y*0,[1 1 1 size(data.u,3)]);
                 data_PIV.w=repmat(data_PIV.y*0,[1 1 1 size(data.u,3)]);
+                data_PIV.s2n=repmat(data_PIV.y*0,[1 1 1 size(data.u,3)]);
             end
             data_PIV.u(:,:,i_height,:)=permute(data.u,[1 2 4 3]);
             data_PIV.v(:,:,i_height,:)=permute(data.v,[1 2 4 3]);
+            data_PIV.s2n(:,:,i_height,:)=permute(data.s2n,[1 2 4 3]);
         end
         
         
         
         save(sprintf('%s.mat',case_name_collection{i_case}),'data_PIV');
-        clear data_PIV
+        
         
         
     end

@@ -90,13 +90,16 @@ fprintf('case: %s, z= %d (mum)\n',expe.case_name,expe.height);
 [~,pattern,~]=fileparts(expe.cxd_file);
 fprintf('Source cxd file: %s\n',pattern);
 fprintf('Importing images:                     ');tic
-all_images=LFD_MPIV_read_cxd(expe.cxd_file,[],0);
+[all_images,~,nb_frames]=LFD_MPIV_read_cxd(expe.cxd_file,expe.image_indices,0);
+if nb_frames~=expe.source_frames
+    expe.source_frames=nb_frames;
+end
 fprintf('ok (%.3f s)\n',toc);
-fprintf('Removing background:                  ');tic
-all_images=LFD_MPIV_remove_background(all_images);
+fprintf('Order frames & removing background:   ');tic
+all_images=LFD_MPIV_prepare_frames(all_images,expe);
 fprintf('ok (%.3f s)\n',toc);
 fprintf('Cutting images:                       ');tic
-all_images=LFD_MPIV_cut_images(all_images,expe);
+%all_images=LFD_MPIV_cut_images(all_images,expe);
 fprintf('ok (%.3f s)\n',toc);
 if expe.cumulcross
 if ~isempty(expe.ttl_folder)
@@ -134,10 +137,10 @@ end
 
 
 for pha=1:nb_phases
-    if expe.cumulcross
-    fprintf('Phase number %d:',pha)
     images=all_images(phase==pha);
-    fprintf(' %d image pairs\n',numel(images))
+    if expe.cumulcross
+        fprintf('Phase number %d:',pha)
+        fprintf(' %d image pairs\n',numel(images))
     else
         fprintf('Image number %d\n',pha)
     end
@@ -148,11 +151,13 @@ for pha=1:nb_phases
 
     data.u(:,:,pha)=data_phase.u*expe.scale/expe.deltat;
     data.v(:,:,pha)=data_phase.v*expe.scale/expe.deltat;
+    data.s2n(:,:,pha)=data_phase.s2n;
     if ~isfield(data,'x');
         data.x=data_phase.x*expe.scale;
         data.y=data_phase.y*expe.scale;
         data.u=repmat(data_phase.u*expe.scale/expe.deltat,[1 1 nb_phases]);
         data.v=repmat(data_phase.v*expe.scale/expe.deltat,[1 1 nb_phases]);
+        data.s2n=repmat(data_phase.s2n,[1 1 nb_phases]);
     end
     end
 end

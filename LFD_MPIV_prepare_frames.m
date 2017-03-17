@@ -1,4 +1,4 @@
-function new_images=LFD_MPIV_prepare_frames(images,nb_frames,step,mode,varargin);
+function new_images=LFD_MPIV_prepare_frames(images,parameters);
 %   Copyright (c) 2017, Thomas Duriez (Distributed under GPLv3)
 
 %% Copyright
@@ -17,46 +17,18 @@ function new_images=LFD_MPIV_prepare_frames(images,nb_frames,step,mode,varargin)
 %    You should have received a copy of the GNU General Public License
 %    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if nargin<2
-    nb_frames=2;
-else
-    if isempty(nb_frames)
-        nb_frames=2;
-    end
-end
 
-if nargin<3
-    step=1;
-else
-    if isempty(step)
-        step=1;
-    end
-end
 
-if nargin<4
-    if nb_frames==2;
-        mode='AB';
-    else
-        mode='TimeSeries';
-    end
-else
-    if isempty(mode)
-        if nb_frames==2;
-            mode='AB';
-        else
-            mode='TimeSeries';
-        end
-    end
-end
+
 
 images=LFD_MPIV_remove_background(images);
 
-switch nb_frames
+switch parameters.source_frames
     case 1
-        new_images=single_to_double_frame(images,step,mode);
+        new_images=single_to_double_frame(images,parameters.frame_skip,parameters.frame_mode);
     case 2
-        new_images=LFD_MPIV_cut_images(images,varargin{:});
-        new_images=reorder_frame_to_frame(new_images,step,mode);
+        new_images=LFD_MPIV_cut_images(images,parameters);
+        new_images=reorder_frame_to_frame(new_images,parameters.frame_skip,parameters.frame_mode);
 end
         
 

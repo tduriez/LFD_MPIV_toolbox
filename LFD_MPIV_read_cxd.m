@@ -1,4 +1,4 @@
-function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd_single_double(file_name,indices,verb)
+function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_name,indices,verb)
 %READ_CXD function that reads CXD files. Obviously.
 %
 %   IMAGES=READ_CXD(FILENAME);
