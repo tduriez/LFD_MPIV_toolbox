@@ -1,3 +1,5 @@
 *~
 *.cxd
 test_dir
+*.mat
+*.orig
