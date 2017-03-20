@@ -35,6 +35,7 @@ classdef LFD_MPIV_parameters < handle
     flip_hor
     flip_ver
     rotation
+    mask
     
     %% PIV options
     IntWin

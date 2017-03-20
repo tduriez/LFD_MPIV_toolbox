@@ -35,6 +35,7 @@ function [allowed_args,default_args,allowed_types]=default_parameters(indices);
     args(:,i)={'flip_hor',0,'numeric'};i=i+1;
     args(:,i)={'flip_ver',0,'numeric'};i=i+1;
     args(:,i)={'rotation',0,'numeric'};i=i+1;
+    args(:,i)={'mask',[],'numeric'};i=i+1;
     
     %% PIV options
     args(:,i)={'IntWin',[64 32 16],'numeric'};i=i+1;

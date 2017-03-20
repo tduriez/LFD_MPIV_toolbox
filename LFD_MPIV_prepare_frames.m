@@ -1,4 +1,4 @@
-function new_images=LFD_MPIV_prepare_frames(images,parameters);
+function new_images=LFD_MPIV_prepare_frames(images,parameters,background_removal);
 %   Copyright (c) 2017, Thomas Duriez (Distributed under GPLv3)
 
 %% Copyright
@@ -17,11 +17,13 @@ function new_images=LFD_MPIV_prepare_frames(images,parameters);
 %    You should have received a copy of the GNU General Public License
 %    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+if nargin<3
+    background_removal=1;
+end
 
-
-
-
-images=LFD_MPIV_remove_background(images);
+if background_removal
+    images=LFD_MPIV_remove_background(images);
+end
 
 switch parameters.source_frames
     case 1
