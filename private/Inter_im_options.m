@@ -63,6 +63,8 @@ set(handles.service_text,'String',[],'BackgroundColor',[0.94 0.94 0.94])
 set(handles.hor_flip,'Value',handles.output.flip_hor);
 set(handles.ver_flip,'Value',handles.output.flip_ver);
 set(handles.rotation_selec,'Value',handles.output.rotation+1);
+set(handles.set_mask_bttn,'enable','off');
+
 
 handles.im_size=display_image(handles.axes1,handles.cxd,handles.output);
 if isempty(handles.output.roi);
