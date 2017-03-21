@@ -22,7 +22,7 @@ function varargout = Inter_im_options(varargin)
 
 % Edit the above text to modify the response to help Inter_im_options
 
-% Last Modified by GUIDE v2.5 13-Feb-2017 18:18:19
+% Last Modified by GUIDE v2.5 21-Mar-2017 12:55:42
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -412,3 +412,11 @@ function ymin_slider_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes on button press in set_mask_bttn.
+function set_mask_bttn_Callback(hObject, eventdata, handles)
+% hObject    handle to set_mask_bttn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user datpushbuttona (see GUIDATA)
+handles.parameters=LFD_MPIV_algo_mask(handles.cxd,handles.parameters);

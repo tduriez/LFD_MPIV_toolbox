@@ -58,19 +58,19 @@ function LFD_MPIV_algo_mask_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for LFD_MPIV_algo_mask
 set(handles.info,'String','Initializing...');
 filename=varargin{1};
+handles.parameters=varargin{2};
 handles.std_cut=0;
 handles.eros=0;
 handles.std_viz_cut=0.9;
 
-images=LFD_MPIV_read_cxd(filename,[],0);
+[images]=LFD_MPIV_read_cxd(filename,[],0,'std');
 handles.first_im=images(:,:,1);
-handles.std_map=std(double(images),[],3);
+handles.std_map=images(:,:,2);
 [c,h]=hist(double(handles.std_map(:)),1000);
 handles.std_lims=h;
 handles.std_hist=c;
+handles.output=show_mask(handles);
 
-handles.output = handles.std_map>handles.std_cut;
-show_mask(handles);
 set(handles.edit1,'String',num2str(handles.std_cut));
 set(handles.edit2,'String',num2str(handles.eros));
 
@@ -84,7 +84,9 @@ set(handles.info,'String','Initialized');
 % UIWAIT makes LFD_MPIV_algo_mask wait for user response (see UIRESUME)
  uiwait(handles.figure1);
 
-function show_mask(handles)
+function mask=show_mask(handles)
+warning('MATLAB:contour:ConstantData','off'); %% remove warning when mask is empty
+cla(handles.axes1);
 set(handles.info,'String','Computing mask...');
 set(handles.edit1,'Enable','off')
 set(handles.edit2,'Enable','off')
@@ -97,7 +99,6 @@ drawnow
         round(0.8*handles.eros),round(1*handles.eros),round(0.3*handles.eros)));
         
     if handles.eros>0
-    
     se1 = strel('disk',round(0.8*handles.eros));
     se2 = strel('disk',round(1*handles.eros));
     se3 = strel('disk',round(0.3*handles.eros));
@@ -105,13 +106,19 @@ drawnow
     mask=imdilate(mask,se1);
     mask=imerode(mask,se2);
     mask=imdilate(mask,se3);
-    
-    
     end
+    
+    if handles.parameters.source_frames==2 %% double frame
+        mask=LFD_MPIV_cut_images(mask,handles.parameters);
+        mask=flipud(((mask.frameA+mask.frameB)>=1));
+    end
+    
     [~,k]=min(abs(cumsum(handles.std_hist)/sum(handles.std_hist)-handles.std_viz_cut));
     
+         
     
     axes(handles.axes1);
+    
     imshow(imadjust(handles.first_im));hold on
     contour(double(mask),'r')
     axes(handles.axes2);
@@ -139,24 +146,10 @@ set(handles.edit1,'Enable','off')
 set(handles.edit2,'Enable','off')
 set(handles.slider1,'Enable','off')
 
-drawnow
-    mask=handles.std_map>handles.std_cut;
-    
-    if handles.eros>0
-    
-    se1 = strel('disk',handles.eros);
-    se2 = strel('disk',2*handles.eros);
-    mask=imerode(mask,se1);
-    mask=imdilate(mask,se2);
-    mask=imerode(mask,se1);
-
-    end
-
-
 set(hObject,'closeRequestFcn','closereq');
-
+handles.parameters.mask=handles.mask;
 % Get default command line output from handles structure
-varargout{1} = mask;
+varargout{1} = handles.parameters;
 close(hObject);
 
 
@@ -168,7 +161,7 @@ function slider1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 [~,k]=min(abs(cumsum(handles.std_hist)/sum(handles.std_hist)-handles.std_viz_cut));
 handles.std_cut=get(hObject,'Value')*(handles.std_lims(k));
-show_mask(handles);
+handles.mask=show_mask(handles);
 set(handles.edit1,'String',num2str(handles.std_cut));
 guidata(hObject,handles);
 % Hints: get(hObject,'Value') returns position of slider
@@ -194,7 +187,7 @@ function edit1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 [~,k]=min(abs(cumsum(handles.std_hist)/sum(handles.std_hist)-handles.std_viz_cut));
 handles.std_cut=str2double(get(hObject,'String'));
-show_mask(handles);
+handles.mask=show_mask(handles);
 set(handles.slider1,'Value',handles.std_cut/(handles.std_lims(k)));
 guidata(hObject,handles);
 % Hints: get(hObject,'String') returns contents of edit1 as text
@@ -228,7 +221,7 @@ function edit2_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.eros=str2double(get(hObject,'String'));
-show_mask(handles);
+handles.mask=show_mask(handles);
 guidata(hObject,handles);
 % Hints: get(hObject,'String') returns contents of edit2 as text
 %        str2double(get(hObject,'String')) returns contents of edit2 as a double

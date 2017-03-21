@@ -1,4 +1,4 @@
-function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_name,indices,verb)
+function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_name,indices,verb,mode)
 %LFD_MPIV_READ_CXD function that reads CXD files. Obviously.
 %
 %   IMAGES=LFD_MPIV_READ_CXD(FILENAME);
@@ -38,6 +38,13 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
 %    You should have received a copy of the GNU General Public License
 %    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+%% Undocumented option 'mode'
+% 'mode' is set to 'normal' for most uses.
+% when set to 'std' it will output the first buffer (be it single or double
+% frame) in image(:,:,1) and the standart deviation of the buffers
+% in image(:,:,2).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MAIN FUNCTION 
     % The main idea is to read the file little by little so the memory is
@@ -45,6 +52,10 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
 
     if nargin<3 
         verb=1; % set default
+    end
+    
+    if nargin<4
+        mode='normal';
     end
     
     header_block_size=2048*5;
@@ -85,7 +96,7 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
     
     
     
-    %% main loop    
+    %% main loop (default mode)   
     for i=1:last_image
         sample=fread(fid,block_size,'uint16=>uint16','l')';
         while detect_pattern(sample) || bullshit(sample) || detect_zero(sample)
@@ -117,7 +128,12 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
     end
     images=images(:,:,1:min(number_of_images,length(indices)));
     if verb;fprintf('%d images contained\n',number_of_images);end
-    fclose(fid);
+    
+    if strcmp(mode,'std')
+        images(:,:,2)=std(double(images),[],3);
+        images=images(:,:,1:2);
+    end
+    
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
