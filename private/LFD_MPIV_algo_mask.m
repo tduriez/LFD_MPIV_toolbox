@@ -85,7 +85,7 @@ set(handles.info,'String','Initialized');
  uiwait(handles.figure1);
 
 function mask=show_mask(handles)
-warning('MATLAB:contour:ConstantData','off'); %% remove warning when mask is empty
+warning('off','MATLAB:contour:ConstantData'); %% remove warning when mask is empty
 cla(handles.axes1);
 set(handles.info,'String','Computing mask...');
 set(handles.edit1,'Enable','off')

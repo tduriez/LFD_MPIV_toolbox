@@ -88,7 +88,9 @@ for current_pass=1:length(parameters.IntWin)
             data.u(ix_vectors,iy_vectors),data.v(ix_vectors,iy_vectors),5);shading interp;view(0,90);
         set(q,'color','k')
         
-        [hg,bins]=hist(sqrt(data.u(:).^2+data.v(:).^2),1000);
+        
+        
+        [hg,bins]=hist(sqrt(data.u(~isnan(data.u)).^2+data.v(~isnan(data.u)).^2),1000);
         levels=cumsum(hg)/sum(hg);
         p_threshold=0.05;
         [~,idx_minclim]=min(abs(p_threshold-levels));

@@ -221,7 +221,7 @@ else
                     if ischar(allowed_args_type{idx})
                         if strcmp(allowed_args_type{idx},'numeric')  % just so 'numeric' can be allowed
                             allowed_args_type{idx}={'double','single','uint16','uint8','uint32','uint64',...
-                                                                           'int16','int8','int32','int64'};
+                                                                           'logical','int16','int8','int32','int64'};
                         end
                     end
                     if ~any(strcmp(allowed_args_type{idx},class(args{i_args*2}))) % do we have incorrect type ?                 
