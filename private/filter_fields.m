@@ -77,6 +77,30 @@ function [data,parameters]=filter_fields(data,parameters);
 
 
 warning('off','MATLAB:smoothn:SLowerBound')
+
+%% Apply MASK
+    if ~isempty(parameters.mask)
+        roi=parameters.roi;
+        s2=size(parameters.mask);
+        if ~isempty(roi)
+        x_range=max(1,roi(3)):min(roi(4),s2(1));
+        y_range=max(1,roi(1)):min(roi(2),s2(2));
+        mask=parameters.mask(x_range,y_range);
+        else
+            mask=parameters.mask;
+        end
+        
+        [x1,y1]=meshgrid(1:size(mask,1),1:size(mask,2));
+        ss=size(data.u);
+        [x2,y2]=meshgrid(linspace(1,size(mask,1),ss(1)),linspace(1,size(mask,2),ss(2)));
+        keyboard
+        mask_vec=interp2(x1,y1,mask',x2,y2,'linear')';
+        keyboard
+        data.u=data.u.*mask_vec;
+        data.v=data.v.*mask_vec;
+    end
+
+
 %% FILTER 1 : Threshold on signal to noise.
     
     
