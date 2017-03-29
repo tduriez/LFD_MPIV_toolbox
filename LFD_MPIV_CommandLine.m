@@ -47,8 +47,11 @@ function  data_PIV=LFD_MPIV_CommandLine(the_input,varargin)
 %    You should have received a copy of the GNU General Public License
 %    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-%% three cases for THE_INPUT: structure, structure+options, file+options
 
+    
+
+
+%% three cases for THE_INPUT: structure, structure+options, file+options
 
 
 if ischar(the_input) % if THE_INPUT is a CXD file route
@@ -63,6 +66,30 @@ expe=the_input;
         expe(i)=expe(i).update(varargin{:});
     end  
 end
+
+%% version checker
+fname=mfilename;
+fpath=mfilename('fullpath');
+idxfp=strfind(fpath,fname);
+toolbox_folder=fpath(1:idxfp-1);
+
+check_needed=1;
+if exist(fullfile(toolbox_folder,'last_version_check.dat'),'file');
+    last_check_date=importdata(fullfile(toolbox_folder,'last_version_check.dat'));
+    if now-last_check_date <1
+        check_needed=0;
+    end
+end
+if check_needed 
+    actual_version=check_last_version;
+    fid=fopen(fullfile(toolbox_folder,'last_version_check.dat'),'w');
+    fprintf(fid,'%e',now);
+    fclose(fid);
+    if actual_version>str2double(expe.release)
+        warning_version_outdated;
+    end
+end
+
 
 %% Start of tomography
 
