@@ -231,9 +231,9 @@ function synchro_bttn_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 idx_selected_cxd=get(handles.list_cxd,'Value');
 cxd=get(handles.list_cxd,'String');
-if isempty(handles.current_parameters.ttl_folder);
-    handles.current_parameters.ttl_folder=pwd;
-end
+% if isempty(handles.current_parameters.ttl_folder);
+%     handles.current_parameters.ttl_folder=pwd;
+% end
 %handles.current_parameters=Inter_synchro(handles.current_parameters,cxd(idx_selected_cxd));
 Inter_synchro(handles.current_parameters,cxd(idx_selected_cxd));
 update_synchro_options(handles);

@@ -204,7 +204,7 @@ function close_bttn_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 check_acq=get(handles.check_acq,'Value');
 if check_acq
-    handles.output.ttl_folder=[];
+    handles.output.ttl_folder='';
 else
     handles.output.acq_freq=[];
 end

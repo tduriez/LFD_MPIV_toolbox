@@ -22,7 +22,7 @@ function varargout = Inter_synchro(varargin)
 
 % Edit the above text to modify the response to help Inter_synchro
 
-% Last Modified by GUIDE v2.5 14-Mar-2017 12:35:41
+% Last Modified by GUIDE v2.5 28-Mar-2017 15:42:13
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -204,7 +204,7 @@ function close_bttn_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 check_acq=get(handles.check_acq,'Value');
 if check_acq
-    handles.output.ttl_folder=[];
+    handles.output.ttl_folder='';
 else
     handles.output.acq_freq=[];
 end
