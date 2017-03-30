@@ -3,3 +3,4 @@
 test_dir
 *.mat
 *.orig
+*.dat

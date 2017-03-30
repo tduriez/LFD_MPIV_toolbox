@@ -47,8 +47,11 @@ function  data_PIV=LFD_MPIV_CommandLine(the_input,varargin)
 %    You should have received a copy of the GNU General Public License
 %    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-%% three cases for THE_INPUT: structure, structure+options, file+options
 
+    
+
+
+%% three cases for THE_INPUT: structure, structure+options, file+options
 
 
 if ischar(the_input) % if THE_INPUT is a CXD file route
@@ -62,6 +65,12 @@ expe=the_input;
         % parameters in varargin
         expe(i)=expe(i).update(varargin{:});
     end  
+end
+
+%% Check if new version is available
+msg=check_last_version(expe(1));
+if expe(1).Verbose
+    fprintf('%s',msg)
 end
 
 %% Start of tomography
