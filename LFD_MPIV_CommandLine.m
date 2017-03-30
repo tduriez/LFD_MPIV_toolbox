@@ -67,29 +67,11 @@ expe=the_input;
     end  
 end
 
-%% version checker
-fname=mfilename;
-fpath=mfilename('fullpath');
-idxfp=strfind(fpath,fname);
-toolbox_folder=fpath(1:idxfp-1);
-
-check_needed=1;
-if exist(fullfile(toolbox_folder,'last_version_check.dat'),'file');
-    last_check_date=importdata(fullfile(toolbox_folder,'last_version_check.dat'));
-    if now-last_check_date <1
-        check_needed=0;
-    end
+%% Check if new version is available
+msg=check_last_version(expe(1));
+if expe(1).Verbose
+    fprintf('%s',msg)
 end
-if check_needed 
-    actual_version=check_last_version;
-    fid=fopen(fullfile(toolbox_folder,'last_version_check.dat'),'w');
-    fprintf(fid,'%e',now);
-    fclose(fid);
-    if actual_version>str2double(expe.release)
-        warning_version_outdated;
-    end
-end
-
 
 %% Start of tomography
 
