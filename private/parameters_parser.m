@@ -149,6 +149,7 @@ end
 
 if isa(args,'LFD_MPIV_parameters')
     the_fields=properties(args);
+    the_fields=the_fields(~strcmp(the_fields','release'));
     new_args=cell(1,numel(the_fields)*2);
     for i=1:numel(the_fields)
         new_args{2*i-1}=the_fields{i};
@@ -163,6 +164,7 @@ end
 if ~isempty(default)
     if isa(default,'LFD_MPIV_parameters') % same as above for args. No check for number of args. (lazy: #FIXME)
         the_fields=properties(default);
+        the_fields=the_fields(~strcmp(the_fields','release'));
         new_def=cell(1,numel(the_fields)*2);
         for i=1:numel(the_fields)
             new_def{2*i-1}=the_fields{i};
