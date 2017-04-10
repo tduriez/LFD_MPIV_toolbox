@@ -175,7 +175,10 @@ sample=fread(fid,block_size,'uint16=>uint16','l')';
         A=sample;
         A=[A fread(fid,2*prod(image_size)-length(A),'uint16=>uint16','l')'];
         fclose(fid);
-        if all(A(prod(image_size)+1:prod(image_size)+512)==repmat(0,[1 512]))
+        
+        sample=A(prod(image_size)+1:prod(image_size)+block_size);
+        
+        if bullshit(sample) || detect_pattern(sample) || detect_zero(sample)
             nb_frames=1;
         else
             nb_frames=2;

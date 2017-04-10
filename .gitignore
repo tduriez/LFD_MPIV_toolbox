@@ -3,4 +3,5 @@
 test_dir
 *.mat
 *.orig
+*.dat
 next-commit_list.txt
