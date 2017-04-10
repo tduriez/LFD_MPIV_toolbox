@@ -210,7 +210,7 @@ classdef LFD_MPIV_parameters < handle
     end
     
     properties (SetAccess=immutable)
-    release='1.7'
+    release='1.71'
     end
     
     methods

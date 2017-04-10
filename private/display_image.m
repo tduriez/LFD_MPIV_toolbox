@@ -41,6 +41,7 @@
         
         
         axes(my_axes);
+        images=images(1);
         imshow(imadjust(images.frameA));
         s=size(images.frameA);
         if ~isempty(roi)

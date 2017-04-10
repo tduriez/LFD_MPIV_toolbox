@@ -53,12 +53,12 @@ function [cut_images]=LFD_MPIV_cut_images(images,varargin)
     for i=1:s(3)
     %    waitbar(i/s(3),h,sprintf('Cutting image %d of %d',i,s(3)));
         if i==1
-        cut_images(1).frameA=rot90(permute(images(:,1:s(2)/2,i)',shiftblock),1+options.rotation);
-        cut_images(1).frameB=rot90(permute(images(:,s(2)/2+1:end,i)',shiftblock),1+options.rotation);
+        cut_images(1).frameA=rot90(permute(images(:,1:s(2)/2,i),shiftblock),options.rotation);
+        cut_images(1).frameB=rot90(permute(images(:,s(2)/2+1:end,i),shiftblock),options.rotation);
         cut_images=repmat(cut_images,[1 s(3)]);
         else
-            cut_images(i).frameA=rot90(permute(images(:,1:s(2)/2,i)',shiftblock),1+options.rotation);
-            cut_images(i).frameB=rot90(permute(images(:,s(2)/2+1:end,i)',shiftblock),1+options.rotation);
+            cut_images(i).frameA=rot90(permute(images(:,1:s(2)/2,i),shiftblock),options.rotation);
+            cut_images(i).frameB=rot90(permute(images(:,s(2)/2+1:end,i),shiftblock),options.rotation);
         end
         
          if ~isempty( options.roi)
