@@ -22,7 +22,7 @@ function varargout = Inter_im_options(varargin)
 
 % Edit the above text to modify the response to help Inter_im_options
 
-% Last Modified by GUIDE v2.5 21-Mar-2017 12:55:42
+% Last Modified by GUIDE v2.5 10-Apr-2017 16:20:09
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -73,6 +73,16 @@ set(handles.xmin_slider,'Value',handles.output.roi(1)/handles.im_size(2));
 set(handles.xmax_slider,'Value',handles.output.roi(2)/handles.im_size(2));
 set(handles.ymin_slider,'Value',handles.output.roi(3)/handles.im_size(1));
 set(handles.ymax_slider,'Value',handles.output.roi(4)/handles.im_size(1));
+
+set(handles.roi_edt,'enable','off')
+set(handles.scale_edt,'enable','off')
+set(handles.delta_edt,'enable','off')
+set(handles.hor_flip,'enable','off')
+set(handles.ver_flip,'enable','off')
+set(handles.dire_selec,'enable','off')
+set(handles.rotation_selec,'enable','off')
+
+set(handles.message,'String','Mask definition')
 
 
 
@@ -419,4 +429,46 @@ function set_mask_bttn_Callback(hObject, eventdata, handles)
 % hObject    handle to set_mask_bttn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user datpushbuttona (see GUIDATA)
-handles.parameters=LFD_MPIV_algo_mask(handles.cxd,handles.parameters);
+handles.output=LFD_MPIV_algo_mask(handles.cxd,handles.output);
+set(handles.scale_edt,'enable','on')
+set(handles.delta_edt,'enable','on')
+set(handles.set_scale_bttn,'enable','on')
+set(handles.set_mask_bttn,'enable','off')
+set(handles.no_mask_bttn,'enable','off')
+
+
+
+
+% --- Executes on button press in no_mask_bttn.
+function no_mask_bttn_Callback(hObject, eventdata, handles)
+% hObject    handle to no_mask_bttn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.output.mask=[];
+set(handles.scale_edt,'enable','on')
+set(handles.delta_edt,'enable','on')
+set(handles.set_scale_bttn,'enable','on')
+set(handles.set_mask_bttn,'enable','off')
+set(handles.no_mask_bttn,'enable','off')
+
+
+
+% --- Executes on button press in set_scale_bttn.
+function set_scale_bttn_Callback(hObject, eventdata, handles)
+% hObject    handle to set_scale_bttn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in set_roi_bttn.
+function set_roi_bttn_Callback(hObject, eventdata, handles)
+% hObject    handle to set_roi_bttn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton7.
+function pushbutton7_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

@@ -110,7 +110,7 @@ drawnow
     
     if handles.parameters.source_frames==2 %% double frame
         mask=LFD_MPIV_cut_images(mask,handles.parameters);
-        mask=flipud(((mask.frameA+mask.frameB)>=1));
+        mask=(((mask.frameA+mask.frameB)>=1));
     end
     
     [~,k]=min(abs(cumsum(handles.std_hist)/sum(handles.std_hist)-handles.std_viz_cut));
