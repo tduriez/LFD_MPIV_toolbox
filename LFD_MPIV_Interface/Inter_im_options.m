@@ -74,20 +74,20 @@ set(handles.xmax_slider,'Value',handles.output.roi(2)/handles.im_size(2));
 set(handles.ymin_slider,'Value',handles.output.roi(3)/handles.im_size(1));
 set(handles.ymax_slider,'Value',handles.output.roi(4)/handles.im_size(1));
 
-set(handles.ymin_slider,'enable','off')
-set(handles.xmin_slider,'enable','off')
-set(handles.ymax_slider,'enable','off')
-set(handles.xmax_slider,'enable','off')
-set(handles.set_roi_bttn,'enable','off')
-set(handles.roi_edt,'enable','off')
-set(handles.hor_flip,'enable','off')
-set(handles.ver_flip,'enable','off')
-set(handles.rotation_selec,'enable','off')
+set(handles.ymin_slider,'enable','on')
+set(handles.xmin_slider,'enable','on')
+set(handles.ymax_slider,'enable','on')
+set(handles.xmax_slider,'enable','on')
+set(handles.set_roi_bttn,'enable','on')
+set(handles.roi_edt,'enable','on')
+set(handles.hor_flip,'enable','on')
+set(handles.ver_flip,'enable','on')
+set(handles.rotation_selec,'enable','on')
 set(handles.scale_edt,'enable','on')
 set(handles.delta_edt,'enable','on')
 set(handles.set_scale_bttn,'enable','on')
-set(handles.set_mask_bttn,'enable','off')
-set(handles.no_mask_bttn,'enable','off')
+set(handles.set_mask_bttn,'enable','on')
+set(handles.no_mask_bttn,'enable','on')
 
 set(handles.message,'String','Set space and time scales')
 
@@ -443,8 +443,8 @@ set(handles.xmin_slider,'enable','on')
 set(handles.ymax_slider,'enable','on')
 set(handles.xmax_slider,'enable','on')
 set(handles.set_roi_bttn,'enable','on')
-set(handles.set_mask_bttn,'enable','off')
-set(handles.no_mask_bttn,'enable','off')
+set(handles.set_mask_bttn,'enable','on')
+set(handles.no_mask_bttn,'enable','on')
 
 
 
@@ -461,8 +461,8 @@ set(handles.xmin_slider,'enable','on')
 set(handles.ymax_slider,'enable','on')
 set(handles.xmax_slider,'enable','on')
 set(handles.set_roi_bttn,'enable','on')
-set(handles.set_mask_bttn,'enable','off')
-set(handles.no_mask_bttn,'enable','off')
+set(handles.set_mask_bttn,'enable','on')
+set(handles.no_mask_bttn,'enable','on')
 
 
 
@@ -471,9 +471,9 @@ function set_scale_bttn_Callback(hObject, eventdata, handles)
 % hObject    handle to set_scale_bttn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-set(handles.scale_edt,'enable','off')
-set(handles.delta_edt,'enable','off')
-set(handles.set_scale_bttn,'enable','off')
+set(handles.scale_edt,'enable','on')
+set(handles.delta_edt,'enable','on')
+set(handles.set_scale_bttn,'enable','on')
 set(handles.set_mask_bttn,'enable','on')
 set(handles.no_mask_bttn,'enable','on')
 set(handles.message,'String','Set use of mask')
@@ -486,12 +486,12 @@ function set_roi_bttn_Callback(hObject, eventdata, handles)
 % hObject    handle to set_roi_bttn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-set(handles.ymin_slider,'enable','off')
-set(handles.xmin_slider,'enable','off')
-set(handles.ymax_slider,'enable','off')
-set(handles.xmax_slider,'enable','off')
-set(handles.set_roi_bttn,'enable','off')
-set(handles.roi_edt,'enable','off')
+set(handles.ymin_slider,'enable','on')
+set(handles.xmin_slider,'enable','on')
+set(handles.ymax_slider,'enable','on')
+set(handles.xmax_slider,'enable','on')
+set(handles.set_roi_bttn,'enable','on')
+set(handles.roi_edt,'enable','on')
 
 
 

@@ -85,7 +85,7 @@ set(handles.info,'String','Initialized');
  uiwait(handles.figure1);
 
 function mask=show_mask(handles)
-warning('MATLAB:contour:ConstantData','off'); %% remove warning when mask is empty
+warning('off','MATLAB:contour:ConstantData'); %% remove warning when mask is empty
 cla(handles.axes1);
 set(handles.info,'String','Computing mask...');
 set(handles.edit1,'Enable','off')
@@ -109,7 +109,7 @@ drawnow
     end
     
     if handles.parameters.source_frames==2 %% double frame
-        mask=LFD_MPIV_cut_images(mask,handles.parameters);
+        mask=LFD_MPIV_cut_images(uint16(mask),handles.parameters);
         mask=(((mask.frameA+mask.frameB)>=1));
     end
     

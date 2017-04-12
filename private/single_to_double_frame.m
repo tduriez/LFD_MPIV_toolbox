@@ -1,41 +1,39 @@
-function [dbl_frame] = single_to_double_frame(sgl_frame,step,mode)
+function [dbl_frame] = single_to_double_frame(sgl_frame,options)
 %SINGLE_TO_DOUBLE_FRAME Transforms image time series in successive double
 %frame buffers.
-%   DBL_FRAME=SINGLE_TO_DOUBLE_FRAME(SGL_FRAME)
-%   DBL_FRAME=SINGLE_TO_DOUBLE_FRAME(SGL_FRAME,STEP)
-%   DBL_FRAME=SINGLE_TO_DOUBLE_FRAME(SGL_FRAME,STEP,MODE)
+%   DBL_FRAME=SINGLE_TO_DOUBLE_FRAME(SGL_FRAME,OPTIONS)
 %
 %   SGL_FRAME is a [nI,nJ,nImages] 3D-array containing all images.
-%   STEP is an integer (Default 1).
-%   MODE is a string. Only 'TimeSeries' (default) and 'Successive' are 
-%   allowed
+%   OPTIONS.FRAME_SKIP is an integer (Default 1).
+%   OPTIONS.FRAME_MODE is a string. Only 'TimeSeries' (default) and 'Successive'
+%   are allowed.
 %
-%   In 'TimeSeries' mode, the images are transformed as follows (STEP=1):
+%   In 'TimeSeries' mode, the images are transformed as follows (FRAME_SKIP=1):
 %
 %   1 2 3 4 5 6 7 8 9  => 9 images, 8 double frame buffers.
 %   A A A A A A A A
 %     B B B B B B B B
 %
-%   In 'Successive' mode, the images are transformed as follows (STEP=1):
+%   In 'Successive' mode, the images are transformed as follows (FRAME_SKIP=1):
 %
 %   1 2 3 4 5 6 7 8 9  => 9 images, 4 double frame buffers.
-%   A   A   A   A   
-%     B   B   B   B 
+%   A   A   A   A
+%     B   B   B   B
 %
 %   Each unit of step shifts the B frame one unit further. In successive
-%   modes this automatically shifts the next A frame too. With STEP=3:
+%   modes this automatically shifts the next A frame too. With FRAME_SKIP=3:
 %
 %   'TimeSeries'
 %
 %   1 2 3 4 5 6 7 8 9  => 9 images, 6 double frame buffers.
-%   A A A A A A 
+%   A A A A A A
 %         B B B B B B
 %
-%   'Successive' 
+%   'Successive'
 %
 %   1 2 3 4 5 6 7 8 9  => 9 images, 2 double frame buffers.
-%   A       A      
-%         B       B 
+%   A       A
+%         B       B
 %
 %   Copyright (c) 2017, Thomas Duriez (Distributed under GPLv3)
 
@@ -57,23 +55,10 @@ function [dbl_frame] = single_to_double_frame(sgl_frame,step,mode)
 
 nImages=size(sgl_frame,3);
 
-if nargin<2
-    step=1;
-else
-    if isempty(step)
-        step=1;
-    end
-end
 
+step=options.frame_skip;
+mode=options.frame_mode;
 
-
-if nargin<3
-    mode='TimeSeries';
-    else
-    if isempty(mode)
-        mode='TimeSeries';
-    end
-end
 
 
 if ~any(strcmpi({'TimeSeries','Successive'},mode))
@@ -87,9 +72,49 @@ switch mode
         idxFrameA=1:(step+1):(nImages-step-1);
 end
 idxFrameB=idxFrameA+step;
+
+if isempty(options.mask)
+    options.mask=ones(size(sgl_frame(:,:,1)));
+end
+
 for i=1:length(idxFrameA);
-dbl_frame(i).frameA=sgl_frame(:,:,idxFrameA(i));
-dbl_frame(i).frameB=sgl_frame(:,:,idxFrameB(i));
+    dbl_frame(i).frameA=rot90(sgl_frame(:,:,idxFrameA(i)).*uint16(options.mask),options.rotation);
+    dbl_frame(i).frameB=rot90(sgl_frame(:,:,idxFrameB(i)).*uint16(options.mask),options.rotation);
+    if i==1
+        dbl_frame=repmat(dbl_frame,[1 length(idxFrameA)]);
+    end
+    
+    if ~isempty(options.roi)
+        roi=options.roi;
+        s2=size(dbl_frame(i).frameA);
+        
+        x_range=max(1,roi(3)):min(roi(4),s2(1));
+        y_range=max(1,roi(1)):min(roi(2),s2(2));
+        [x_range(1) x_range(1) x_range(end) x_range(end)];
+        [y_range(1) y_range(end) y_range(end) y_range(1)];
+        %              if i==1;
+        %                 imshow(imadjust(dbl_frame(i).frameA));
+        %                 hold on
+        %                 plot([x_range(1) x_range(1) x_range(end) x_range(end)],...
+        %                     [y_range(1) y_range(end) y_range(end) y_range(1)],...
+        %                     'color','r','linewidth',2,'linestyle','--')
+        %              end
+        dbl_frame(i).frameA=dbl_frame(i).frameA(x_range,y_range);
+        dbl_frame(i).frameB=dbl_frame(i).frameB(x_range,y_range);
+    end
+    
+    if options.flip_ver
+        dbl_frame(i).frameA=flipud(dbl_frame(i).frameA);
+        dbl_frame(i).frameB=flipud(dbl_frame(i).frameB);
+    end
+    
+    if options.flip_hor
+        dbl_frame(i).frameA=fliplr(dbl_frame(i).frameA);
+        dbl_frame(i).frameB=fliplr(dbl_frame(i).frameB);
+    end
+    
+    
+    
 end
 
 

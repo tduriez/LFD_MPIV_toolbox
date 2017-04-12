@@ -1,4 +1,5 @@
 function [shown_image_size,parameters]=display_image2(cxd,parameters,my_axes,mode);
+warning('off','MATLAB:contour:ConstantData');
     if nargin < 2
         parameters=LFD_MPIV_parameters;
     end
@@ -13,6 +14,7 @@ function [shown_image_size,parameters]=display_image2(cxd,parameters,my_axes,mod
     
     fprintf('M.O.D.E:\n')
     fprintf('%d ',mode)
+    fprintf('\n',mode)
     
     n_necessary=parameters.frame_skip+1;
     [images,image_size,nb_frames]=LFD_MPIV_read_cxd(cxd,1:n_necessary,0);
