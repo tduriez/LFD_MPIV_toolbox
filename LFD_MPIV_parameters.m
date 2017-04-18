@@ -61,8 +61,8 @@ classdef LFD_MPIV_parameters < handle
 %                 |         |         | degrees.
 % mask            | logical |  []     | Same size as the original image. 
 %                 |         |         | Zeros indicates where no vectors
-%                 |         |         | should be computed. Feature in dev.
-%                 |         |         | #FIXME
+%                 |         |         | should be computed.
+% apparrent_mask  | uint16  |  []     | Mask after transformations.
 %     
 % -- PIV options ------------------------------------------d----------------
 %    parameter    |  type   | default    |          comments
@@ -178,6 +178,7 @@ classdef LFD_MPIV_parameters < handle
     flip_ver
     rotation
     mask
+    apparrent_mask
     
     %% PIV options
     IntWin

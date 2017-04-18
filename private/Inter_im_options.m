@@ -64,7 +64,7 @@ set(handles.hor_flip,'Value',handles.output.flip_hor);
 set(handles.ver_flip,'Value',handles.output.flip_ver);
 set(handles.rotation_selec,'Value',handles.output.rotation+1);
 
-handles.im_size=display_image(handles.axes1,handles.cxd,handles.output);
+handles.im_size=display_image(handles.cxd,handles.output,handles.axes1);
 if isempty(handles.output.roi);
     handles.output.roi=[1 handles.im_size(2) 1 handles.im_size(1)];
 end
@@ -188,7 +188,7 @@ try
         [],...
         'BackgroundColor',[0.94 0.94 0.94]);
     
-        display_image(handles.axes1,handles.cxd,handles.output);
+        display_image(handles.cxd,handles.output,handles.axes1);
           set(handles.xmin_slider,'Value',(handles.output.roi(1)-1)/(handles.im_size(2)-1));
           set(handles.xmax_slider,'Value',(handles.output.roi(2)-1)/(handles.im_size(2)-1));
           set(handles.ymin_slider,'Value',(handles.output.roi(3)-1)/(handles.im_size(1)-1));
@@ -240,7 +240,7 @@ function hor_flip_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.output.flip_hor=get(hObject,'Value');
-display_image(handles.axes1,handles.cxd,handles.output);
+display_image(handles.cxd,handles.output,handles.axes1);
 guidata(hObject,handles);
 % Hint: get(hObject,'Value') returns toggle state of hor_flip
 
@@ -251,7 +251,7 @@ function ver_flip_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.output.flip_ver=get(hObject,'Value');
-display_image(handles.axes1,handles.cxd,handles.output);
+display_image(handles.cxd,handles.output,handles.axes1);
 guidata(hObject,handles);
 % Hint: get(hObject,'Value') returns toggle state of ver_flip
 
@@ -262,7 +262,7 @@ function rotation_selec_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.output.rotation=get(hObject,'Value')-1;
-display_image(handles.axes1,handles.cxd,handles.output);
+display_image(handles.cxd,handles.output,handles.axes1);
 guidata(hObject,handles);
 % Hints: contents = cellstr(get(hObject,'String')) returns rotation_selec contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from rotation_selec
@@ -292,7 +292,7 @@ function dire_selec_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.output.dire=get(hObject,'Value');
-display_image(handles.axes1,handles.cxd,handles.output);
+display_image(handles.cxd,handles.output,handles.axes1);
 guidata(hObject,handles);
 % Hints: contents = cellstr(get(hObject,'String')) returns dire_selec contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from dire_selec
@@ -326,7 +326,7 @@ handles.output.roi(1)=ixmin;
 roi=handles.output.roi;
 set(handles.roi_edt,'String',sprintf('[%d %d %d %d]',roi(1),roi(2),roi(3),roi(4)))
 %set(handles.service_text,'String',sprintf('%f',xmin_value));
-display_image(handles.axes1,handles.cxd,handles.output);
+display_image(handles.cxd,handles.output,handles.axes1);
 guidata(hObject,handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -354,7 +354,7 @@ roi=handles.output.roi;
 set(handles.roi_edt,'String',sprintf('[%d %d %d %d]',roi(1),roi(2),roi(3),roi(4)))
 %set(handles.service_text,'String',sprintf('%f',xmin_value));
 guidata(hObject,handles);
-display_image(handles.axes1,handles.cxd,handles.output);
+display_image(handles.cxd,handles.output,handles.axes1);
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -387,7 +387,7 @@ roi=handles.output.roi;
 set(handles.roi_edt,'String',sprintf('[%d %d %d %d]',roi(1),roi(2),roi(3),roi(4)))
 %set(handles.service_text,'String',sprintf('%f',xmin_value));
 guidata(hObject,handles);
-display_image(handles.axes1,handles.cxd,handles.output);
+display_image(handles.cxd,handles.output,handles.axes1);
 
 % --- Executes during object creation, after setting all properties.
 function ymax_slider_CreateFcn(hObject, eventdata, handles)
@@ -414,7 +414,7 @@ roi=handles.output.roi;
 set(handles.roi_edt,'String',sprintf('[%d %d %d %d]',roi(1),roi(2),roi(3),roi(4)))
 %set(handles.service_text,'String',sprintf('%f',xmin_value));
 guidata(hObject,handles);
-display_image(handles.axes1,handles.cxd,handles.output);
+display_image(handles.cxd,handles.output,handles.axes1);
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 

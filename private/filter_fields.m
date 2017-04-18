@@ -194,16 +194,9 @@ end
     
 
 
-    if ~isempty(parameters.mask)
-        roi=parameters.roi;
-        s2=size(parameters.mask);
-        if ~isempty(roi)
-        x_range=max(1,roi(3)):min(roi(4),s2(1));
-        y_range=max(1,roi(1)):min(roi(2),s2(2));
-        mask=parameters.mask(x_range,y_range);
-        else
-            mask=parameters.mask;
-        end
+    if ~isempty(parameters.apparrent_mask)
+        mask=parameters.apparrent_mask;
+        
         mask=flipud(mask);
         [x1,y1]=meshgrid(1:size(mask,1),1:size(mask,2));
         ss=size(data.u);

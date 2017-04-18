@@ -109,8 +109,12 @@ drawnow
     end
     
     if handles.parameters.source_frames==2 %% double frame
-        mask=LFD_MPIV_cut_images(uint16(mask),handles.parameters);
-        mask=(((mask.frameA+mask.frameB)>=1));
+        shiftblock=[circshift([1 2],[0 handles.parameters.dire]) 3];
+        mask=permute(mask,shiftblock);
+        s=size(mask);
+        maskA=permute(mask(:,1:s(2)/2),shiftblock);
+        maskB=permute(mask(:,s(2)/2+1:end),shiftblock);
+        mask=(((maskA+maskB)>=1));
     end
     
     [~,k]=min(abs(cumsum(handles.std_hist)/sum(handles.std_hist)-handles.std_viz_cut));

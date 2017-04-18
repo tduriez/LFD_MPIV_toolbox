@@ -32,6 +32,7 @@ switch parameters.source_frames
         new_images=LFD_MPIV_cut_images(images,parameters);
         new_images=reorder_frame_to_frame(new_images,parameters.frame_skip,parameters.frame_mode);
 end
-        
+
+parameters.apparrent_mask=uint16(new_images(1).frameA~=0);
 
 

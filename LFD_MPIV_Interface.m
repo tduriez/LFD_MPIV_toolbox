@@ -132,7 +132,7 @@ function list_cxd_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 idx = get(hObject,'Value');
 idx=idx(1);
-display_image(handles.axes1,fullfile(handles.cxd_folder,handles.cxd{idx}),handles.current_parameters);
+display_image(fullfile(handles.cxd_folder,handles.cxd{idx}),handles.current_parameters,handles.axes1,1+2+4+8);
 
 
 
