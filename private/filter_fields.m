@@ -177,7 +177,7 @@ data = apply_mask(data,parameters);
      end
      
     if parameters.current_pass==length(parameters.IntWin)
-        data = apply_mask(data,parameters,1);
+        %data = apply_mask(data,parameters,1);
     end
     
      

@@ -78,8 +78,8 @@ if isempty(options.mask)
 end
 
 for i=1:length(idxFrameA);
-    dbl_frame(i).frameA=rot90(sgl_frame(:,:,idxFrameA(i)).*uint16(options.mask),options.rotation);
-    dbl_frame(i).frameB=rot90(sgl_frame(:,:,idxFrameB(i)).*uint16(options.mask),options.rotation);
+    dbl_frame(i).frameA=rot90(sgl_frame(:,:,idxFrameA(i))+uint16((1-options.mask)*2^16),options.rotation);
+    dbl_frame(i).frameB=rot90(sgl_frame(:,:,idxFrameB(i))+uint16((1-options.mask)*2^16),options.rotation);
     if i==1
         dbl_frame=repmat(dbl_frame,[1 length(idxFrameA)]);
     end

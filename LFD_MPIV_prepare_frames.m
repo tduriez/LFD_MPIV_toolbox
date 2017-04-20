@@ -33,6 +33,6 @@ switch parameters.source_frames
         new_images=reorder_frame_to_frame(new_images,parameters.frame_skip,parameters.frame_mode);
 end
 
-parameters.apparrent_mask=uint16(new_images(1).frameA~=0);
+parameters.apparrent_mask=uint16(new_images(1).frameA~=uint16(2^16));
 
 
