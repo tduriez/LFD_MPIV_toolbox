@@ -161,19 +161,17 @@ classdef LFD_MPIV_parameters < handle
 
     properties (SetObservable)
         
-    %% File options
-    cxd_file
-    ttl_folder
     
     %% Image import options
+    cxd_file
     frame_mode
     frame_skip
     source_frames
     image_indices
-    
-    %% Image display options
-    roi
     dire
+    
+    %% Frames display options
+    roi
     flip_hor
     flip_ver
     rotation
@@ -190,6 +188,7 @@ classdef LFD_MPIV_parameters < handle
     ImDeform
     
     %% Synchronization options
+    ttl_folder
     acq_freq
     act_freq
     nb_phases
@@ -215,8 +214,6 @@ classdef LFD_MPIV_parameters < handle
     end
     
     methods
-        
-            
         
         
         function obj=LFD_MPIV_parameters()

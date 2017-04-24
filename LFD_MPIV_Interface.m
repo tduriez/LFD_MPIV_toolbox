@@ -39,7 +39,7 @@ function varargout = LFD_MPIV_Interface(varargin)
 
 % Edit the above text to modify the response to help LFD_MPIV_Interface
 
-% Last Modified by GUIDE v2.5 10-Feb-2017 17:09:10
+% Last Modified by GUIDE v2.5 24-Apr-2017 15:28:05
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -444,10 +444,44 @@ function PIV_bttn_Callback(hObject, eventdata, handles)
 LFD_MPIV_CommandLine(handles.parameters);        
                 
         
-    
 
 
+% --- Executes on button press in import_bttn.
+function import_bttn_Callback(hObject, eventdata, handles)
+% hObject    handle to import_bttn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+Inter_import(handles.current_parameters);
+update_import_options(handles);
+guidata(hObject,handles);
+
+function update_import_options(handles);
+text_PIV=sprintf('Folder: %s\n',handles.current_parameters.export_folder);
+text_PIV=sprintf('%sCase name: %s\n',text_PIV,handles.current_parameters.case_name);
+text_PIV=sprintf('%sDate: %s\n',text_PIV,handles.current_parameters.the_date);
+text_PIV=sprintf('%sFilename: %s\n',text_PIV,handles.current_parameters.export_filename);
+
+set(handles.export_list,'String',text_PIV)
 
 
+% --- Executes on selection change in import_list.
+function import_list_Callback(hObject, eventdata, handles)
+% hObject    handle to import_list (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
-    
+% Hints: contents = cellstr(get(hObject,'String')) returns import_list contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from import_list
+
+
+% --- Executes during object creation, after setting all properties.
+function import_list_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to import_list (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
