@@ -1,4 +1,4 @@
-function [dbl_frame] = single_to_double_frame(sgl_frame,options)
+function [dbl_frame,apparent_mask] = single_to_double_frame(sgl_frame,options)
 %SINGLE_TO_DOUBLE_FRAME Transforms image time series in successive double
 %frame buffers.
 %   DBL_FRAME=SINGLE_TO_DOUBLE_FRAME(SGL_FRAME,OPTIONS)
@@ -75,12 +75,17 @@ idxFrameB=idxFrameA+step;
 
 if isempty(options.mask)
     options.mask=ones(size(sgl_frame(:,:,1)));
+else
+        if ~all(size(options.mask)~=size(sgl_frame(:,:,1)))
+            options.mask=ones(size(sgl_frame(:,:,1)));
+        end
 end
 
 for i=1:length(idxFrameA);
-    dbl_frame(i).frameA=rot90(sgl_frame(:,:,idxFrameA(i))+uint16((1-options.mask)*2^16),options.rotation);
-    dbl_frame(i).frameB=rot90(sgl_frame(:,:,idxFrameB(i))+uint16((1-options.mask)*2^16),options.rotation);
+    dbl_frame(i).frameA=rot90(sgl_frame(:,:,idxFrameA(i)),options.rotation);
+    dbl_frame(i).frameB=rot90(sgl_frame(:,:,idxFrameB(i)),options.rotation);
     if i==1
+        masked_image=rot90(sgl_frame(:,:,idxFrameA(i))+uint16((1-options.mask)*2^16),options.rotation);
         dbl_frame=repmat(dbl_frame,[1 length(idxFrameA)]);
     end
     
@@ -99,16 +104,25 @@ for i=1:length(idxFrameA);
         %                     [y_range(1) y_range(end) y_range(end) y_range(1)],...
         %                     'color','r','linewidth',2,'linestyle','--')
         %              end
+        if i==1
+            masked_image=masked_image(x_range,y_range);
+        end
         dbl_frame(i).frameA=dbl_frame(i).frameA(x_range,y_range);
         dbl_frame(i).frameB=dbl_frame(i).frameB(x_range,y_range);
     end
     
     if options.flip_ver
+        if i==1
+            masked_image=flipud(masked_image);
+        end
         dbl_frame(i).frameA=flipud(dbl_frame(i).frameA);
         dbl_frame(i).frameB=flipud(dbl_frame(i).frameB);
     end
     
     if options.flip_hor
+        if i==1
+            masked_image=fliplr(masked_image);
+        end
         dbl_frame(i).frameA=fliplr(dbl_frame(i).frameA);
         dbl_frame(i).frameB=fliplr(dbl_frame(i).frameB);
     end
@@ -116,7 +130,7 @@ for i=1:length(idxFrameA);
     
     
 end
-
+apparent_mask=uint16(masked_image~=uint16(2^16));
 
 end
 

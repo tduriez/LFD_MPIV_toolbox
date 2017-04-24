@@ -1,4 +1,4 @@
-function [cut_images]=LFD_MPIV_cut_images(images,varargin)
+function [cut_images,apparent_mask]=LFD_MPIV_cut_images(images,varargin)
 % part data along one dimension. Hope you deal with pair numbers.
 % FIXME: try to come with general dimension handling
 % FIXME: maybe check data conformity
@@ -48,16 +48,25 @@ function [cut_images]=LFD_MPIV_cut_images(images,varargin)
         return
     end
     
+    
+        
+    
     if isempty(options.mask)
         options.mask=ones(size(permute(images(:,1:s(2)/2,1),shiftblock)));
+    else
+        
+        if ~all(size(options.mask)==size(permute(images(:,1:s(2)/2,1),shiftblock)))
+            options.mask=ones(size(permute(images(:,1:s(2)/2,1),shiftblock)));
+        end
     end
     
    % h=waitbar(0,sprintf('Cutting %d images in 2 frames',s(3)));
     for i=1:s(3)
     %    waitbar(i/s(3),h,sprintf('Cutting image %d of %d',i,s(3)));
         if i==1
-        cut_images(1).frameA=rot90(permute(images(:,1:s(2)/2,i),shiftblock)+uint16((1-options.mask)*2^16),options.rotation);
-        cut_images(1).frameB=rot90(permute(images(:,s(2)/2+1:end,i),shiftblock)+uint16((1-options.mask)*2^16),options.rotation);
+        masked_image=rot90(permute(images(:,1:s(2)/2,i),shiftblock)+uint16((1-options.mask)*2^16),options.rotation);
+        cut_images(1).frameA=rot90(permute(images(:,1:s(2)/2,i),shiftblock),options.rotation);
+        cut_images(1).frameB=rot90(permute(images(:,s(2)/2+1:end,i),shiftblock),options.rotation);
         cut_images=repmat(cut_images,[1 s(3)]);
         else
             cut_images(i).frameA=rot90(permute(images(:,1:s(2)/2,i),shiftblock),options.rotation);
@@ -79,6 +88,9 @@ function [cut_images]=LFD_MPIV_cut_images(images,varargin)
 %                     [y_range(1) y_range(end) y_range(end) y_range(1)],...
 %                     'color','r','linewidth',2,'linestyle','--')
 %              end
+            if i==1
+                masked_image=masked_image(x_range,y_range);
+            end
             cut_images(i).frameA=cut_images(i).frameA(x_range,y_range);
             cut_images(i).frameB=cut_images(i).frameB(x_range,y_range);
             
@@ -87,16 +99,25 @@ function [cut_images]=LFD_MPIV_cut_images(images,varargin)
         end
         
         if options.flip_ver
+            if i==1
+                masked_image=flipud(masked_image);
+            end
             cut_images(i).frameA=flipud(cut_images(i).frameA);
             cut_images(i).frameB=flipud(cut_images(i).frameB);
         end
         
         if options.flip_hor
+            if i==1
+                masked_image=fliplr(masked_image);
+            end
             cut_images(i).frameA=fliplr(cut_images(i).frameA);
             cut_images(i).frameB=fliplr(cut_images(i).frameB);
         end
         
         
     end
+    
+    apparent_mask=uint16(masked_image~=uint16(2^16));
+    
     %close(h)
     

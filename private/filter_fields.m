@@ -177,7 +177,7 @@ data = apply_mask(data,parameters);
      end
      
     if parameters.current_pass==length(parameters.IntWin)
-        %data = apply_mask(data,parameters,1);
+        data = apply_mask(data,parameters,1);
     end
     
      
@@ -197,7 +197,7 @@ end
     if ~isempty(parameters.apparrent_mask)
         mask=parameters.apparrent_mask;
         
-        mask=flipud(mask);
+        %mask=flipud(mask);
         [x1,y1]=meshgrid(1:size(mask,1),1:size(mask,2));
         ss=size(data.u);
         [x2,y2]=meshgrid(linspace(1,size(mask,1),ss(1)),linspace(1,size(mask,2),ss(2)));
