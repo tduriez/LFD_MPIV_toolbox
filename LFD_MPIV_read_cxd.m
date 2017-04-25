@@ -1,4 +1,4 @@
-function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_name,indices,verb,mode)
+function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_name,indices,verb,mode,msg)
 %LFD_MPIV_READ_CXD function that reads CXD files. Obviously.
 %
 %   IMAGES=LFD_MPIV_READ_CXD(FILENAME);
@@ -45,6 +45,11 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
 % frame) in image(:,:,1) and the standart deviation of the buffers
 % in image(:,:,2).
 
+%% Undocumented option 'VERB=-1'
+% if verb=-1 a waitbar is used for loading images and the message set in
+% 'msg' is used.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MAIN FUNCTION 
     % The main idea is to read the file little by little so the memory is
@@ -56,6 +61,14 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
     
     if nargin<4
         mode='normal';
+    else
+        if isempty(mode)
+            mode='normal';
+        end
+    end
+    
+    if nargin<5
+        msg='loading';
     end
     
     header_block_size=2048*5;
@@ -97,7 +110,9 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
     
     
     %% main loop (default mode)   
+    if verb==-1;h=waitbar(0,msg);end
     for i=1:last_image
+        if verb==-1;h=waitbar(i/last_image,h);end
         sample=fread(fid,block_size,'uint16=>uint16','l')';
         while detect_pattern(sample) || bullshit(sample) || detect_zero(sample)
             if verb>3
@@ -126,13 +141,16 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
             break
         end  
     end
+   
     images=images(:,:,1:min(number_of_images,length(indices)));
-    if verb;fprintf('%d images contained\n',number_of_images);end
+    if verb>0;fprintf('%d images contained\n',number_of_images);end
     
     if strcmp(mode,'std')
+        if verb==-1;waitbar(1,h,'Computing Standart Deviation');end
         images(:,:,2)=std(double(images),[],3);
         images=images(:,:,1:2);
     end
+     if verb==-1;close(h);end
     
 end
 
@@ -188,7 +206,7 @@ sample=fread(fid,block_size,'uint16=>uint16','l')';
         
 
 
-if verb;fprintf('Image size: %d x %d\n',image_size(1),image_size(2));end
+if verb>0;fprintf('Image size: %d x %d\n',image_size(1),image_size(2));end
 
 end
 

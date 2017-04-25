@@ -407,7 +407,9 @@ function import_bttn_Callback(hObject, eventdata, handles)
 % hObject    handle to import_bttn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-Inter_import(handles.current_parameters);
+selected_cxd=get(handles.list_cxd,'Value');
+cxd_files=get(handles.list_cxd,'String');
+Inter_import(handles.current_parameters,fullfile(handles.cxd_folder,cxd_files{selected_cxd(1)}));
 update_import_options(handles);
 guidata(hObject,handles);
 
