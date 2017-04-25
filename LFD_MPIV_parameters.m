@@ -105,7 +105,6 @@ classdef LFD_MPIV_parameters < handle
     % act_freq        | double  | 1       | Actuation frequency, in Hertz.
     %                 |         |         | Has an effect only if phase
     %                 |         |         | reconstruction is achieved.
-    
     %
     % -- Tomography option ----------------------------------------------------
     %    parameter    |  type   | default |          comments
@@ -159,57 +158,59 @@ classdef LFD_MPIV_parameters < handle
     %    You should have received a copy of the GNU General Public License
     %    along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
+
     properties (SetObservable)
-        
-        %% Image import options
-        cxd_file
-        frame_mode
-        frame_skip
-        source_frames
-        image_indices
-        dire
-        
-        %% Frames display options
-        roi
-        flip_hor
-        flip_ver
-        rotation
-        mask
-        apparrent_mask
-        
-        %% PIV options
-        IntWin
-        overlap
-        cumulcross
-        deltat
-        scale
-        SubPixMode
-        ImDeform
-        
-        %% Synchronization options
-        ttl_folder
-        acq_freq
-        act_freq
-        nb_phases
-        
-        %% Tomography option
-        height
-        
-        %% Export options
-        case_name
-        the_date
-        export_folder
-        export_filename
-        
-        %% Global options
-        Verbose
-        
-        
-        
+       
+    
+    %% Image import options
+    cxd_file
+    frame_mode
+    frame_skip
+    source_frames
+    image_indices
+    dire
+    
+    %% Frames display options
+    roi
+    flip_hor
+    flip_ver
+    rotation
+    mask
+    apparrent_mask
+    
+    %% PIV options
+    IntWin
+    overlap
+    cumulcross
+    deltat
+    scale
+    SubPixMode
+    ImDeform
+    
+    %% Synchronization options
+    ttl_folder
+    acq_freq
+    act_freq
+    nb_phases
+     
+    %% Tomography option
+    height
+    
+    %% Export options
+    case_name
+    the_date
+    export_folder
+    export_filename
+    
+    %% Global options    
+    Verbose
+    
+	
+    
     end
     
     properties (SetAccess=immutable)
-        release='1.71'
+    release='1.71'
     end
     
     methods
@@ -244,7 +245,7 @@ classdef LFD_MPIV_parameters < handle
             addlistener(obj,'overlap','PostSet',@LFD_MPIV_parameters.IntWinChange);
             addlistener(obj,'the_date','PostSet',@LFD_MPIV_parameters.FileNameChange);
             addlistener(obj,'case_name','PostSet',@LFD_MPIV_parameters.FileNameChange);
-            addlistener(obj,'source_frames','PostSet',@LFD_MPIV_parameters.FrameChange);
+	    addlistener(obj,'source_frames','PostSet',@LFD_MPIV_parameters.FrameChange);
         end
         
         %% Update the object
