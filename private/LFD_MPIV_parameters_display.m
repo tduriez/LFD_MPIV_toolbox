@@ -153,6 +153,21 @@ end
             output_text=sprintf('%s   PIV plane height: %.3f (um)\n',output_text,obj.height);
       end
         
+      %% Export option
+       if any(strcmp(mode,{'all'}))
+        output_text=sprintf('%s * --- Export options --- *\n',output_text);
+       end   
+      
+        if any(strcmp(mode,{'all','export','short'}))
+            output_text=sprintf('%s   Case name: %s\n',output_text,obj.case_name);
+        end
+        
+        if any(strcmp(mode,{'all','export'}))
+            output_text=sprintf('%s   Date: %s\n',output_text,obj.the_date);
+            output_text=sprintf('%s   Export folder: %s\n',output_text,obj.export_folder);
+        end
+        
+       
       
       
       if any(strcmp(mode,{'short'}))

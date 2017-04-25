@@ -98,7 +98,7 @@ if numel(varargin)==2
 end
 
 
-
+update_import_options(handles);
 update_PIV_options(handles);
 update_synchro_options(handles);
 update_images_options(handles);
@@ -208,17 +208,7 @@ update_PIV_options(handles);
 guidata(hObject,handles);
 
 function update_PIV_options(handles);
-if handles.current_parameters.cumulcross==1
-    PIV_mode='Cumulative';
-else
-    PIV_mode='Single';
-end
-text_PIV=sprintf('%s cross-correlation\n%d passes\n',...
-    PIV_mode,numel(handles.current_parameters.IntWin));
-for i=1:numel(handles.current_parameters.IntWin)
-    text_PIV=sprintf('%s %dx%d %d%% overlap\n',text_PIV,handles.current_parameters.IntWin(i),handles.current_parameters.IntWin(i),handles.current_parameters.overlap(i));
-end
-
+text_PIV=handles.current_parameters.display('PIV');
 set(handles.text_PIV_options,'String',text_PIV);
 
 
@@ -239,20 +229,8 @@ Inter_synchro(handles.current_parameters,cxd(idx_selected_cxd));
 update_synchro_options(handles);
 guidata(hObject,handles);
 
-function update_synchro_options(handles);
-if ~isempty(handles.current_parameters.ttl_folder)
-    synchro_mode='TTL';
-else
-    synchro_mode='Frequency';
-end
-text_PIV=sprintf('%s synchronisation\n%d passes\n',synchro_mode);
-if strcmp(synchro_mode,'TTL')
-text_PIV=sprintf('%sFolder: %s\n',text_PIV,handles.current_parameters.ttl_folder);
-else
-text_PIV=sprintf('%sAcq. Freq: %5.2f Hz\n',text_PIV,handles.current_parameters.acq_freq);
-end
-text_PIV=sprintf('%sAct. Freq: %5.2f Hz\n',text_PIV,handles.current_parameters.act_freq);
-text_PIV=sprintf('%sNb of phases: %d',text_PIV,handles.current_parameters.nb_phases);
+function update_synchro_options(handles)
+text_PIV=handles.current_parameters.display('synchro');
 set(handles.synchro_txt,'String',text_PIV);
 
 
@@ -268,29 +246,7 @@ update_images_options(handles);
 guidata(hObject,handles);
 
 function update_images_options(handles);
-text_PIV=[];
-text_PIV=sprintf('%sScale (mum/pixel): %f\n',text_PIV,handles.current_parameters.scale);
-text_PIV=sprintf('%sDelta t (mus): %f\n',text_PIV,handles.current_parameters.deltat);
-if ~isempty(handles.current_parameters.roi)
-    text_PIV=sprintf('%sROI: %s \n',text_PIV,sprintf('%d ',handles.current_parameters.roi));
-else
-    text_PIV=sprintf('%sROI: %s \n',text_PIV,'full frame');
-end
-
-switch handles.current_parameters.flip_hor*2^0 + handles.current_parameters.flip_ver*2^1
-    case 0
-        the_flip='none';
-    case 1
-        the_flip='horizontal';
-    case 2
-        the_flip='vertical';
-    case 3
-        the_flip='horizontal and vertical';
-end
-
-text_PIV=sprintf('%sFlip: %s \n',text_PIV,the_flip);
-text_PIV=sprintf('%sRotation: %d%c  \n',text_PIV,handles.current_parameters.rotation*90,char(176));
-
+text_PIV=handles.current_parameters.display('frames');
 set(handles.im_list,'String',text_PIV);
 
 % --- Executes on selection change in im_list.
@@ -456,12 +412,10 @@ update_import_options(handles);
 guidata(hObject,handles);
 
 function update_import_options(handles);
-text_PIV=sprintf('Folder: %s\n',handles.current_parameters.export_folder);
-text_PIV=sprintf('%sCase name: %s\n',text_PIV,handles.current_parameters.case_name);
-text_PIV=sprintf('%sDate: %s\n',text_PIV,handles.current_parameters.the_date);
-text_PIV=sprintf('%sFilename: %s\n',text_PIV,handles.current_parameters.export_filename);
-
-set(handles.export_list,'String',text_PIV)
+text_PIV=handles.current_parameters.display('import');
+idx=strfind(text_PIV,char(10));
+text_PIV=text_PIV(idx+1:end);
+set(handles.import_list,'String',text_PIV)
 
 
 % --- Executes on selection change in import_list.

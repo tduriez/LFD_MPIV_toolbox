@@ -218,7 +218,7 @@ classdef LFD_MPIV_parameters < handle
 %% Overload Display        
         function varargout=display(obj,mode)
             if nargin<2
-                mode='all';
+                mode='short';
             end
             
             
