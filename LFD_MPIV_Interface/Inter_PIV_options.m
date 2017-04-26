@@ -39,7 +39,7 @@ function varargout = Inter_PIV_options(varargin)
 
 % Edit the above text to modify the response to help Inter_PIV_options
 
-% Last Modified by GUIDE v2.5 08-Feb-2017 12:34:20
+% Last Modified by GUIDE v2.5 26-Apr-2017 16:24:16
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -72,7 +72,17 @@ function Inter_PIV_options_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for Inter_PIV_options
 handles.parameters=varargin{1};
   populate_list(handles);
-  
+  set(handles.scale_edt,'String',handles.parameters.scale);
+    set(handles.delta_edt,'String',handles.parameters.deltat);
+set(handles.cumulcross,'Value',handles.parameters.cumulcross);
+switch handles.parameters.ImDeform
+    case 'linear'
+        set(handles.deform_pop,'Value',1)
+    case 'spline'
+        set(handles.deform_pop,'Value',3)
+    case 'cubic'
+        set(handles.deform_pop,'Value',2)
+end
 
 
 
@@ -197,7 +207,8 @@ function cumulcross_Callback(hObject, eventdata, handles)
 % hObject    handle to cumulcross (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+handles.parameters.cumulcross=get(hObject,'Value')
+guidata(hObject,handles);
 % Hint: get(hObject,'Value') returns toggle state of cumulcross
 
 
@@ -237,3 +248,76 @@ function close_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 uiresume;
+
+
+
+function scale_edt_Callback(hObject, eventdata, handles)
+% hObject    handle to scale_edt (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.parameters.scale=str2double(get(hObject,'String'));
+guidata(hObject,handles);
+% Hints: get(hObject,'String') returns contents of scale_edt as text
+%        str2double(get(hObject,'String')) returns contents of scale_edt as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function scale_edt_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to scale_edt (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function delta_edt_Callback(hObject, eventdata, handles)
+% hObject    handle to delta_edt (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of delta_edt as text
+%        str2double(get(hObject,'String')) returns contents of delta_edt as a double
+handles.parameters.deltat=str2double(get(hObject,'String'));
+guidata(hObject,handles);
+
+% --- Executes during object creation, after setting all properties.
+function delta_edt_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to delta_edt (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in deform_pop.
+function deform_pop_Callback(hObject, eventdata, handles)
+% hObject    handle to deform_pop (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+contents = cellstr(get(hObject,'String')) ;
+handles.parameters.ImDeform=contents{get(hObject,'Value')};
+guidata(hObject,handles);
+% Hints: contents = cellstr(get(hObject,'String')) returns deform_pop contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from deform_pop
+
+
+% --- Executes during object creation, after setting all properties.
+function deform_pop_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to deform_pop (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

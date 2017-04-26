@@ -22,7 +22,7 @@ function varargout = Inter_im_options(varargin)
 
 % Edit the above text to modify the response to help Inter_im_options
 
-% Last Modified by GUIDE v2.5 10-Apr-2017 16:20:09
+% Last Modified by GUIDE v2.5 26-Apr-2017 16:31:20
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -56,9 +56,6 @@ function Inter_im_options_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output=varargin{1};
 handles.cxd=varargin{2};
 
-set(handles.scale_edt,'String',handles.output.scale);
-set(handles.delta_edt,'String',handles.output.deltat);
-
 set(handles.service_text,'String',[],'BackgroundColor',[0.94 0.94 0.94])
 set(handles.hor_flip,'Value',handles.output.flip_hor);
 set(handles.ver_flip,'Value',handles.output.flip_ver);
@@ -74,22 +71,8 @@ set(handles.xmax_slider,'Value',handles.output.roi(2)/handles.im_size(2));
 set(handles.ymin_slider,'Value',handles.output.roi(3)/handles.im_size(1));
 set(handles.ymax_slider,'Value',handles.output.roi(4)/handles.im_size(1));
 
-set(handles.ymin_slider,'enable','on')
-set(handles.xmin_slider,'enable','on')
-set(handles.ymax_slider,'enable','on')
-set(handles.xmax_slider,'enable','on')
-set(handles.set_roi_bttn,'enable','on')
-set(handles.roi_edt,'enable','on')
-set(handles.hor_flip,'enable','on')
-set(handles.ver_flip,'enable','on')
-set(handles.rotation_selec,'enable','on')
-set(handles.scale_edt,'enable','on')
-set(handles.delta_edt,'enable','on')
-set(handles.set_scale_bttn,'enable','on')
-set(handles.set_mask_bttn,'enable','on')
-set(handles.no_mask_bttn,'enable','on')
 
-set(handles.message,'String','Set space and time scales')
+
 
 
 
@@ -121,50 +104,7 @@ close(hObject);
 
 
 
-function scale_edt_Callback(hObject, eventdata, handles)
-% hObject    handle to scale_edt (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-handles.output.scale=str2double(get(hObject,'String'));
-guidata(hObject,handles);
-% Hints: get(hObject,'String') returns contents of scale_edt as text
-%        str2double(get(hObject,'String')) returns contents of scale_edt as a double
 
-
-% --- Executes during object creation, after setting all properties.
-function scale_edt_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to scale_edt (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-function delta_edt_Callback(hObject, eventdata, handles)
-% hObject    handle to delta_edt (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-handles.output.deltat=str2double(get(hObject,'String'));
-guidata(hObject,handles);
-% Hints: get(hObject,'String') returns contents of delta_edt as text
-%        str2double(get(hObject,'String')) returns contents of delta_edt as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function delta_edt_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to delta_edt (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
 
 
 function roi_edt_Callback(hObject, eventdata, handles)
@@ -282,33 +222,6 @@ end
 
 
 
-
-
-
-
-% --- Executes on selection change in dire_selec.
-function dire_selec_Callback(hObject, eventdata, handles)
-% hObject    handle to dire_selec (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-handles.output.dire=get(hObject,'Value');
-display_image(handles.cxd,handles.output,handles.axes1);
-guidata(hObject,handles);
-% Hints: contents = cellstr(get(hObject,'String')) returns dire_selec contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from dire_selec
-
-
-% --- Executes during object creation, after setting all properties.
-function dire_selec_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to dire_selec (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
 
 
 % --- Executes on slider movement.
@@ -436,67 +349,17 @@ function set_mask_bttn_Callback(hObject, eventdata, handles)
 % hObject    handle to set_mask_bttn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user datpushbuttona (see GUIDATA)
+
 handles.output=LFD_MPIV_algo_mask(handles.cxd,handles.output);
-set(handles.roi_edt,'enable','on')
-set(handles.ymin_slider,'enable','on')
-set(handles.xmin_slider,'enable','on')
-set(handles.ymax_slider,'enable','on')
-set(handles.xmax_slider,'enable','on')
-set(handles.set_roi_bttn,'enable','on')
-set(handles.set_mask_bttn,'enable','on')
-set(handles.no_mask_bttn,'enable','on')
+display_image(handles.cxd,handles.output,handles.axes1);
 
 
 
 
-% --- Executes on button press in no_mask_bttn.
-function no_mask_bttn_Callback(hObject, eventdata, handles)
-% hObject    handle to no_mask_bttn (see GCBO)
+% --- Executes on button press in clear_mask_bttn.
+function clear_mask_bttn_Callback(hObject, eventdata, handles)
+% hObject    handle to clear_mask_bttn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.output.mask=[];
-set(handles.roi_edt,'enable','on')
-set(handles.ymin_slider,'enable','on')
-set(handles.xmin_slider,'enable','on')
-set(handles.ymax_slider,'enable','on')
-set(handles.xmax_slider,'enable','on')
-set(handles.set_roi_bttn,'enable','on')
-set(handles.set_mask_bttn,'enable','on')
-set(handles.no_mask_bttn,'enable','on')
-
-
-
-% --- Executes on button press in set_scale_bttn.
-function set_scale_bttn_Callback(hObject, eventdata, handles)
-% hObject    handle to set_scale_bttn (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-set(handles.scale_edt,'enable','on')
-set(handles.delta_edt,'enable','on')
-set(handles.set_scale_bttn,'enable','on')
-set(handles.set_mask_bttn,'enable','on')
-set(handles.no_mask_bttn,'enable','on')
-set(handles.message,'String','Set use of mask')
-
-
-
-
-% --- Executes on button press in set_roi_bttn.
-function set_roi_bttn_Callback(hObject, eventdata, handles)
-% hObject    handle to set_roi_bttn (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-set(handles.ymin_slider,'enable','on')
-set(handles.xmin_slider,'enable','on')
-set(handles.ymax_slider,'enable','on')
-set(handles.xmax_slider,'enable','on')
-set(handles.set_roi_bttn,'enable','on')
-set(handles.roi_edt,'enable','on')
-
-
-
-% --- Executes on button press in pushbutton7.
-function pushbutton7_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton7 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+display_image(handles.cxd,handles.output,handles.axes1);
