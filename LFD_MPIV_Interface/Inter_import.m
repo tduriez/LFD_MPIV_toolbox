@@ -22,7 +22,7 @@ function varargout = Inter_import(varargin)
 
 % Edit the above text to modify the response to help Inter_import
 
-% Last Modified by GUIDE v2.5 26-Apr-2017 14:54:30
+% Last Modified by GUIDE v2.5 26-Apr-2017 17:32:44
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -58,6 +58,7 @@ handles.cxd=varargin{2};
 set(hObject,'closeRequestFcn',[])
 handles.images=[];
 handles.showframe=1;
+handles.currentimage=1;
 handles=set_options(handles);
 axes(handles.axes1);
 imshow(imadjust(handles.images(:,:,1)));
@@ -71,21 +72,29 @@ guidata(hObject, handles);
 
 function handles=set_options(handles)
     reading_necessary=1;
-    n_images_necessary=handles.output.frame_skip+1;
     if ~isempty(handles.images)
-        s=size(handles.images);
-        s=[s 1];
-        if s(3)>=n_images_necessary
             reading_necessary=0;
-        end
     end
             
     if reading_necessary
-        [images,~,nb_frames,number_of_images]=LFD_MPIV_read_cxd(handles.cxd,1:n_images_necessary,-1,[],'Reading from CXD file');
+        [images,~,nb_frames]=LFD_MPIV_read_cxd(handles.cxd,[],-1,[],'Reading from CXD file');
         handles.images=images;
         handles.output.source_frames=nb_frames;
         
     end
+    
+    switch handles.output.background
+        case 'auto'
+            set(handles.remove_back_selec,'Value',1)
+        case 'min'
+            set(handles.remove_back_selec,'Value',2)
+        case 'avg'
+            set(handles.remove_back_selec,'Value',3)
+        case 'none'
+            set(handles.remove_back_selec,'Value',4)
+    end
+    
+    set(handles.frame_nb,'String',num2str(handles.currentimage));
     
     set(handles.cut_dir_choice,'Value',handles.output.dire);
     
@@ -104,6 +113,13 @@ function handles=set_options(handles)
             set(handles.frame_mode,'Value',2)
         end
     end
+    
+    if strcmp(handles.output.frame_mode,'AB')
+        set(handles.skip_edt,'enable','off')
+    else
+        set(handles.skip_edt,'enable','on')
+    end
+    
     set(handles.skip_edt,'String',num2str(handles.output.frame_skip));
     %% saving frame editing options 
     roi=handles.output.roi;
@@ -119,7 +135,16 @@ function handles=set_options(handles)
     handles.output.rotation=0;
     
     handles.frames=LFD_MPIV_prepare_frames(handles.images,handles.output);
-    handles.frames=handles.frames(1);
+    
+    handles.nb_image_pair=length(handles.frames);
+    set(handles.infotext,'String',sprintf('View image pair number               (of %d)',handles.nb_image_pair));
+    handles.currentimage=max(1,round(handles.currentimage));
+    handles.currentimage=min(handles.nb_image_pair,round(handles.currentimage));
+    set(handles.slider1,'Value',(handles.currentimage-1)/(handles.nb_image_pair-1))
+    handles.frames=handles.frames(handles.currentimage);
+    
+    
+    
     %% write
     show_frame(handles);
     %% restoring
@@ -134,8 +159,10 @@ function handles=set_options(handles)
         axes(handles.axes2)
         if handles.showframe==1
             activeframe=handles.frames.frameA;
+            set(handles.frametxt,'string','A')
         else
             activeframe=handles.frames.frameB;
+            set(handles.frametxt,'string','B')
         end
         imshow(imadjust(activeframe));
         
@@ -268,6 +295,81 @@ function cut_dir_choice_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in remove_back_selec.
+function remove_back_selec_Callback(hObject, eventdata, handles)
+% hObject    handle to remove_back_selec (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+contents = cellstr(get(hObject,'String'));
+handles.output.background=contents{get(hObject,'Value')};
+handles=set_options(handles);
+guidata(hObject,handles);
+% Hints: contents = cellstr(get(hObject,'String')) returns remove_back_selec contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from remove_back_selec
+
+
+% --- Executes during object creation, after setting all properties.
+function remove_back_selec_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to remove_back_selec (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on slider movement.
+function slider1_Callback(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.currentimage=round(get(hObject,'Value')*(handles.nb_image_pair-1)+1);
+handles=set_options(handles);
+guidata(hObject,handles);
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+
+function frame_nb_Callback(hObject, eventdata, handles)
+% hObject    handle to frame_nb (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.currentimage=str2double(get(hObject,'String'));
+handles=set_options(handles);
+guidata(hObject,handles);
+% Hints: get(hObject,'String') returns contents of frame_nb as text
+%        str2double(get(hObject,'String')) returns contents of frame_nb as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function frame_nb_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to frame_nb (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');

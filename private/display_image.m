@@ -29,7 +29,7 @@ warning('off','MATLAB:contour:ConstantData');
     
     
     
-    images=LFD_MPIV_prepare_frames(images,parameters,0);
+    images=LFD_MPIV_prepare_frames(images,parameters);
     images=images(1);
     parameters.roi=roi;
     if mode(2)==0

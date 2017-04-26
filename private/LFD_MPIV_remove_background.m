@@ -17,17 +17,36 @@ function removed_background=LFD_MPIV_remove_background(images,method)
 %    You should have received a copy of the GNU General Public License
 %    along with this program.  If not, see <http://www.gnu.org/licenses/>.
         if nargin<2
-            method='min';
+            method='auto';
+        end
+        
+        
+        
+        if strcmp(method,'auto')
+            s=size(images);
+            s=[s 1];
+            if s(3)>=10;
+                method='min';
+            else
+                method='none';
+            end
+        end
+            
+        
+       if strcmp(method,'none')
+            removed_background=images;
+            return
         end
         
         switch method
             case 'min' 
                 background=min(images,[],3);
-            case 'mean'
+            case 'avg'
                 background=mean(images,3);
         end
+      
         background=repmat(background,[1 1 size(images,3)]);
-        removed_background=images-background;
+        removed_background=images-uint16(background);
         
         
     

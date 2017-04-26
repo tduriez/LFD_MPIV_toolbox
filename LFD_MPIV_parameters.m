@@ -9,15 +9,9 @@ classdef LFD_MPIV_parameters < handle
     %
     % List of parameters that can be used with the LFD_MPIV functions:
     %
-    % -- Input File options ---------------------------------------------------
-    %    parameter    |  type   | default |          comments
-    % cxd_file        | char    |  ''     | route to the cxd file
-    % ttl_folder      | char    |  ''     | folder with TTL files. If this is
-    %                 |         |         | empty the 'acq_freq' propertie
-    %                 |         |         | is used.
-    %
     % -- Image import options -------------------------------------------------
     %    parameter    |  type   | default |          comments
+    % cxd_file        | char    |  ''     | route to the cxd file
     % source_frames   | integer | 2       | Number of frames/buffer. Can be
     %                 |         |         | collected as an output of
     %                 |         |         | LFD_MPIV_read_cxd. Automatically
@@ -37,8 +31,18 @@ classdef LFD_MPIV_parameters < handle
     % image_indices   | integer | []      | Indices of the images to use from
     %                 |         |         | the CXD file. [] uses the whole
     %                 |         |         | file.
+    % dire            | integer |  2      | In case of two frames in one buffer
+    %                 |         |         | specifies the direction of the cut.
+    %                 |         |         | 1: horizontaly
+    %                 |         |         | 2: verticaly
+    % background      | char    | 'auto'  | Removes background. 'auto'
+    %                 |         |         | removes minimum of images if
+    %                 |         |         | there is more than 10 images
+    %                 |         |         | 'min' removes the minimum
+    %                 |         |         | 'avg' removes the average
+    %                 |         |         | 'none' does nothing.
     %
-    % -- Image display options ------------------------------------------------
+    % -- Frame display options ------------------------------------------------
     %    parameter    |  type   | default |          comments
     % roi             | integer |  []     | Region Of Interest. Determines in
     %                 |         |         | pixels how to cut the image in the
@@ -49,10 +53,6 @@ classdef LFD_MPIV_parameters < handle
     %                 |         |         | the 3rd vertically to the 950th.
     %                 |         |         | An empty value ([], default) will
     %                 |         |         | make use of the whole image.
-    % dire            | integer |  2      | In case of two frames in one buffer
-    %                 |         |         | specifies the direction of the cut.
-    %                 |         |         | 1: horizontaly
-    %                 |         |         | 2: verticaly
     % flip_hor        | logical |  0      | Flips the image horizontaly when
     %                 |         |         | True
     % flip_ver        | logical |  0      | Flips the image verticaly when
@@ -94,6 +94,9 @@ classdef LFD_MPIV_parameters < handle
     %
     % -- Synchronization options ----------------------------------------------
     %    parameter    |  type   | default |          comments
+    % ttl_folder      | char    |  ''     | folder with TTL files. If this is
+    %                 |         |         | empty the 'acq_freq' propertie
+    %                 |         |         | is used.
     % nb_phases       | integer | 1       | Number of phases to reconstruct. If
     %                 |         |         | set to 1, no phase reconstruction
     %                 |         |         | is achieved.
@@ -169,6 +172,7 @@ classdef LFD_MPIV_parameters < handle
     source_frames
     image_indices
     dire
+    background
     
     %% Frames display options
     roi

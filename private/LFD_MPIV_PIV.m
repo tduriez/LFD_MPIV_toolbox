@@ -86,7 +86,7 @@ for current_pass=1:length(parameters.IntWin)
         iy_vectors=round(linspace(1,size(data.x,2),ny_vectors));
         q=quiver(data.x(ix_vectors,iy_vectors),data.y(ix_vectors,iy_vectors),...
             data.u(ix_vectors,iy_vectors),data.v(ix_vectors,iy_vectors),5);shading interp;view(0,90);
-        set(q,'color','k')
+        set(q,'color','y')
         
         
         

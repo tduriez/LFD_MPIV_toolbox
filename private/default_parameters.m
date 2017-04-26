@@ -18,20 +18,21 @@ function [allowed_args,default_args,allowed_types]=default_parameters(indices);
 %    along with this program.  If not, see <http://www.gnu.org/licenses/>.
     i=1;
     
-    %% File options
-    args(:,i)={'cxd_file','','char'};i=i+1;
-    args(:,i)={'ttl_folder','','char'};i=i+1;
+    
     
     %% Image import options
+    args(:,i)={'cxd_file','','char'};i=i+1;
     args(:,i)={'frame_skip',1,'numeric'};i=i+1;
     args(:,i)={'frame_mode','AB','char'};i=i+1;
     args(:,i)={'source_frames',2,'numeric'};i=i+1;
     args(:,i)={'image_indices',[],'numeric'};i=i+1;
+    args(:,i)={'dire',2,'numeric'};i=i+1;
+    args(:,i)={'background','auto','char'};i=i+1;
     
     
     %% Image display options
     args(:,i)={'roi',[],'numeric'};i=i+1;
-    args(:,i)={'dire',2,'numeric'};i=i+1;
+    
     args(:,i)={'flip_hor',0,'numeric'};i=i+1;
     args(:,i)={'flip_ver',0,'numeric'};i=i+1;
     args(:,i)={'rotation',0,'numeric'};i=i+1;
@@ -48,6 +49,7 @@ function [allowed_args,default_args,allowed_types]=default_parameters(indices);
     args(:,i)={'ImDeform','linear','char'};i=i+1;
     
     %% Synchronization options
+    args(:,i)={'ttl_folder','','char'};i=i+1;
     args(:,i)={'acq_freq',1,'numeric'};i=i+1;
     args(:,i)={'act_freq',1,'numeric'};i=i+1;
     args(:,i)={'nb_phases',1,'numeric'};i=i+1;

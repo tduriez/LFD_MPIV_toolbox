@@ -1,15 +1,20 @@
 function output_text=LFD_MPIV_parameters_display(obj,mode,name)
 
+listing=0;
+if strcmp(mode,'list')
+    mode='all';
+    listing=1;
+end
 
 output_text='';
 
-if any(strcmp(mode,{'all','short'}))
+if any(strcmp(mode,{'all','short'})) && listing==0
     output_text=sprintf('%s\n   ***********************\n',output_text);
     output_text=sprintf('%s   * LFD MPIV Experiment *\n',output_text);
     output_text=sprintf('%s   ***********************\n\n',output_text);
 end
 %% Import
-if any(strcmp(mode,{'all'}))
+if any(strcmp(mode,{'all'})) && listing==0
     output_text=sprintf('%s * --- Import --- *\n',output_text);
 end
 
@@ -54,10 +59,11 @@ if any(strcmp(mode,{'all','import'}))
     
     output_text=sprintf('%s   %d frames%s\n   mode %s\n   skip %d %s\n   use %s %s\n',...
         output_text,obj.source_frames,cut_info,obj.frame_mode,obj.frame_skip,image_text,index_text,image_text2);
+    output_text=sprintf('%s   Background removal: %s\n',output_text,obj.background);
 end
     
 %% Frames construction
-if any(strcmp(mode,{'all'}))
+if any(strcmp(mode,{'all'})) && listing==0
     output_text=sprintf('%s * --- Frames composition --- *\n',output_text);
 end
 if any(strcmp(mode,{'all','frames'}))
@@ -84,7 +90,7 @@ if any(strcmp(mode,{'all','frames'}))
 end
 
     %% PIV options
-    if any(strcmp(mode,{'all'}))
+    if any(strcmp(mode,{'all'})) && listing==0
         output_text=sprintf('%s * --- PIV options --- *\n',output_text);
     end
     if any(strcmp(mode,{'all','PIV','short'}))
@@ -111,7 +117,7 @@ end
     end
     
     %% Synchronization options
-    if any(strcmp(mode,{'all'}))
+    if any(strcmp(mode,{'all'})) && listing==0
         output_text=sprintf('%s * --- Synchronization options --- *\n',output_text);
     end
         
@@ -145,7 +151,7 @@ end
     end
         
       %% Tomography option
-      if any(strcmp(mode,{'all'}))
+      if any(strcmp(mode,{'all'})) && listing==0
         output_text=sprintf('%s * --- Tomography options --- *\n',output_text);
       end   
       
@@ -154,7 +160,7 @@ end
       end
         
       %% Export option
-       if any(strcmp(mode,{'all'}))
+       if any(strcmp(mode,{'all'})) && listing==0
         output_text=sprintf('%s * --- Export options --- *\n',output_text);
        end   
       
@@ -179,6 +185,13 @@ end
           output_text=sprintf('%s         <a href="matlab:%s.display(''export'')">Export options</a>, ',output_text,name);
           output_text=sprintf('%s<a href="matlab:%s.display(''all'')">All options</a>\n',output_text,name); 
       end
+      
+      if listing
+          output_text(output_text==char(10))=',';
+          output_text=strrep(output_text,'   ',' ');
+          output_text=output_text(1:end-1);
+      end
+      
 
     
 end

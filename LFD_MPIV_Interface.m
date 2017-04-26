@@ -307,16 +307,16 @@ function display_expe(handles)
 expe_list=cell(1,numel(handles.parameters));
 for i=1:numel(handles.parameters);
     [~,cxd,~]=fileparts(handles.parameters(i).cxd_file);
-    expe_list{i}=sprintf('%d: %s,',i,cxd);
-    expe_list{i}=sprintf('%s %s',expe_list{i},handles.parameters(i).case_name);
-    expe_list{i}=sprintf('%s y=%.2f',expe_list{i},handles.parameters(i).height);
-    expe_list{i}=sprintf('%s (IntWin:%s, %d%% ',expe_list{i},sprintf('%d ',handles.parameters(i).IntWin),handles.parameters(i).overlap(1));
-    if isempty(handles.parameters(i).ttl_folder)
-        expe_list{i}=sprintf('%s Acq. Feq.: %.2f',expe_list{i},handles.parameters(i).acq_freq);
-    else
-        expe_list{i}=sprintf('%s Acq. Sync. TTL',expe_list{i});
-    end
-        
+    expe_list{i}=sprintf('%d: %s,',i,handles.parameters(i).case_name);
+    expe_list{i}=sprintf('%s %s',expe_list{i},cxd);
+    expe_list{i}=sprintf('%s y=%.2f,',expe_list{i},handles.parameters(i).height);
+    expe_list{i}=sprintf('%s IntWin:%s, %d%% ',expe_list{i},sprintf('%d ',handles.parameters(i).IntWin),handles.parameters(i).overlap(1));
+%     if isempty(handles.parameters(i).ttl_folder)
+%         expe_list{i}=sprintf('%s Acq. Feq.: %.2f',expe_list{i},handles.parameters(i).acq_freq);
+%     else
+%         expe_list{i}=sprintf('%s Acq. Sync. TTL',expe_list{i});
+%     end
+        expe_list{i}=sprintf('%s full info: %s',expe_list{i},handles.parameters(i).display('list'));
     
     
 end
@@ -361,11 +361,7 @@ update_export_options(handles);
 guidata(hObject,handles);
 
 function update_export_options(handles);
-text_PIV=sprintf('Folder: %s\n',handles.current_parameters.export_folder);
-text_PIV=sprintf('%sCase name: %s\n',text_PIV,handles.current_parameters.case_name);
-text_PIV=sprintf('%sDate: %s\n',text_PIV,handles.current_parameters.the_date);
-text_PIV=sprintf('%sFilename: %s\n',text_PIV,handles.current_parameters.export_filename);
-
+text_PIV=handles.current_parameters.display('export');
 set(handles.export_list,'String',text_PIV);
 
 
