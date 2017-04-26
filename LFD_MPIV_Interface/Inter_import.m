@@ -22,7 +22,7 @@ function varargout = Inter_import(varargin)
 
 % Edit the above text to modify the response to help Inter_import
 
-% Last Modified by GUIDE v2.5 25-Apr-2017 16:00:33
+% Last Modified by GUIDE v2.5 26-Apr-2017 14:54:30
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -86,6 +86,8 @@ function handles=set_options(handles)
         handles.output.source_frames=nb_frames;
         
     end
+    
+    set(handles.cut_dir_choice,'Value',handles.output.dire);
     
     if handles.output.source_frames==1
         set(handles.frame_mode,'String',{'Time series','Successive'});
@@ -245,3 +247,28 @@ function close_bttn_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 uiresume;
+
+
+% --- Executes on selection change in cut_dir_choice.
+function cut_dir_choice_Callback(hObject, eventdata, handles)
+% hObject    handle to cut_dir_choice (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.output.dire=get(hObject,'Value');
+handles=set_options(handles);
+guidata(hObject,handles);
+% Hints: contents = cellstr(get(hObject,'String')) returns cut_dir_choice contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from cut_dir_choice
+
+
+% --- Executes during object creation, after setting all properties.
+function cut_dir_choice_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to cut_dir_choice (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
