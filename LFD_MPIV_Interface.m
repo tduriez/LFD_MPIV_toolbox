@@ -1,4 +1,4 @@
-function varargout = LFD_MPIV_Interface(varargin)
+function [varargout] = LFD_MPIV_Interface(varargin)
 %LFD_MPIV_INTERFACE M-file for LFD_MPIV_Interface.fig
 %      LFD_MPIV_INTERFACE, by itself, creates a new LFD_MPIV_INTERFACE or raises the existing
 %      singleton*.
@@ -56,7 +56,9 @@ if nargin && ischar(varargin{1})
     end
 end
 
+
 if nargout
+    varargin
     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
 else
     gui_mainfcn(gui_State, varargin{:});
@@ -85,7 +87,7 @@ else
 end
 
 handles.current_parameters=LFD_MPIV_parameters;
-
+set(handles.version_txt,'String',sprintf('LFD_MPIV Toolbox v%s',handles.current_parameters.release));
 
 %handles.cxd_folder='';
 %handles.cxd='';

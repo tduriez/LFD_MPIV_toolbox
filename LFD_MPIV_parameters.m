@@ -141,7 +141,7 @@ classdef LFD_MPIV_parameters < handle
     %    parameter    |  type   | default |          comments
     % Verbose         | integer | 1       |   How much information you get.
     %                 |         |         |   Debugging starts at 3.
-    % release=1.6     | char    | N/A     |   Release number of the toolbox
+    % release         | char    | N/A     |   Release number of the toolbox
     %
     %   Copyright (c) 2017, Thomas Duriez (Distributed under GPLv3)
     
@@ -214,7 +214,7 @@ classdef LFD_MPIV_parameters < handle
     end
     
     properties (SetAccess=immutable)
-    release='1.71'
+    release='2.0'
     end
     
     methods

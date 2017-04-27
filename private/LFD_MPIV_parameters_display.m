@@ -9,9 +9,10 @@ end
 output_text='';
 
 if any(strcmp(mode,{'all','short'})) && listing==0
-    output_text=sprintf('%s\n   ***********************\n',output_text);
-    output_text=sprintf('%s   * LFD MPIV Experiment *\n',output_text);
-    output_text=sprintf('%s   ***********************\n\n',output_text);
+    the_title=sprintf('* LFD MPIV Experiment v%s *',obj.release);
+    output_text=sprintf('%s\n   %s\n',output_text,repmat('*',[1 length(the_title)]));
+    output_text=sprintf('%s   %s\n',output_text,the_title);
+    output_text=sprintf('%s   %s\n',output_text,repmat('*',[1 length(the_title)]));
 end
 %% Import
 if any(strcmp(mode,{'all'})) && listing==0
