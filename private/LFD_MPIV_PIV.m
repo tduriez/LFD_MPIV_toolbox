@@ -116,6 +116,6 @@ data.v=data.v';
 data.s2n=data.s2n';
 
 t2=now;
-fprintf('Total time (current PIV): %s\n',datestr(t2-t1,13));
+if parameters.Verbose;fprintf('Total time (current PIV): %s\n',datestr(t2-t1,13));end
 end
     

@@ -207,7 +207,6 @@ end
         data.v=data.v.*mask_vec;
         
         if last
-            fprintf('this is the last\n')
             data.u(mask_vec<0.5)=NaN;
             data.v(mask_vec<0.5)=NaN;
         end

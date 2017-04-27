@@ -86,21 +86,21 @@ end
 
 
 %% Start PIV
+if expe.Verbose
 fprintf('case: %s, z= %d (mum)\n',expe.case_name,expe.height);
+end
 [~,pattern,~]=fileparts(expe.cxd_file);
-fprintf('Source cxd file: %s\n',pattern);
-fprintf('Importing images:                     ');tic
-[all_images,~,nb_frames]=LFD_MPIV_read_cxd(expe.cxd_file,expe.image_indices,0);
+if expe.Verbose;fprintf('Source cxd file: %s\n',pattern);end
+if expe.Verbose;fprintf('Importing images:                     ');end
+tic
+[all_images,~,nb_frames]=LFD_MPIV_read_cxd(expe.cxd_file,expe.image_indices,min(2,max(0,expe.Verbose-1)));
 if nb_frames~=expe.source_frames
     expe.source_frames=nb_frames;
 end
-fprintf('ok (%.3f s)\n',toc);
-fprintf('Order frames & removing background:   ');tic
+if expe.Verbose;fprintf('ok (%.3f s)\n',toc);end
+if expe.Verbose;fprintf('Preparing frames:                     ');tic;end
 all_images=LFD_MPIV_prepare_frames(all_images,expe);
-fprintf('ok (%.3f s)\n',toc);
-fprintf('Cutting images:                       ');tic
-%all_images=LFD_MPIV_cut_images(all_images,expe);
-fprintf('ok (%.3f s)\n',toc);
+if expe.Verbose;fprintf('ok (%.3f s)\n',toc);end
 if expe.cumulcross
 if ~isempty(expe.ttl_folder)
     d=dir(expe.ttl_folder);
@@ -113,7 +113,7 @@ if ~isempty(expe.ttl_folder)
         simi(i)=stringsimilarity(pattern,name);
     end
     [~,k]=max(simi);
-    fprintf('Using synchronisation file: %s\n',d(k).name);
+    if expe.Verbose>1;fprintf('Using synchronisation file: %s\n',d(k).name);end
     load(fullfile(expe.ttl_folder,d(k).name),'tframe');
     T_acquired=tframe;
 else
@@ -139,10 +139,10 @@ end
 for pha=1:nb_phases
     images=all_images(phase==pha);
     if expe.cumulcross
-        fprintf('Phase number %d:',pha)
-        fprintf(' %d image pairs\n',numel(images))
+        if expe.Verbose;fprintf('Phase number %d:',pha)
+        fprintf(' %d image pairs\n',numel(images));end
     else
-        fprintf('Image number %d\n',pha)
+        if expe.Verbose;fprintf('Image number %d\n',pha);end
     end
         
 

@@ -58,7 +58,6 @@ end
 
 
 if nargout
-    varargin
     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
 else
     gui_mainfcn(gui_State, varargin{:});
