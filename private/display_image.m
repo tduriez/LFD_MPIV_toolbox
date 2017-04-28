@@ -1,4 +1,11 @@
 function [shown_image_size,parameters]=display_image(cxd,parameters,my_axes,mode);
+ %% M.O.D.E.
+    %  | | | |
+    %  | | | ---> Show M.O.D.E.    (2^0)
+    %  | | -----> Frame A/B switch (2^1)
+    %  | -------> Mask switch      (2^2)
+    %  ---------> R.O.I. Switch    (2^3)
+
 warning('off','MATLAB:contour:ConstantData');
     if nargin < 2
         parameters=LFD_MPIV_parameters;
@@ -11,7 +18,7 @@ warning('off','MATLAB:contour:ConstantData');
     else
         mode=dec2bin(mode,4)-48;
     end
-    
+keyboard    
     if mode(4)==1
         fprintf('M.O.D.E:\n')
         fprintf('%d ',mode)
@@ -32,13 +39,7 @@ warning('off','MATLAB:contour:ConstantData');
     images=LFD_MPIV_prepare_frames(images,parameters);
     images=images(1);
     parameters.roi=roi;
-    if mode(2)==0
-        if isempty(parameters.mask)
-            parameters.mask=ones(fliplr(image_size));
-        end
-        images.frameA=images.frameA;
-        images.frameB=images.frameB;
-    end
+    
     
      axes(my_axes);
      
@@ -51,6 +52,7 @@ warning('off','MATLAB:contour:ConstantData');
      the_frame(the_frame==0)=min(min(the_frame(the_frame~=0)));
      imshow(imadjust(the_frame));
      shown_image_size=size(the_frame);
+     if mode(1)==0
      if ~isempty(roi)
          
            rangex=[max(1,roi(1)):min(shown_image_size(2),roi(2))];
@@ -65,13 +67,17 @@ warning('off','MATLAB:contour:ConstantData');
                 'linewidth',2);
             hold off 
      end
-        
-     if ~isempty(parameters.mask)
+     end
+     
+    if mode(2)==1
+        if ~isempty(parameters.apparrent_mask)
          hold on
-         contour(parameters.mask,'b');
+         contour(parameters.apparrent_mask,'b');
          hold off
 
-     end
+     end  
+    end       
+     
 end
         
 

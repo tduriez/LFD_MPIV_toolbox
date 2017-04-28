@@ -39,7 +39,7 @@ function [varargout] = LFD_MPIV_Interface(varargin)
 
 % Edit the above text to modify the response to help LFD_MPIV_Interface
 
-% Last Modified by GUIDE v2.5 24-Apr-2017 15:28:05
+% Last Modified by GUIDE v2.5 27-Apr-2017 23:41:14
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -92,7 +92,7 @@ set(handles.version_txt,'String',sprintf('LFD_MPIV Toolbox v%s',handles.current_
 %handles.cxd='';
 
 handles.parameters=[];
-
+handles.current_frame=0;
 if numel(varargin)==2
     handles.parameters=varargin{2};
     display_expe(handles);
@@ -133,7 +133,9 @@ function list_cxd_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 idx = get(hObject,'Value');
 idx=idx(1);
-display_image(fullfile(handles.cxd_folder,handles.cxd{idx}),handles.current_parameters,handles.axes1,1+2+4+8);
+display_image(fullfile(handles.cxd_folder,handles.cxd{idx}),handles.current_parameters,...
+    handles.axes1,2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
+
 
 
 
@@ -171,6 +173,10 @@ for i=1:numel(d)
     handles.cxd{i}=d(i).name;
 end
 set(handles.list_cxd,'String',handles.cxd,'Max',numel(d));
+idx = get(handles.list_cxd,'Value');
+idx=idx(1);
+display_image(fullfile(handles.cxd_folder,handles.cxd{idx}),handles.current_parameters,...
+    handles.axes1,2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
 guidata(hObject,handles);
 
 
@@ -438,3 +444,48 @@ function import_list_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in showroi_box.
+function showroi_box_Callback(hObject, eventdata, handles)
+% hObject    handle to showroi_box (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+idx = get(handles.list_cxd,'Value');
+idx=idx(1);
+display_image(fullfile(handles.cxd_folder,handles.cxd{idx}),handles.current_parameters,...
+    handles.axes1,2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(hObject,'Value'));
+
+% Hint: get(hObject,'Value') returns toggle state of showroi_box
+
+
+% --- Executes on button press in show_mask_box.
+function show_mask_box_Callback(hObject, eventdata, handles)
+% hObject    handle to show_mask_box (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+idx = get(handles.list_cxd,'Value');
+idx=idx(1);
+display_image(fullfile(handles.cxd_folder,handles.cxd{idx}),handles.current_parameters,...
+    handles.axes1,2*handles.current_frame+4*get(hObject,'Value')+8*get(handles.showroi_box,'Value'));
+% Hint: get(hObject,'Value') returns toggle state of show_mask_box
+
+
+% --- Executes on button press in change_frame_bttn.
+function change_frame_bttn_Callback(hObject, eventdata, handles)
+% hObject    handle to change_frame_bttn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if handles.current_frame==0
+    handles.current_frame=1;
+    set(handles.current_frame_txt,'String','B');
+else
+     handles.current_frame=0;
+     set(handles.current_frame_txt,'String','A');
+end
+    
+idx = get(handles.list_cxd,'Value');
+idx=idx(1);
+display_image(fullfile(handles.cxd_folder,handles.cxd{idx}),handles.current_parameters,...
+    handles.axes1,2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
+guidata(hObject,handles);

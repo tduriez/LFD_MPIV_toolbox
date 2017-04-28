@@ -22,7 +22,7 @@ function varargout = Inter_im_options(varargin)
 
 % Edit the above text to modify the response to help Inter_im_options
 
-% Last Modified by GUIDE v2.5 26-Apr-2017 16:31:20
+% Last Modified by GUIDE v2.5 27-Apr-2017 23:46:45
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -55,13 +55,16 @@ function Inter_im_options_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for Inter_synchro
 handles.output=varargin{1};
 handles.cxd=varargin{2};
+handles.current_frame=0;
 
 set(handles.service_text,'String',[],'BackgroundColor',[0.94 0.94 0.94])
 set(handles.hor_flip,'Value',handles.output.flip_hor);
 set(handles.ver_flip,'Value',handles.output.flip_ver);
 set(handles.rotation_selec,'Value',handles.output.rotation+1);
 
-handles.im_size=display_image(handles.cxd,handles.output,handles.axes1);
+handles.im_size=display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
+
 if isempty(handles.output.roi);
     handles.output.roi=[1 handles.im_size(2) 1 handles.im_size(1)];
 end
@@ -180,7 +183,9 @@ function hor_flip_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.output.flip_hor=get(hObject,'Value');
-display_image(handles.cxd,handles.output,handles.axes1);
+display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
+
 guidata(hObject,handles);
 % Hint: get(hObject,'Value') returns toggle state of hor_flip
 
@@ -191,7 +196,9 @@ function ver_flip_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.output.flip_ver=get(hObject,'Value');
-display_image(handles.cxd,handles.output,handles.axes1);
+display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
+
 guidata(hObject,handles);
 % Hint: get(hObject,'Value') returns toggle state of ver_flip
 
@@ -202,7 +209,9 @@ function rotation_selec_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.output.rotation=get(hObject,'Value')-1;
-display_image(handles.cxd,handles.output,handles.axes1);
+display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
+
 guidata(hObject,handles);
 % Hints: contents = cellstr(get(hObject,'String')) returns rotation_selec contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from rotation_selec
@@ -239,7 +248,9 @@ handles.output.roi(1)=ixmin;
 roi=handles.output.roi;
 set(handles.roi_edt,'String',sprintf('[%d %d %d %d]',roi(1),roi(2),roi(3),roi(4)))
 %set(handles.service_text,'String',sprintf('%f',xmin_value));
-display_image(handles.cxd,handles.output,handles.axes1);
+display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
+
 guidata(hObject,handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -267,7 +278,9 @@ roi=handles.output.roi;
 set(handles.roi_edt,'String',sprintf('[%d %d %d %d]',roi(1),roi(2),roi(3),roi(4)))
 %set(handles.service_text,'String',sprintf('%f',xmin_value));
 guidata(hObject,handles);
-display_image(handles.cxd,handles.output,handles.axes1);
+display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
+
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -300,7 +313,9 @@ roi=handles.output.roi;
 set(handles.roi_edt,'String',sprintf('[%d %d %d %d]',roi(1),roi(2),roi(3),roi(4)))
 %set(handles.service_text,'String',sprintf('%f',xmin_value));
 guidata(hObject,handles);
-display_image(handles.cxd,handles.output,handles.axes1);
+display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
+
 
 % --- Executes during object creation, after setting all properties.
 function ymax_slider_CreateFcn(hObject, eventdata, handles)
@@ -327,7 +342,9 @@ roi=handles.output.roi;
 set(handles.roi_edt,'String',sprintf('[%d %d %d %d]',roi(1),roi(2),roi(3),roi(4)))
 %set(handles.service_text,'String',sprintf('%f',xmin_value));
 guidata(hObject,handles);
-display_image(handles.cxd,handles.output,handles.axes1);
+display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
+
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -363,3 +380,42 @@ function clear_mask_bttn_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 handles.output.mask=[];
 display_image(handles.cxd,handles.output,handles.axes1);
+
+
+% --- Executes on button press in showroi_box.
+function showroi_box_Callback(hObject, eventdata, handles)
+% hObject    handle to showroi_box (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+idx=idx(1);
+display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(hObject,'Value'));
+% Hint: get(hObject,'Value') returns toggle state of showroi_box
+
+
+% --- Executes on button press in show_mask_box.
+function show_mask_box_Callback(hObject, eventdata, handles)
+% hObject    handle to show_mask_box (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(hObject,'Value')+8*get(handles.showroi_box,'Value'));
+
+% Hint: get(hObject,'Value') returns toggle state of show_mask_box
+
+
+% --- Executes on button press in change_frame_bttn.
+function change_frame_bttn_Callback(hObject, eventdata, handles)
+% hObject    handle to change_frame_bttn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if handles.current_frame==0
+    handles.current_frame=1;
+    set(handles.current_frame_txt,'String','B');
+else
+     handles.current_frame=0;
+     set(handles.current_frame_txt,'String','A');
+end
+display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
+guidata(hObject,handles);
