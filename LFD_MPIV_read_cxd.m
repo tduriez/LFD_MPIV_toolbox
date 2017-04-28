@@ -50,6 +50,7 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
 % 'msg' is used.
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MAIN FUNCTION 
     % The main idea is to read the file little by little so the memory is
@@ -115,8 +116,6 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
     
     
     
-   
-    
     
     
     
@@ -150,7 +149,8 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
             if strcmp(mode,'std') && nargin<6
                 avg=avg+double(im);
             elseif strcmp(mode,'std') && nargin==6
-                std_dev=std_dev+abs(double(im-avg));
+                
+                std_dev=std_dev+abs(double(im)-avg);
             end
             
         if verb>1;fprintf('obtained image %d\n',i);end
@@ -161,14 +161,20 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
             break
         end  
     end
-   
+  
     if strcmp(mode,'normal') 
         images=images(:,:,1:min(number_of_images,length(indices)));
         if verb>0;fprintf('%d images contained\n',number_of_images);end
-    elseif strcmp(mode,'std') && nargin<6
-        images(:,:,2)=uint16(avg/number_of_images);
+    end
+    
+    if strcmp(mode,'std')
+        images=double(images);
+    end
+    
+    if strcmp(mode,'std') && nargin<6
+        images(:,:,2)=(avg/number_of_images);
     elseif strcmp(mode,'std') && nargin==6
-        images(:,:,2)=uint16(std_dev/number_of_images);
+        images(:,:,2)=(std_dev/number_of_images);
     end
     
     

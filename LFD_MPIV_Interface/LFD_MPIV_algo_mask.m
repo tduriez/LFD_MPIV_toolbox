@@ -64,9 +64,10 @@ handles.eros=0;
 handles.std_viz_cut=0.9;
 
 [images]=LFD_MPIV_read_cxd(filename,[],-1,'std');
-handles.first_im=images(:,:,1);
+handles.first_im=uint16(images(:,:,1));
 handles.std_map=images(:,:,2);
-[c,h]=hist(double(handles.std_map(:)),1:max(double(handles.std_map(:))));
+
+[c,h]=hist(double(handles.std_map(:)),1000);
 handles.std_lims=h;
 handles.std_hist=c;
 handles.output=show_mask(handles);
