@@ -1,4 +1,4 @@
-function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_name,indices,verb,mode,msg)
+function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_name,indices,verb,mode,msg,avg)
 %LFD_MPIV_READ_CXD function that reads CXD files. Obviously.
 %
 %   IMAGES=LFD_MPIV_READ_CXD(FILENAME);
@@ -74,7 +74,7 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
     header_block_size=2048*5;
     block_size=512;
     
-    %% Some info recollection and display. Double frame is supposed
+    %% Some info recollection and display.
     [image_size,nb_frames]=read_header_cxd(file_name,verb); % image_size is for 1 frame. 
     fid=fopen(file_name);
     
@@ -94,8 +94,19 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
     
     
     %% initialize buffer and result matrix
+    if strcmp(mode,'normal')
+        images=uint16(zeros(image_size(2),image_size(1)*nb_frames,length(indices)));
+    else
+        images=uint16(zeros(image_size(2),image_size(1)*nb_frames,2));
+    end
     
-    images=uint16(zeros(image_size(2),image_size(1)*nb_frames,length(indices)));
+    if strcmp(mode,'std') && nargin <6
+        avg=zeros(image_size(2),image_size(1)*nb_frames);
+    end
+    
+    if strcmp(mode,'std') && nargin ==6
+        std_dev=zeros(image_size(2),image_size(1)*nb_frames);
+    end
     last_image=indices(end);
     k=0;
     
@@ -132,7 +143,16 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
         [im]=obtain_image(fid,B,image_size,block_size,nb_frames,  verb);
         if find(indices==i);
             k=k+1;
-            images(:,:,k)=im;
+            if strcmp(mode,'normal') || k==1
+                images(:,:,k)=im;
+            end
+            
+            if strcmp(mode,'std') && nargin<6
+                avg=avg+double(im);
+            elseif strcmp(mode,'std') && nargin==6
+                std_dev=std_dev+abs(double(im-avg));
+            end
+            
         if verb>1;fprintf('obtained image %d\n',i);end
         end
         catch
@@ -142,13 +162,21 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
         end  
     end
    
-    images=images(:,:,1:min(number_of_images,length(indices)));
-    if verb>0;fprintf('%d images contained\n',number_of_images);end
+    if strcmp(mode,'normal') 
+        images=images(:,:,1:min(number_of_images,length(indices)));
+        if verb>0;fprintf('%d images contained\n',number_of_images);end
+    elseif strcmp(mode,'std') && nargin<6
+        images(:,:,2)=uint16(avg/number_of_images);
+    elseif strcmp(mode,'std') && nargin==6
+        images(:,:,2)=uint16(std_dev/number_of_images);
+    end
     
-    if strcmp(mode,'std')
-        if verb==-1;waitbar(1,h,'Computing Standart Deviation');end
-        images(:,:,2)=std(double(images),[],3);
-        images=images(:,:,1:2);
+    
+    
+    
+    %% Second call for std
+    if strcmp(mode,'std') && nargin<6
+        images=LFD_MPIV_read_cxd(file_name,indices,verb,'std','Computing Standart Deviation',images(:,:,2));
     end
      if verb==-1;close(h);end
     
@@ -226,7 +254,6 @@ function [image]=obtain_image(fid,A,image_size,block_size,nb_frames,verb)
     end
     
     if verb>3
-        
         plot(A)
         title('image')
         pause
