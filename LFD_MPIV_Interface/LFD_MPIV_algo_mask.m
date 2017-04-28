@@ -63,7 +63,7 @@ handles.std_cut=0;
 handles.eros=0;
 handles.std_viz_cut=0.9;
 
-[images]=LFD_MPIV_read_cxd(filename,[],0,'std');
+[images]=LFD_MPIV_read_cxd(filename,[],-1,'std');
 handles.first_im=images(:,:,1);
 handles.std_map=images(:,:,2);
 [c,h]=hist(double(handles.std_map(:)),1000);
@@ -85,7 +85,7 @@ set(handles.info,'String','Initialized');
  uiwait(handles.figure1);
 
 function mask=show_mask(handles)
-warning('MATLAB:contour:ConstantData','off'); %% remove warning when mask is empty
+warning('off','MATLAB:contour:ConstantData'); %% remove warning when mask is empty
 cla(handles.axes1);
 set(handles.info,'String','Computing mask...');
 set(handles.edit1,'Enable','off')
@@ -109,8 +109,12 @@ drawnow
     end
     
     if handles.parameters.source_frames==2 %% double frame
-        mask=LFD_MPIV_cut_images(mask,handles.parameters);
-        mask=(((mask.frameA+mask.frameB)>=1));
+        shiftblock=[circshift([1 2],[0 handles.parameters.dire]) 3];
+        mask=permute(mask,shiftblock);
+        s=size(mask);
+        maskA=permute(mask(:,1:s(2)/2),shiftblock);
+        maskB=permute(mask(:,s(2)/2+1:end),shiftblock);
+        mask=(((maskA+maskB)>=1));
     end
     
     [~,k]=min(abs(cumsum(handles.std_hist)/sum(handles.std_hist)-handles.std_viz_cut));

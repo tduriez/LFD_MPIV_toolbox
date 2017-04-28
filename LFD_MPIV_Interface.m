@@ -251,6 +251,10 @@ cxd_files=get(handles.list_cxd,'String');
 Inter_im_options(handles.current_parameters,fullfile(handles.cxd_folder,cxd_files{selected_cxd(1)}));
 update_images_options(handles);
 guidata(hObject,handles);
+idx = get(handles.list_cxd,'Value');
+idx=idx(1);
+display_image(fullfile(handles.cxd_folder,handles.cxd{idx}),handles.current_parameters,...
+    handles.axes1,2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
 
 function update_images_options(handles);
 text_PIV=handles.current_parameters.display('frames');

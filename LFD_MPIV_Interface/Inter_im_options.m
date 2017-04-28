@@ -22,7 +22,7 @@ function varargout = Inter_im_options(varargin)
 
 % Edit the above text to modify the response to help Inter_im_options
 
-% Last Modified by GUIDE v2.5 27-Apr-2017 23:46:45
+% Last Modified by GUIDE v2.5 28-Apr-2017 00:08:27
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -57,6 +57,7 @@ handles.output=varargin{1};
 handles.cxd=varargin{2};
 handles.current_frame=0;
 
+set(handles.show_mask_box,'Value',1.0);
 set(handles.service_text,'String',[],'BackgroundColor',[0.94 0.94 0.94])
 set(handles.hor_flip,'Value',handles.output.flip_hor);
 set(handles.ver_flip,'Value',handles.output.flip_ver);
@@ -368,7 +369,8 @@ function set_mask_bttn_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user datpushbuttona (see GUIDATA)
 
 handles.output=LFD_MPIV_algo_mask(handles.cxd,handles.output);
-display_image(handles.cxd,handles.output,handles.axes1);
+display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
 
 
 
@@ -379,7 +381,8 @@ function clear_mask_bttn_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.output.mask=[];
-display_image(handles.cxd,handles.output,handles.axes1);
+display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
 
 
 % --- Executes on button press in showroi_box.
@@ -387,7 +390,6 @@ function showroi_box_Callback(hObject, eventdata, handles)
 % hObject    handle to showroi_box (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-idx=idx(1);
 display_image(handles.cxd,handles.output,handles.axes1,...
     2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(hObject,'Value'));
 % Hint: get(hObject,'Value') returns toggle state of showroi_box

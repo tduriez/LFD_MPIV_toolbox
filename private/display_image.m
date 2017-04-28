@@ -18,7 +18,7 @@ warning('off','MATLAB:contour:ConstantData');
     else
         mode=dec2bin(mode,4)-48;
     end
-keyboard    
+    
     if mode(4)==1
         fprintf('M.O.D.E:\n')
         fprintf('%d ',mode)
