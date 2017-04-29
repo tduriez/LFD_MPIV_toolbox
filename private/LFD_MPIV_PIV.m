@@ -39,29 +39,29 @@ for current_pass=1:length(parameters.IntWin)
     parameters.current_pass=current_pass;
     
     % Prepare images, get interrogation windows indices + image deformation
-    if parameters.Verbose;tic;fprintf('Image preprocessing...        ');end
+    if parameters.Verbose>1;tic;fprintf('Image preprocessing...        ');end
     [work_images,indices,data,parameters]=prepare_images(images,data,parameters);
-    if parameters.Verbose;fprintf('ok (%.3f s)\n',toc);end
+    if parameters.Verbose>1;fprintf('ok (%.3f s)\n',toc);end
     
    
     % Cumulative cross correlation
-    if parameters.Verbose;tic;fprintf('Cross correlation...          ');end
+    if parameters.Verbose>1;tic;fprintf('Cross correlation...          ');end
     correlation=cumulative_cross_correlation(work_images,indices,parameters);
-    if parameters.Verbose;fprintf('ok (%.3f s)\n',toc);end
+    if parameters.Verbose>1;fprintf('ok (%.3f s)\n',toc);end
     
     
     
     % Determine raw vector field
-    if parameters.Verbose;tic;fprintf('Vector field determination... ');end
+    if parameters.Verbose>1;tic;fprintf('Vector field determination... ');end
     [data,parameters]=vector_field_determination(correlation,data,parameters);
-    if parameters.Verbose;fprintf('ok (%.3f s)\n',toc);end
+    if parameters.Verbose>1;fprintf('ok (%.3f s)\n',toc);end
     
     
     
     % Filter vector field for next pass or final result
-    if parameters.Verbose;tic;fprintf('Filtering...                  ');end
+    if parameters.Verbose>1;tic;fprintf('Filtering...                  ');end
     [data,parameters]=filter_fields(data,parameters);
-    if parameters.Verbose;fprintf('ok (%.3f s)\n\n',toc);end
+    if parameters.Verbose>1;fprintf('ok (%.3f s)\n\n',toc);end
     
     
     try %check if used from GUI
@@ -104,7 +104,7 @@ for current_pass=1:length(parameters.IntWin)
         drawnow
 
 
-
+    
 
 
 
@@ -116,6 +116,5 @@ data.v=data.v';
 data.s2n=data.s2n';
 
 t2=now;
-if parameters.Verbose;fprintf('Total time (current PIV): %s\n',datestr(t2-t1,13));end
-end
+if parameters.Verbose>0;fprintf('Total time (current PIV): %s\n',datestr(t2-t1,13));end
     

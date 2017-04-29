@@ -91,16 +91,20 @@ fprintf('case: %s, z= %d (mum)\n',expe.case_name,expe.height);
 end
 [~,pattern,~]=fileparts(expe.cxd_file);
 if expe.Verbose;fprintf('Source cxd file: %s\n',pattern);end
-if expe.Verbose;fprintf('Importing images:                     ');end
+if expe.Verbose>1;fprintf('Importing images:                     ');end
 tic
-[all_images,~,nb_frames]=LFD_MPIV_read_cxd(expe.cxd_file,expe.image_indices,min(2,max(0,expe.Verbose-1)));
+read_verbose=0;
+if expe.Verbose>2
+    read_verbose=min(2,max(1,expe.Verbose-2));
+end
+[all_images,~,nb_frames]=LFD_MPIV_read_cxd(expe.cxd_file,expe.image_indices,read_verbose);
 if nb_frames~=expe.source_frames
     expe.source_frames=nb_frames;
 end
-if expe.Verbose;fprintf('ok (%.3f s)\n',toc);end
-if expe.Verbose;fprintf('Preparing frames:                     ');tic;end
+if expe.Verbose>1;fprintf('ok (%.3f s)\n',toc);end
+if expe.Verbose>1;fprintf('Preparing frames:                     ');tic;end
 all_images=LFD_MPIV_prepare_frames(all_images,expe);
-if expe.Verbose;fprintf('ok (%.3f s)\n',toc);end
+if expe.Verbose>1;fprintf('ok (%.3f s)\n',toc);end
 if expe.cumulcross
 if ~isempty(expe.ttl_folder)
     d=dir(expe.ttl_folder);
@@ -139,8 +143,12 @@ end
 for pha=1:nb_phases
     images=all_images(phase==pha);
     if expe.cumulcross
-        if expe.Verbose;fprintf('Phase number %d:',pha)
-        fprintf(' %d image pairs\n',numel(images));end
+        if nb_phases~=1
+            if expe.Verbose;fprintf('Phase number %d:',pha)
+            fprintf(' %d image pairs\n',numel(images));end
+        else
+            fprintf('Cumulative cross-correlation of %d image pairs\n',numel(images))
+        end
     else
         if expe.Verbose;fprintf('Image number %d\n',pha);end
     end
