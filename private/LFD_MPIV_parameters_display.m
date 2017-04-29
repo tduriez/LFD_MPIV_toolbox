@@ -174,6 +174,16 @@ end
             output_text=sprintf('%s   Export folder: %s\n',output_text,obj.export_folder);
         end
         
+        %% Global option
+        
+       if any(strcmp(mode,{'all'})) && listing==0
+        output_text=sprintf('%s * --- Global options --- *\n',output_text);
+       end   
+       
+       if any(strcmp(mode,{'all','global'}))
+            output_text=sprintf('%s   Verbose: %d\n',output_text,obj.Verbose);
+       end
+        
        
       
       

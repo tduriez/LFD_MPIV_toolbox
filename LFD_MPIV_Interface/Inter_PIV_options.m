@@ -39,7 +39,7 @@ function varargout = Inter_PIV_options(varargin)
 
 % Edit the above text to modify the response to help Inter_PIV_options
 
-% Last Modified by GUIDE v2.5 26-Apr-2017 16:24:16
+% Last Modified by GUIDE v2.5 28-Apr-2017 22:22:09
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -71,6 +71,7 @@ function Inter_PIV_options_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for Inter_PIV_options
 handles.parameters=varargin{1};
+  set(handles.verbose_selec,'Value',handles.parameters.Verbose+1);
   populate_list(handles);
   set(handles.scale_edt,'String',handles.parameters.scale);
     set(handles.delta_edt,'String',handles.parameters.deltat);
@@ -313,6 +314,30 @@ guidata(hObject,handles);
 % --- Executes during object creation, after setting all properties.
 function deform_pop_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to deform_pop (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in verbose_selec.
+function verbose_selec_Callback(hObject, eventdata, handles)
+% hObject    handle to verbose_selec (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.parameters.Verbose=get(hObject,'Value')-1;
+guidata(hObject,handles);
+% Hints: contents = cellstr(get(hObject,'String')) returns verbose_selec contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from verbose_selec
+
+
+% --- Executes during object creation, after setting all properties.
+function verbose_selec_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to verbose_selec (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 

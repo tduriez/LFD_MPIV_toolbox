@@ -65,7 +65,7 @@ function [allowed_args,default_args,allowed_types]=default_parameters(indices);
     
     
     %% Global options    
-    args(:,i)={'Verbose',2,'numeric'};i=i+1;
+    args(:,i)={'Verbose',1,'numeric'};i=i+1;
 
     
     if nargin<1;
