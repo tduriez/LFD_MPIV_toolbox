@@ -22,7 +22,7 @@ function varargout = Inter_import(varargin)
 
 % Edit the above text to modify the response to help Inter_import
 
-% Last Modified by GUIDE v2.5 26-Apr-2017 17:32:44
+% Last Modified by GUIDE v2.5 29-Apr-2017 18:26:33
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -374,3 +374,12 @@ function frame_nb_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in select_bttn.
+function select_bttn_Callback(hObject, eventdata, handles)
+% hObject    handle to select_bttn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.output=Inter_image_index(handles.output,size(handles.images,3));
+guidata(hObject,handles);
