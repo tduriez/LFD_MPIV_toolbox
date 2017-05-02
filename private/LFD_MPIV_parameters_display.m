@@ -1,12 +1,25 @@
 function output_text=LFD_MPIV_parameters_display(obj,mode,name)
 
+output_text='';
+
+if length(obj)~=1
+    the_title=sprintf('* LFD MPIV Experiment v%s *',obj(1).release);
+    output_text=sprintf('%s\n   %s\n',output_text,repmat('*',[1 length(the_title)]));
+    output_text=sprintf('%s   %s  Experiment list\n',output_text,the_title);
+    output_text=sprintf('%s   %s\n',output_text,repmat('*',[1 length(the_title)]));
+        
+    for i=1:length(obj)
+        output_text=sprintf('%s case: %s, height: %.3f, <a href="matlab:%s(%d).display(''all'')">View this slice''s parameters</a>\n',output_text,obj(i).case_name,obj(i).height,name,i);
+    end
+    return
+end
 listing=0;
 if strcmp(mode,'list')
     mode='all';
     listing=1;
 end
 
-output_text='';
+
 
 if any(strcmp(mode,{'all','short'})) && listing==0
     the_title=sprintf('* LFD MPIV Experiment v%s *',obj.release);

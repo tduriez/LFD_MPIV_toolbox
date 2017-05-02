@@ -187,6 +187,7 @@ function [vector] = SUBPIXGAUSS(result_conv, IntWin, x, y, idx, SubPixOffset)
 end
     
     function [vector] = SUBPIX2DGAUSS(result_conv, IntWin, x, y, idx, SubPixOffset)
+    z= (1:length(idx))';
     xi = find(~((x <= (size(result_conv,2)-1)) & (y <= (size(result_conv,1)-1)) & (x >= 2) & (y >= 2)));
     x(xi) = [];
     y(xi) = [];

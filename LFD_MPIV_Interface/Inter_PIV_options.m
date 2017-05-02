@@ -39,7 +39,7 @@ function varargout = Inter_PIV_options(varargin)
 
 % Edit the above text to modify the response to help Inter_PIV_options
 
-% Last Modified by GUIDE v2.5 28-Apr-2017 22:22:09
+% Last Modified by GUIDE v2.5 02-May-2017 15:47:29
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -76,6 +76,7 @@ handles.parameters=varargin{1};
   set(handles.scale_edt,'String',handles.parameters.scale);
     set(handles.delta_edt,'String',handles.parameters.deltat);
 set(handles.cumulcross,'Value',handles.parameters.cumulcross);
+set(handles.popupmenu3,'Value',handles.parameters.SubPixMode);
 switch handles.parameters.ImDeform
     case 'linear'
         set(handles.deform_pop,'Value',1)
@@ -338,6 +339,30 @@ guidata(hObject,handles);
 % --- Executes during object creation, after setting all properties.
 function verbose_selec_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to verbose_selec (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in popupmenu3.
+function popupmenu3_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.parameters.SubPixMode=get(hObject,'Value');
+guidata(hObject,handles);
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu3 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu3
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
