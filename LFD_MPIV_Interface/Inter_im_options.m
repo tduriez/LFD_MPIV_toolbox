@@ -22,16 +22,16 @@ function varargout = Inter_im_options(varargin)
 
 % Edit the above text to modify the response to help Inter_im_options
 
-% Last Modified by GUIDE v2.5 28-Apr-2017 00:08:27
+% Last Modified by GUIDE v2.5 02-May-2017 17:29:02
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
-                   'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @Inter_im_options_OpeningFcn, ...
-                   'gui_OutputFcn',  @Inter_im_options_OutputFcn, ...
-                   'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);
+    'gui_Singleton',  gui_Singleton, ...
+    'gui_OpeningFcn', @Inter_im_options_OpeningFcn, ...
+    'gui_OutputFcn',  @Inter_im_options_OutputFcn, ...
+    'gui_LayoutFcn',  [] , ...
+    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
@@ -63,19 +63,12 @@ set(handles.hor_flip,'Value',handles.output.flip_hor);
 set(handles.ver_flip,'Value',handles.output.flip_ver);
 set(handles.rotation_selec,'Value',handles.output.rotation+1);
 
-handles.im_size=display_image(handles.cxd,handles.output,handles.axes1,...
-    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
-
+[~,image_size,~]=LFD_MPIV_read_cxd(handles.cxd,1,0);
+handles.im_size=fliplr(image_size);
 if isempty(handles.output.roi);
     handles.output.roi=[1 handles.im_size(2) 1 handles.im_size(1)];
 end
-set(handles.roi_edt,'String',sprintf('%d ',handles.output.roi));
-set(handles.xmin_slider,'Value',handles.output.roi(1)/handles.im_size(2));
-set(handles.xmax_slider,'Value',handles.output.roi(2)/handles.im_size(2));
-set(handles.ymin_slider,'Value',handles.output.roi(3)/handles.im_size(1));
-set(handles.ymax_slider,'Value',handles.output.roi(4)/handles.im_size(1));
-
-
+set_all_rois(handles);
 
 
 
@@ -85,16 +78,10 @@ set(hObject,'closeRequestFcn',[])
 guidata(hObject, handles);
 
 % UIWAIT makes Inter_synchro wait for user response (see UIRESUME)
- uiwait(handles.figure1);
-
- 
- 
-        
-    
- 
+uiwait(handles.figure1);
 
 % --- Outputs from this function are returned to the command line.
-function varargout = Inter_im_options_OutputFcn(hObject, eventdata, handles) 
+function varargout = Inter_im_options_OutputFcn(hObject, eventdata, handles)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -107,10 +94,6 @@ varargout{1} = handles.output;
 close(hObject);
 
 
-
-
-
-
 function roi_edt_Callback(hObject, eventdata, handles)
 % hObject    handle to roi_edt (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -119,27 +102,21 @@ function roi_edt_Callback(hObject, eventdata, handles)
 try
     eval(sprintf('handles.output.roi=[%s];',get(hObject,'String')));
     if ~isa(handles.output.roi,'numeric')
-         set(handles.service_text,'String',...
-        'We are expecting 4 integers...',...
-        'BackgroundColor',[1 0.94 0.94]);
+        set(handles.service_text,'String',...
+            'We are expecting 4 integers...',...
+            'BackgroundColor',[1 0.94 0.94]);
     else
         if any(handles.output.roi~=round(handles.output.roi)) || numel(handles.output.roi)~=4
-              set(handles.service_text,'String',...
-        'We are expecting 4 integers...',...
-        'BackgroundColor',[1 0.94 0.94]);
+            set(handles.service_text,'String',...
+                'We are expecting 4 integers...',...
+                'BackgroundColor',[1 0.94 0.94]);
         else
             set(handles.service_text,'String',...
-        [],...
-        'BackgroundColor',[0.94 0.94 0.94]);
-    
-        display_image(handles.cxd,handles.output,handles.axes1);
-          set(handles.xmin_slider,'Value',(handles.output.roi(1)-1)/(handles.im_size(2)-1));
-          set(handles.xmax_slider,'Value',(handles.output.roi(2)-1)/(handles.im_size(2)-1));
-          set(handles.ymin_slider,'Value',(handles.output.roi(3)-1)/(handles.im_size(1)-1));
-          set(handles.ymax_slider,'Value',(handles.output.roi(4)-1)/(handles.im_size(1)-1));
-        
-          
-          guidata(hObject,handles);
+                '',...
+                'BackgroundColor',[0.94 0.94 0.94]);
+            set_all_rois(handles);
+            
+            guidata(hObject,handles);
         end
     end
 catch err
@@ -148,8 +125,57 @@ catch err
         'BackgroundColor',[1 0.94 0.94]);
 end
 
+function set_all_rois(handles,shouldidisplay)
+if nargin<2
+    shouldidisplay=1;
+end
+for i=1:4
+    handles.output.roi(i)=round(handles.output.roi(i));
+    handles.output.roi(i)=max(1,handles.output.roi(i));
+    if i<3
+        handles.output.roi(i)=min(handles.im_size(2),handles.output.roi(i));
+    else
+        handles.output.roi(i)=min(handles.im_size(1),handles.output.roi(i));
+    end
+end
 
-    
+if handles.output.roi(1)>=handles.output.roi(2)
+    if handles.output.roi(2)>1
+       handles.output.roi(1)=handles.output.roi(2)-1;
+    else
+        handles.output.roi(1)=1;
+        handles.output.roi(2)=2;
+    end
+end
+
+if handles.output.roi(3)>=handles.output.roi(4)
+    if handles.output.roi(4)>1
+       handles.output.roi(3)=handles.output.roi(4)-1;
+    else
+        handles.output.roi(3)=1;
+        handles.output.roi(4)=2;
+    end
+end
+
+
+roi=handles.output.roi
+
+
+% set roi_edt
+set(handles.roi_edt,'String',sprintf('[%d %d %d %d]',roi(1),roi(2),roi(3),roi(4)));
+set(handles.roi_edt1,'String',num2str(roi(1)));
+set(handles.roi_edt2,'String',num2str(roi(2)));
+set(handles.roi_edt3,'String',num2str(roi(3)));
+set(handles.roi_edt4,'String',num2str(roi(4)));
+set(handles.slider_roi1,'Value',(roi(1)-1)/(handles.im_size(2)-1),'sliderstep',[1/(handles.im_size(2)-1) 1/(handles.im_size(2)-1)]);
+set(handles.slider_roi2,'Value',(roi(2)-1)/(handles.im_size(2)-1),'sliderstep',[1/(handles.im_size(2)-1) 1/(handles.im_size(2)-1)]);
+set(handles.slider_roi3,'Value',(roi(3)-1)/(handles.im_size(1)-1),'sliderstep',[1/(handles.im_size(1)-1) 1/(handles.im_size(1)-1)]);
+set(handles.slider_roi4,'Value',(roi(4)-1)/(handles.im_size(1)-1),'sliderstep',[1/(handles.im_size(1)-1) 1/(handles.im_size(1)-1)]);
+    if shouldidisplay
+        display_image(handles.cxd,handles.output,handles.axes1,...
+    2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
+    end
+
 
 % Hints: get(hObject,'String') returns contents of roi_edt as text
 %        str2double(get(hObject,'String')) returns contents of roi_edt as a double
@@ -309,7 +335,7 @@ function ymax_slider_Callback(hObject, eventdata, handles)
 ymax_value=get(hObject,'Value');
 iymax=floor(ymax_value*(handles.im_size(1)-1))+1;
 set(handles.ymin_slider,'Max',(iymax-2)/(handles.im_size(1)-1));
-handles.output.roi(4)=iymax;
+handles.output.roi(3)=iymax;
 roi=handles.output.roi;
 set(handles.roi_edt,'String',sprintf('[%d %d %d %d]',roi(1),roi(2),roi(3),roi(4)))
 %set(handles.service_text,'String',sprintf('%f',xmin_value));
@@ -338,7 +364,7 @@ function ymin_slider_Callback(hObject, eventdata, handles)
 ymin_value=get(hObject,'Value');
 iymin=floor(ymin_value*(handles.im_size(1)-1))+1;
 set(handles.ymax_slider,'Min',(iymin-2)/(handles.im_size(1)-1));
-handles.output.roi(3)=iymin;
+handles.output.roi(4)=iymin;
 roi=handles.output.roi;
 set(handles.roi_edt,'String',sprintf('[%d %d %d %d]',roi(1),roi(2),roi(3),roi(4)))
 %set(handles.service_text,'String',sprintf('%f',xmin_value));
@@ -415,9 +441,208 @@ if handles.current_frame==0
     handles.current_frame=1;
     set(handles.current_frame_txt,'String','B');
 else
-     handles.current_frame=0;
-     set(handles.current_frame_txt,'String','A');
+    handles.current_frame=0;
+    set(handles.current_frame_txt,'String','A');
 end
 display_image(handles.cxd,handles.output,handles.axes1,...
     2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
 guidata(hObject,handles);
+
+
+% --- Executes on slider movement.
+function slider_roi1_Callback(hObject, eventdata, handles)
+% hObject    handle to slider_roi1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.output.roi(1)=round(get(hObject,'Value')*(handles.im_size(2)-1)+1);
+set_all_rois(handles);
+guidata(hObject,handles);
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider_roi1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider_roi1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function slider_roi2_Callback(hObject, eventdata, handles)
+% hObject    handle to slider_roi2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.output.roi(2)=round(get(hObject,'Value')*(handles.im_size(2)-1)+1);
+set_all_rois(handles);
+guidata(hObject,handles);
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider_roi2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider_roi2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function slider_roi3_Callback(hObject, eventdata, handles)
+% hObject    handle to slider_roi3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.output.roi(3)=round(get(hObject,'Value')*(handles.im_size(1)-1)+1);
+set_all_rois(handles);
+guidata(hObject,handles);
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider_roi3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider_roi3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function slider_roi4_Callback(hObject, eventdata, handles)
+% hObject    handle to slider_roi4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.output.roi(4)=round(get(hObject,'Value')*(handles.im_size(1)-1)+1);
+set_all_rois(handles);
+guidata(hObject,handles);
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider_roi4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider_roi4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+
+function roi_edt1_Callback(hObject, eventdata, handles)
+% hObject    handle to roi_edt1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.output.roi(1)=str2double(get(hObject,'String'));
+set_all_rois(handles);
+guidata(hObject,handles);
+% Hints: get(hObject,'String') returns contents of roi_edt1 as text
+%        str2double(get(hObject,'String')) returns contents of roi_edt1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function roi_edt1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to roi_edt1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function roi_edt2_Callback(hObject, eventdata, handles)
+% hObject    handle to roi_edt2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.output.roi(2)=str2double(get(hObject,'String'));
+set_all_rois(handles);
+guidata(hObject,handles);
+% Hints: get(hObject,'String') returns contents of roi_edt2 as text
+%        str2double(get(hObject,'String')) returns contents of roi_edt2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function roi_edt2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to roi_edt2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function roi_edt3_Callback(hObject, eventdata, handles)
+% hObject    handle to roi_edt3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.output.roi(3)=str2double(get(hObject,'String'));
+set_all_rois(handles);
+guidata(hObject,handles);
+% Hints: get(hObject,'String') returns contents of roi_edt3 as text
+%        str2double(get(hObject,'String')) returns contents of roi_edt3 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function roi_edt3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to roi_edt3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function roi_edt4_Callback(hObject, eventdata, handles)
+% hObject    handle to roi_edt4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.output.roi(4)=str2double(get(hObject,'String'));
+set_all_rois(handles);
+guidata(hObject,handles);
+% Hints: get(hObject,'String') returns contents of roi_edt4 as text
+%        str2double(get(hObject,'String')) returns contents of roi_edt4 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function roi_edt4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to roi_edt4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
