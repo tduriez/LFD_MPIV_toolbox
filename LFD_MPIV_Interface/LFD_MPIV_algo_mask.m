@@ -152,7 +152,7 @@ set(handles.edit2,'Enable','off')
 set(handles.slider1,'Enable','off')
 
 set(hObject,'closeRequestFcn','closereq');
-handles.parameters.mask=handles.mask;
+handles.parameters.mask=flipud(handles.mask);
 % Get default command line output from handles structure
 varargout{1} = handles.parameters;
 close(hObject);

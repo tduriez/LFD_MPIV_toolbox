@@ -164,7 +164,7 @@ function handles=set_options(handles)
             activeframe=handles.frames.frameB;
             set(handles.frametxt,'string','B')
         end
-        imshow(imadjust(activeframe));
+        imshow(imadjust(flipud(activeframe)));
         
     
     

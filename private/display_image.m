@@ -50,7 +50,8 @@ warning('off','MATLAB:contour:ConstantData');
      end
      
      the_frame(the_frame==0)=min(min(the_frame(the_frame~=0)));
-     imshow(imadjust(the_frame));
+     imshow(imadjust((the_frame)));set(gca,'ydir','normal');
+     
      shown_image_size=size(the_frame);
      if mode(1)==0
      if ~isempty(roi)

@@ -22,7 +22,7 @@ function varargout = Inter_import(varargin)
 
 % Edit the above text to modify the response to help Inter_import
 
-% Last Modified by GUIDE v2.5 29-Apr-2017 18:26:43
+% Last Modified by GUIDE v2.5 02-May-2017 23:36:14
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -164,7 +164,7 @@ function handles=set_options(handles)
             activeframe=handles.frames.frameB;
             set(handles.frametxt,'string','B')
         end
-        imshow(imadjust(activeframe));
+        imshow(imadjust(flipud(activeframe)));
         
     
     

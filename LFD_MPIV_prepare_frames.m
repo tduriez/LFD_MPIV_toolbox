@@ -19,6 +19,7 @@ function new_images=LFD_MPIV_prepare_frames(images,parameters)
 
 
 images=LFD_MPIV_remove_background(images,parameters.background);
+images=flipud(images); 
 
 switch parameters.source_frames
     case 1
