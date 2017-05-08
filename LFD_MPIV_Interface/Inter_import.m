@@ -134,7 +134,7 @@ function handles=set_options(handles)
     handles.output.flip_hor=0;
     handles.output.rotation=0;
     
-    handles.frames=LFD_MPIV_prepare_frames(handles.images,handles.output);
+    handles.frames=prepare_frames(handles.images,handles.output);
     
     handles.nb_image_pair=length(handles.frames);
     set(handles.infotext,'String',sprintf('View image pair number               (of %d)',handles.nb_image_pair));
@@ -240,7 +240,7 @@ quick_piv_params.IntWin=64;
 quick_piv_params.nb_phases=1;
 c=colormap;
 axes(handles.axes2);
-LFD_MPIV_PIV(handles.frames,quick_piv_params);
+PIV(handles.frames,quick_piv_params);
 colormap(c);
 
 

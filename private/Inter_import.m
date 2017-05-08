@@ -240,7 +240,7 @@ quick_piv_params.IntWin=64;
 quick_piv_params.nb_phases=1;
 c=colormap;
 axes(handles.axes2);
-LFD_MPIV_PIV(handles.frames,quick_piv_params);
+PIV(handles.frames,quick_piv_params);
 colormap(c);
 
 
