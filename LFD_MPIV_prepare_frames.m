@@ -30,5 +30,3 @@ switch parameters.source_frames
 end
 
 parameters.apparrent_mask=apparrent_mask;
-
-

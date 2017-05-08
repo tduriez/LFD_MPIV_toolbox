@@ -61,7 +61,7 @@ set(handles.show_mask_box,'Value',1.0);
 set(handles.service_text,'String',[],'BackgroundColor',[0.94 0.94 0.94])
 set(handles.hor_flip,'Value',handles.output.flip_hor);
 set(handles.ver_flip,'Value',handles.output.flip_ver);
-set(handles.rotation_selec,'Value',handles.output.rotation+1);
+set(handles.rotation_selec,'Value',handles.output.rotation);
 
 [~,image_size,~]=LFD_MPIV_read_cxd(handles.cxd,1,0);
 handles.im_size=fliplr(image_size);
@@ -158,7 +158,7 @@ if handles.output.roi(3)>=handles.output.roi(4)
 end
 
 
-roi=handles.output.roi
+roi=handles.output.roi;
 
 
 % set roi_edt
@@ -235,7 +235,7 @@ function rotation_selec_Callback(hObject, eventdata, handles)
 % hObject    handle to rotation_selec (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-handles.output.rotation=get(hObject,'Value')-1;
+handles.output.rotation=get(hObject,'Value');
 display_image(handles.cxd,handles.output,handles.axes1,...
     2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
 

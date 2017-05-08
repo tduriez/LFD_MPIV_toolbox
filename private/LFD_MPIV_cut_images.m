@@ -64,13 +64,13 @@ function [cut_images,apparent_mask]=LFD_MPIV_cut_images(images,varargin)
     for i=1:s(3)
     %    waitbar(i/s(3),h,sprintf('Cutting image %d of %d',i,s(3)));
         if i==1
-        masked_image=rot90(permute(images(:,1:s(2)/2,i),shiftblock)+uint16((1-options.mask)*2^16),options.rotation);
-        cut_images(1).frameA=rot90(permute(images(:,1:s(2)/2,i),shiftblock),options.rotation);
-        cut_images(1).frameB=rot90(permute(images(:,s(2)/2+1:end,i),shiftblock),options.rotation);
+        masked_image=permute(images(:,1:s(2)/2,i),shiftblock)+uint16((1-options.mask)*2^16);
+        cut_images(1).frameA=permute(images(:,1:s(2)/2,i),shiftblock);
+        cut_images(1).frameB=permute(images(:,s(2)/2+1:end,i),shiftblock);
         cut_images=repmat(cut_images,[1 s(3)]);
         else
-            cut_images(i).frameA=rot90(permute(images(:,1:s(2)/2,i),shiftblock),options.rotation);
-            cut_images(i).frameB=rot90(permute(images(:,s(2)/2+1:end,i),shiftblock),options.rotation);
+            cut_images(i).frameA=permute(images(:,1:s(2)/2,i),shiftblock);
+            cut_images(i).frameB=permute(images(:,s(2)/2+1:end,i),shiftblock);
         end
         
          if ~isempty( options.roi)
@@ -96,8 +96,17 @@ function [cut_images,apparent_mask]=LFD_MPIV_cut_images(images,varargin)
             
             
             
-        end
+         end
         
+        if options.rotation
+            if i==1
+                masked_image=rot90(masked_image,options.rotation);
+            end
+            cut_images(i).frameA=rot90(cut_images(i).frameA,options.rotation);
+            cut_images(i).frameB=rot90(cut_images(i).frameB,options.rotation);
+        end
+    
+         
         if options.flip_ver
             if i==1
                 masked_image=flipud(masked_image);

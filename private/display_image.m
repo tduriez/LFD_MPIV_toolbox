@@ -1,5 +1,5 @@
 function [shown_image_size,parameters]=display_image(cxd,parameters,my_axes,mode);
- %% M.O.D.E.
+    %% M.O.D.E.
     %  | | | |
     %  | | | ---> Show M.O.D.E.    (2^0)
     %  | | -----> Frame A/B switch (2^1)
@@ -55,15 +55,29 @@ warning('off','MATLAB:contour:ConstantData');
      shown_image_size=size(the_frame);
      if mode(1)==0
      if ~isempty(roi)
-         
-           rangex=[max(1,roi(1)):min(shown_image_size(2),roi(2))];
-           rangey=[max(1,roi(3)):min(shown_image_size(1),roi(4))];
            
-            %cut_images=images.frameA(rangex,rangey);
-            
+    
+         
+           if parameters.rotation
+               rangey=sort([max(1,shown_image_size(1)-roi(1)+1),min(shown_image_size(1),shown_image_size(1)-roi(2)+1)]);
+               rangex=sort([max(1,roi(3)+1),min(shown_image_size(2),roi(4)+1)]); 
+           else
+               rangex=sort([max(1,roi(1)),min(shown_image_size(2),roi(2))]);
+               rangey=sort([max(1,roi(3)),min(shown_image_size(1),roi(4))]);   
+           end
+           
+           if parameters.flip_hor
+               rangex=sort(shown_image_size(2)+1-rangex);
+           end
+           
+           if parameters.flip_ver
+               rangey=sort(shown_image_size(1)+1-rangey);
+           end
+           
+           
            hold on
-           plot([rangex(1) rangex(end) rangex(end) rangex(1) rangex(1)],...
-           [rangey(1) rangey(1) rangey(end) rangey(end) rangey(1)],...
+           plot([rangex(1) rangex(2) rangex(2) rangex(1) rangex(1)],...
+           [rangey(1) rangey(1) rangey(2) rangey(2) rangey(1)],...
                 '--r',...
                 'linewidth',2);
             hold off 

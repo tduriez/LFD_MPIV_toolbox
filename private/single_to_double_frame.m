@@ -82,10 +82,10 @@ else
 end
 
 for i=1:length(idxFrameA);
-    dbl_frame(i).frameA=rot90(sgl_frame(:,:,idxFrameA(i)),options.rotation);
-    dbl_frame(i).frameB=rot90(sgl_frame(:,:,idxFrameB(i)),options.rotation);
+    dbl_frame(i).frameA=sgl_frame(:,:,idxFrameA(i));
+    dbl_frame(i).frameB=sgl_frame(:,:,idxFrameB(i));
     if i==1
-        masked_image=rot90(sgl_frame(:,:,idxFrameA(i))+uint16((1-options.mask)*2^16),options.rotation);
+        masked_image=sgl_frame(:,:,idxFrameA(i))+uint16((1-options.mask)*2^16);
         dbl_frame=repmat(dbl_frame,[1 length(idxFrameA)]);
     end
     
@@ -110,6 +110,15 @@ for i=1:length(idxFrameA);
         dbl_frame(i).frameA=dbl_frame(i).frameA(x_range,y_range);
         dbl_frame(i).frameB=dbl_frame(i).frameB(x_range,y_range);
     end
+    
+    if options.rotation
+        if i==1
+            masked_image=rot90(masked_image,options.rotation);
+        end
+        dbl_frame(i).frameA=rot90(dbl_frame(i).frameA,options.rotation);
+        dbl_frame(i).frameB=rot90(dbl_frame(i).frameB,options.rotation);
+    end
+    
     
     if options.flip_ver
         if i==1
