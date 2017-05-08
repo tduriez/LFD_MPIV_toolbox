@@ -77,7 +77,7 @@ function handles=set_options(handles)
     end
             
     if reading_necessary
-        [images,~,nb_frames]=LFD_MPIV_read_cxd(handles.cxd,[],-1,[],'Reading from CXD file');
+        [images,~,nb_frames]=LFD_MPIV_read_images(handles.cxd,[],-1,[],'Reading from CXD file');
         handles.images=images;
         handles.output.source_frames=nb_frames;
         

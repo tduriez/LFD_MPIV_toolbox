@@ -63,7 +63,7 @@ handles.std_cut=0;
 handles.eros=0;
 handles.std_viz_cut=0.9;
 
-[images]=LFD_MPIV_read_cxd(filename,[],-1,'std');
+[images]=LFD_MPIV_read_images(filename,[],-1,'std');
 handles.first_im=uint16(images(:,:,1));
 handles.std_map=images(:,:,2);
 

@@ -1,4 +1,4 @@
-function [dbl_frame,apparent_mask] = single_to_double_frame(sgl_frame,options)
+function [dbl_frame,apparent_mask] = single_to_double_frame(sgl_frame,parameters)
 %SINGLE_TO_DOUBLE_FRAME Transforms image time series in successive double
 %frame buffers.
 %   DBL_FRAME=SINGLE_TO_DOUBLE_FRAME(SGL_FRAME,OPTIONS)
@@ -56,8 +56,8 @@ function [dbl_frame,apparent_mask] = single_to_double_frame(sgl_frame,options)
 nImages=size(sgl_frame,3);
 
 
-step=options.frame_skip;
-mode=options.frame_mode;
+step=parameters.frame_skip;
+mode=parameters.frame_mode;
 
 
 
@@ -73,11 +73,11 @@ switch mode
 end
 idxFrameB=idxFrameA+step;
 
-if isempty(options.mask)
-    options.mask=ones(size(sgl_frame(:,:,1)));
+if isempty(parameters.mask)
+    parameters.mask=ones(size(sgl_frame(:,:,1)));
 else
-        if ~all(size(options.mask)~=size(sgl_frame(:,:,1)))
-            options.mask=ones(size(sgl_frame(:,:,1)));
+        if ~all(size(parameters.mask)~=size(sgl_frame(:,:,1)))
+            parameters.mask=ones(size(sgl_frame(:,:,1)));
         end
 end
 
@@ -85,12 +85,12 @@ for i=1:length(idxFrameA);
     dbl_frame(i).frameA=sgl_frame(:,:,idxFrameA(i));
     dbl_frame(i).frameB=sgl_frame(:,:,idxFrameB(i));
     if i==1
-        masked_image=sgl_frame(:,:,idxFrameA(i))+uint16((1-options.mask)*2^16);
+        masked_image=sgl_frame(:,:,idxFrameA(i))+uint16((1-parameters.mask)*2^16);
         dbl_frame=repmat(dbl_frame,[1 length(idxFrameA)]);
     end
     
-    if ~isempty(options.roi)
-        roi=options.roi;
+    if ~isempty(parameters.roi)
+        roi=parameters.roi;
         s2=size(dbl_frame(i).frameA);
         
         x_range=max(1,roi(3)):min(roi(4),s2(1));
@@ -111,16 +111,16 @@ for i=1:length(idxFrameA);
         dbl_frame(i).frameB=dbl_frame(i).frameB(x_range,y_range);
     end
     
-    if options.rotation
+    if parameters.rotation
         if i==1
-            masked_image=rot90(masked_image,options.rotation);
+            masked_image=rot90(masked_image,parameters.rotation);
         end
-        dbl_frame(i).frameA=rot90(dbl_frame(i).frameA,options.rotation);
-        dbl_frame(i).frameB=rot90(dbl_frame(i).frameB,options.rotation);
+        dbl_frame(i).frameA=rot90(dbl_frame(i).frameA,parameters.rotation);
+        dbl_frame(i).frameB=rot90(dbl_frame(i).frameB,parameters.rotation);
     end
     
     
-    if options.flip_ver
+    if parameters.flip_ver
         if i==1
             masked_image=flipud(masked_image);
         end
@@ -128,7 +128,7 @@ for i=1:length(idxFrameA);
         dbl_frame(i).frameB=flipud(dbl_frame(i).frameB);
     end
     
-    if options.flip_hor
+    if parameters.flip_hor
         if i==1
             masked_image=fliplr(masked_image);
         end

@@ -14,7 +14,7 @@ classdef LFD_MPIV_parameters < handle
     % cxd_file        | char    |  ''     | route to the cxd file
     % source_frames   | integer | 2       | Number of frames/buffer. Can be
     %                 |         |         | collected as an output of
-    %                 |         |         | LFD_MPIV_read_cxd. Automatically
+    %                 |         |         | LFD_MPIV_read_images. Automatically
     %                 |         |         | corrected by most LFD_MPIV
     %                 |         |         | functions.
     % frame_mode      | char    | 'AB'    | Double frame buffers have acces to
@@ -226,7 +226,7 @@ classdef LFD_MPIV_parameters < handle
             end
             
             
-           output_text=LFD_MPIV_parameters_display(obj,mode,inputname(1));
+           output_text=parameters_display(obj,mode,inputname(1));
             
             
             if nargout<1
@@ -262,6 +262,15 @@ classdef LFD_MPIV_parameters < handle
                 obj.(thefields{i})=params.(thefields{i});
             end
         end
+        
+        %% Create new handle with same values
+        function obj2=copy(obj)
+            obj2=LFD_MPIV_parameters;
+            obj2.update(obj);
+        end
+        
+
+            
         
     end
     

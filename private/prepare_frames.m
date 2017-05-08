@@ -1,4 +1,4 @@
-function new_images=LFD_MPIV_prepare_frames(images,parameters)
+function new_images=prepare_frames(images,parameters)
 %   Copyright (c) 2017, Thomas Duriez (Distributed under GPLv3)
 
 %% Copyright
@@ -18,14 +18,17 @@ function new_images=LFD_MPIV_prepare_frames(images,parameters)
 %    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-images=LFD_MPIV_remove_background(images,parameters.background);
-images=flipud(images); 
+images=remove_background(images,parameters.background);
+images=flipud(images); % Images first element is lower left corner of matrix
+                       % while data matrices first element is upper left.
+                       % This flip makes all image <-> data transactions
+                       % more trivial.
 
 switch parameters.source_frames
     case 1
         [new_images,apparrent_mask]=single_to_double_frame(images,parameters);
     case 2
-        [new_images,apparrent_mask]=LFD_MPIV_cut_images(images,parameters);
+        [new_images,apparrent_mask]=cut_images_to_double_frames(images,parameters);
         new_images=reorder_frame_to_frame(new_images,parameters.frame_skip,parameters.frame_mode);
 end
 

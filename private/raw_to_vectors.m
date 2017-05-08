@@ -1,10 +1,10 @@
-function data=LFD_MPIV_cxd_to_vectors(cxd_info,varargin)
-%LFD_MPIV_CXD_TO_VECTOR    computes PIV fields from cxd files.
+function data=raw_to_vectors(cxd_info,varargin)
+%RAW_TO_VECTORS    computes PIV fields from cxd files.
 %
-%   DATA=LFD_MPIV_CXD_TO_VECTOR(CXD_FILE) computes cumulative correlation
+%   DATA=RAW_TO_VECTORS(CXD_FILE) computes cumulative correlation
 %   of all image pairs included in the CXD file.
 %
-%   DATA=LFD_MPIV_CXD_TO_VECTOR(CXD_FILE,PARAMETER,VALUE,...) allows the
+%   DATA=RAW_TO_VECTORS(CXD_FILE,PARAMETER,VALUE,...) allows the
 %   introduction of the following parameters:
 %
 %   Parameter       Value                    Description
@@ -43,7 +43,6 @@ function data=LFD_MPIV_cxd_to_vectors(cxd_info,varargin)
 %                                                              [full image]
 %
 %
-%   See also LFD_MPIV_READ_CXD, LFD_MPIV_PIV, LFD_MPIV_CUT_IMAGES, LFD_MPIV_REMOVE_BACKGROUND
 %
 %   Copyright (c) 2017, Thomas Duriez (Distributed under GPLv3)
 
@@ -66,17 +65,17 @@ function data=LFD_MPIV_cxd_to_vectors(cxd_info,varargin)
 %% Start program
 t1=now;
 
-% If the experiment is GUI generated, an experiment object is created. This
+% If the experiment is GUI generated, a parameters object is created. This
 % object is also the output of the GUI, so it can be reused. If only the CXD
 % file location is given, default parameters apply. Any parameter entered manually
 % will overwrite default or LFD_MPIV object given parameter.
 
 if isa(cxd_info,'char')
-    expe=LFD_MPIV_parameters; %load default_parameters
-    expe.cxd_file=cxd_info;
-    expe=expe.update(varargin{:});    %implement options
+    parameters=LFD_MPIV_parameters; %load default_parameters
+    parameters.cxd_file=cxd_info;
+    parameters=parameters.update(varargin{:});    %implement options
 elseif isa(cxd_info,'LFD_MPIV_parameters');
-    expe=cxd_info.update(varargin{:});  %implement options
+    parameters=cxd_info.update(varargin{:});  %implement options
 else
     error('I don''t know what to do with a parameter of class %s.',class(cxd_info));
 end
@@ -86,28 +85,28 @@ end
 
 
 %% Start PIV
-if expe.Verbose
-fprintf('case: %s, z= %d (mum)\n',expe.case_name,expe.height);
+if parameters.Verbose
+fprintf('case: %s, z= %d (mum)\n',parameters.case_name,parameters.height);
 end
-[~,pattern,~]=fileparts(expe.cxd_file);
-if expe.Verbose;fprintf('Source cxd file: %s\n',pattern);end
-if expe.Verbose>1;fprintf('Importing images:                     ');end
+[~,pattern,~]=fileparts(parameters.cxd_file);
+if parameters.Verbose;fprintf('Source cxd file: %s\n',pattern);end
+if parameters.Verbose>1;fprintf('Importing images:                     ');end
 tic
 read_verbose=0;
-if expe.Verbose>2
-    read_verbose=min(2,max(1,expe.Verbose-2));
+if parameters.Verbose>2
+    read_verbose=min(2,max(1,parameters.Verbose-2));
 end
-[all_images,~,nb_frames]=LFD_MPIV_read_cxd(expe.cxd_file,expe.image_indices,read_verbose);
-if nb_frames~=expe.source_frames
-    expe.source_frames=nb_frames;
+[all_images,~,nb_frames]=LFD_MPIV_read_images(parameters.cxd_file,parameters.image_indices,read_verbose);
+if nb_frames~=parameters.source_frames
+    parameters.source_frames=nb_frames;
 end
-if expe.Verbose>1;fprintf('ok (%.3f s)\n',toc);end
-if expe.Verbose>1;fprintf('Preparing frames:                     ');tic;end
-all_images=LFD_MPIV_prepare_frames(all_images,expe);
-if expe.Verbose>1;fprintf('ok (%.3f s)\n',toc);end
-if expe.cumulcross
-if ~isempty(expe.ttl_folder)
-    d=dir(expe.ttl_folder);
+if parameters.Verbose>1;fprintf('ok (%.3f s)\n',toc);end
+if parameters.Verbose>1;fprintf('Preparing frames:                     ');tic;end
+all_images=prepare_frames(all_images,parameters);
+if parameters.Verbose>1;fprintf('ok (%.3f s)\n',toc);end
+if parameters.cumulcross
+if ~isempty(parameters.ttl_folder)
+    d=dir(parameters.ttl_folder);
 
     pattern=lower(pattern);
     pattern=strip_string(pattern);
@@ -117,15 +116,15 @@ if ~isempty(expe.ttl_folder)
         simi(i)=stringsimilarity(pattern,name);
     end
     [~,k]=max(simi);
-    if expe.Verbose>1;fprintf('Using synchronisation file: %s\n',d(k).name);end
-    load(fullfile(expe.ttl_folder,d(k).name),'tframe');
+    if parameters.Verbose>1;fprintf('Using synchronisation file: %s\n',d(k).name);end
+    load(fullfile(parameters.ttl_folder,d(k).name),'tframe');
     T_acquired=tframe;
 else
-    T_acquired=(0:numel(all_images)-1)/expe.acq_freq;
+    T_acquired=(0:numel(all_images)-1)/parameters.acq_freq;
 end
 
-f_act=expe.act_freq;
-nb_phases=expe.nb_phases;
+f_act=parameters.act_freq;
+nb_phases=parameters.nb_phases;
 
 if f_act==0;
     nb_phases=1;
@@ -142,29 +141,29 @@ end
 
 for pha=1:nb_phases
     images=all_images(phase==pha);
-    if expe.cumulcross
+    if parameters.cumulcross
         if nb_phases~=1
-            if expe.Verbose;fprintf('Phase number %d:',pha)
+            if parameters.Verbose;fprintf('Phase number %d:',pha)
             fprintf(' %d image pairs\n',numel(images));end
         else
             fprintf('Cumulative cross-correlation of %d image pairs\n',numel(images))
         end
     else
-        if expe.Verbose;fprintf('Image number %d\n',pha);end
+        if parameters.Verbose;fprintf('Image number %d\n',pha);end
     end
         
 
     if numel(images)>0
-    data_phase=LFD_MPIV_PIV(images,expe);
+    data_phase=PIV(images,parameters);
 
-    data.u(:,:,pha)=data_phase.u*expe.scale/expe.deltat;
-    data.v(:,:,pha)=data_phase.v*expe.scale/expe.deltat;
+    data.u(:,:,pha)=data_phase.u*parameters.scale/parameters.deltat;
+    data.v(:,:,pha)=data_phase.v*parameters.scale/parameters.deltat;
     data.s2n(:,:,pha)=data_phase.s2n;
     if ~isfield(data,'x');
-        data.x=data_phase.x*expe.scale;
-        data.y=data_phase.y*expe.scale;
-        data.u=repmat(data_phase.u*expe.scale/expe.deltat,[1 1 nb_phases]);
-        data.v=repmat(data_phase.v*expe.scale/expe.deltat,[1 1 nb_phases]);
+        data.x=data_phase.x*parameters.scale;
+        data.y=data_phase.y*parameters.scale;
+        data.u=repmat(data_phase.u*parameters.scale/parameters.deltat,[1 1 nb_phases]);
+        data.v=repmat(data_phase.v*parameters.scale/parameters.deltat,[1 1 nb_phases]);
         data.s2n=repmat(data_phase.s2n,[1 1 nb_phases]);
     end
     end
@@ -172,13 +171,13 @@ end
 
 %% Scaling
 
-data.x=data.x*expe.scale;
-data.y=data.y*expe.scale;
-data.u=data.u*expe.scale/expe.deltat;
-data.v=data.v*expe.scale/expe.deltat;
+data.x=data.x*parameters.scale;
+data.y=data.y*parameters.scale;
+data.u=data.u*parameters.scale/parameters.deltat;
+data.v=data.v*parameters.scale/parameters.deltat;
 
 %% Saving used parameters
-data.parameters=expe;
+data.parameters=parameters;
 end
 
 

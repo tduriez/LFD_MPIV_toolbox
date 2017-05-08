@@ -63,7 +63,7 @@ set(handles.hor_flip,'Value',handles.output.flip_hor);
 set(handles.ver_flip,'Value',handles.output.flip_ver);
 set(handles.rotation_selec,'Value',handles.output.rotation);
 
-[~,image_size,~]=LFD_MPIV_read_cxd(handles.cxd,1,0);
+[~,image_size,~]=LFD_MPIV_read_images(handles.cxd,1,0);
 handles.im_size=fliplr(image_size);
 if isempty(handles.output.roi);
     handles.output.roi=[1 handles.im_size(2) 1 handles.im_size(1)];
@@ -394,7 +394,7 @@ function set_mask_bttn_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user datpushbuttona (see GUIDATA)
 
-handles.output=LFD_MPIV_algo_mask(handles.cxd,handles.output);
+handles.output=Inter_algo_mask(handles.cxd,handles.output);
 display_image(handles.cxd,handles.output,handles.axes1,...
     2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
 

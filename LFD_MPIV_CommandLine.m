@@ -55,53 +55,53 @@ function  data_PIV=LFD_MPIV_CommandLine(the_input,varargin)
 
 
 if ischar(the_input) % if THE_INPUT is a CXD file route
-    expe=LFD_MPIV_parameters;
-    expe.cxd_file=the_input;
-    expe.update(varargin{:});
+    parameters=LFD_MPIV_parameters;
+    parameters.cxd_file=the_input;
+    parameters.update(varargin{:});
 elseif isa(the_input,'LFD_MPIV_parameters') % THE_INPUT is an array of LFD_MPIV objects
-expe=the_input;
     for i=1:numel(the_input)
         % THE_INPUT is used as default so it can be overridden by specified
         % parameters in varargin
-        expe(i)=expe(i).update(varargin{:});
+        parameters(i)=the_input(i).copy;
+        parameters(i).update(varargin{:});
     end  
 end
 
 %% Check if new version is available
-msg=check_last_version(expe(1));
-if expe(1).Verbose
+msg=check_last_version(parameters(1));
+if parameters(1).Verbose
     fprintf('%s',msg)
 end
 
 %% Start of tomography
 
-if ~isempty(expe)
+if ~isempty(parameters)
     case_name_collection={};
-    for i=1:length(expe);
-        if ~any(strcmp(case_name_collection,expe(i).export_filename))
-        case_name_collection{numel(case_name_collection)+1}=expe(i).export_filename;        
+    for i=1:length(parameters);
+        if ~any(strcmp(case_name_collection,parameters(i).export_filename))
+        case_name_collection{numel(case_name_collection)+1}=parameters(i).export_filename;        
         end
     end
     
     for i_case=1:length(case_name_collection)
-        this_expe_idx=zeros(1,length(expe));
-        this_z=zeros(1,length(expe));
-        for i=1:length(expe);
-            if strcmp(case_name_collection{i_case},expe(i).export_filename)
-                this_expe_idx(i)=1;
-                this_z(i)=expe(i).height;
+        this_parameters_idx=zeros(1,length(parameters));
+        this_z=zeros(1,length(parameters));
+        for i=1:length(parameters);
+            if strcmp(case_name_collection{i_case},parameters(i).export_filename)
+                this_parameters_idx(i)=1;
+                this_z(i)=parameters(i).height;
             end
            
            
         end
         
         
-        this_case_expe=expe(this_expe_idx>0);
-        [this_z,sort_idx]=sort(this_z(this_expe_idx>0));
-        this_case_expe=this_case_expe(sort_idx);
+        this_case_parameters=parameters(this_parameters_idx>0);
+        [this_z,sort_idx]=sort(this_z(this_parameters_idx>0));
+        this_case_parameters=this_case_parameters(sort_idx);
         
          if length(unique(this_z))~=length(this_z);
-                error(['At least two experiment have same ''case_name'''...
+                error(['At least two parametersriment have same ''case_name'''...
                     'and ''height''. This would result in overridden '...
                     'data. Please modify it'])
             end
@@ -109,7 +109,7 @@ if ~isempty(expe)
         for i_height = 1:numel(this_z)
             setappdata(0,'LFD_MPIV_gui',gcf);
             
-            data=LFD_MPIV_cxd_to_vectors(this_case_expe(i_height));
+            data=raw_to_vectors(this_case_parameters(i_height));
             if i_height==1
                 try
                     clear data_PIV
@@ -127,7 +127,7 @@ if ~isempty(expe)
             data_PIV.u(:,:,i_height,:)=permute(data.u,[1 2 4 3]);
             data_PIV.v(:,:,i_height,:)=permute(data.v,[1 2 4 3]);
             data_PIV.s2n(:,:,i_height,:)=permute(data.s2n,[1 2 4 3]);
-            data_PIV.parameters(i_height)=this_case_expe(i_height);
+            data_PIV.parameters(i_height)=this_case_parameters(i_height);
         end
         
         

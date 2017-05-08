@@ -26,7 +26,7 @@ warning('off','MATLAB:contour:ConstantData');
     end
     
     n_necessary=parameters.frame_skip+1;
-    [images,image_size,nb_frames]=LFD_MPIV_read_cxd(cxd,1:n_necessary,0);
+    [images,image_size,nb_frames]=LFD_MPIV_read_images(cxd,1:n_necessary,0);
     parameters.source_frames=nb_frames;
     
     roi=parameters.roi;
@@ -36,7 +36,7 @@ warning('off','MATLAB:contour:ConstantData');
     
     
     
-    images=LFD_MPIV_prepare_frames(images,parameters);
+    images=prepare_frames(images,parameters);
     images=images(1);
     parameters.roi=roi;
     

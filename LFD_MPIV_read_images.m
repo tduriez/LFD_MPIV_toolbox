@@ -1,17 +1,16 @@
-function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_name,indices,verb,mode,msg,avg)
-%LFD_MPIV_READ_CXD function that reads CXD files. Obviously.
-%
-%   IMAGES=LFD_MPIV_READ_CXD(FILENAME);
+function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_images(file_name,indices,verb,mode,msg,avg)
+%LFD_MPIV_READ_CXD function that reads CXD files. 
+%   IMAGES=LFD_MPIV_READ_IMAGES(FILENAME);
 %   IMAGES is a IxJxN uint16 matrix where IxJ is the image size and N the
 %   number of images.
 %   FILENAME is a string containing the path to the .cxd file. 
 %
-%   IMAGES=LFD_MPIV_READ_CXD(FILENAME,INDICES);
+%   IMAGES=LFD_MPIV_READ_IMAGES(FILENAME,INDICES);
 %   Only recover images specified in INDICES (integer array). The procedure
 %   still reads the file from the beginning, but stops at the last required
 %   image. Memory efficient, not speed efficient.
 %
-%   IMAGES=LFD_MPIV_READ_CXD(FILENAME,INDICES,VERB);
+%   IMAGES=LFD_MPIV_READ_IMAGES(FILENAME,INDICES,VERB);
 %   achieves the same as before, with adjustable verbosity:
 %   VERB = 0: No output;
 %   VERB = 1: Displays image size and number of images (default);
@@ -182,7 +181,7 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_cxd(file_n
     
     %% Second call for std
     if strcmp(mode,'std') && nargin<6
-        images=LFD_MPIV_read_cxd(file_name,indices,verb,'std','Computing Standart Deviation',images(:,:,2));
+        images=LFD_MPIV_read_images(file_name,indices,verb,'std','Computing Standart Deviation',images(:,:,2));
     end
      if verb==-1;close(h);end
     

@@ -1,4 +1,4 @@
-function [data]=LFD_MPIV_PIV(images,expe)
+function [data]=PIV(images,input_parameters)
 %   Copyright (c) 2017, Thomas Duriez (Distributed under GPLv3)
 
 %% Copyright
@@ -20,11 +20,11 @@ function [data]=LFD_MPIV_PIV(images,expe)
 t1=now;
 % parameters contains all possible option
 
-%% transforming expe in structure to add specfific fields
-the_properties=properties(expe);
+%% transforming input_parameters in structure to add specfific fields
+the_properties=properties(input_parameters);
 parameters=struct;
 for i=1:length(the_properties)
-    parameters.(the_properties{i})=expe.(the_properties{i});
+    parameters.(the_properties{i})=input_parameters.(the_properties{i});
 end
 
 parameters.proof=0;

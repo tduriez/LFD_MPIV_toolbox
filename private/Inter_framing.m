@@ -76,7 +76,7 @@ allowed_types={'char'   ,'char'          ,'char'   ,'numeric'    ,'numeric'};
 handles.output=parameters_parser(varargin,allowed_args,allowed_types,[],0);
 set_buttons(handles);
 set(handles.txt_service,'String','Opening file...');
-handles.images=LFD_MPIV_read_cxd(handles.output.CxdFile,[],0);
+handles.images=LFD_MPIV_read_images(handles.output.CxdFile,[],0);
 [A,B,list_frames]=calculate_frames(handles);
 handles.A=A;
 handles.B=B;

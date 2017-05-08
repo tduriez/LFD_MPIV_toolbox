@@ -1,4 +1,4 @@
-function removed_background=LFD_MPIV_remove_background(images,method)
+function removed_background=remove_background(images,method)
 %   Copyright (c) 2017, Thomas Duriez (Distributed under GPLv3)
 
 %% Copyright

@@ -77,7 +77,7 @@ function handles=set_options(handles)
     end
             
     if reading_necessary
-        [images,~,nb_frames]=LFD_MPIV_read_cxd(handles.cxd,[],-1,[],'Reading from CXD file');
+        [images,~,nb_frames]=LFD_MPIV_read_images(handles.cxd,[],-1,[],'Reading from CXD file');
         handles.images=images;
         handles.output.source_frames=nb_frames;
         
@@ -134,7 +134,7 @@ function handles=set_options(handles)
     handles.output.flip_hor=0;
     handles.output.rotation=0;
     
-    handles.frames=LFD_MPIV_prepare_frames(handles.images,handles.output);
+    handles.frames=prepare_frames(handles.images,handles.output);
     
     handles.nb_image_pair=length(handles.frames);
     set(handles.infotext,'String',sprintf('View image pair number               (of %d)',handles.nb_image_pair));
