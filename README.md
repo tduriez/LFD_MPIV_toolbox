@@ -3,13 +3,13 @@
 ## Description
 LFD_MPIV_Toolbox is a Matlab (R) Toolbox aimed at obtaining tomographic - phase
 averaged PIV fields from Hamamatsu CXD files. The application for which it is
-developped is micro fluidic (imaging through inverted microscope) and thus some
+developed is micro fluidic (imaging through inverted microscope) and thus some
 default choice reflect that. This toolbox is heavily inspired by (and some files
 are portion of) the PIVlab Toolbox (http://pivlab.blogspot.com/), which might be
 a better choice as a generic solution for PIV.
 
 ## Features
-The main features that commended the devellopment of this package over the use
+The main features that commended the development of this package over the use
 of PIVlab are:
 
 - Support of CXD files (for the moment, the only format accepted).
@@ -34,6 +34,7 @@ of PIVlab are:
   Many bugs are still present, please report at:
 
   https://github.com/tduriez/LFD_MPIV_Toolbox/issues
+
 
 ## Copyright and License
 

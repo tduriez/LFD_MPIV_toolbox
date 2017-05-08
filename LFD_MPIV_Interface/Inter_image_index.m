@@ -176,7 +176,7 @@ if isempty(handles.output.image_indices)
     n_selected_images=handles.nb_images;
 end
 if n_selected_images<n_min_images
-    set(handles.textinfo,'String',sprintf('With your current settings, you must select at least %d images. %d selected so far.',n_min_images,n_selected));
+    set(handles.textinfo,'String',sprintf('With your current settings, you must select at least %d images. %d selected so far.',n_min_images,n_selected_images));
 else
     uiresume
 end
