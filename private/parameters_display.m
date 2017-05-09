@@ -19,6 +19,13 @@ if strcmp(mode,'list')
     listing=1;
 end
 
+if strcmp(mode,'parameters');
+    the_params=properties(obj);
+    for i=1:length(the_params);
+        output_text=sprintf('%s   %s\n',output_text,the_params{i});
+    end
+end
+
 
 
 if any(strcmp(mode,{'all','short'})) && listing==0
@@ -207,7 +214,9 @@ end
           output_text=sprintf('%s         <a href="matlab:%s.display(''synchro'')">Synchronization options</a>, ',output_text,name);
           output_text=sprintf('%s<a href="matlab:%s.display(''tomo'')">Tomography options</a>,\n',output_text,name);
           output_text=sprintf('%s         <a href="matlab:%s.display(''export'')">Export options</a>, ',output_text,name);
-          output_text=sprintf('%s<a href="matlab:%s.display(''all'')">All options</a>\n',output_text,name); 
+          output_text=sprintf('%s<a href="matlab:%s.display(''all'')">All options</a>, ',output_text,name); 
+          output_text=sprintf('%s<a href="matlab:%s.display(''parameters'')">List parameter names</a>\n',output_text,name);
+          
       end
       
       if listing
