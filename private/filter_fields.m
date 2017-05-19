@@ -111,7 +111,7 @@ data = apply_mask(data,parameters);
     
    
     epsilon=0.02;
-    thresh=2;
+    thresh=1.5;
     [J,I]=size(data.u);
     %medianres=zeros(J,I);
     normfluct=zeros(J,I,2);

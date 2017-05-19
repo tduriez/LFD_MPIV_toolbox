@@ -39,7 +39,7 @@ function [varargout] = LFD_MPIV_Interface(varargin)
 
 % Edit the above text to modify the response to help LFD_MPIV_Interface
 
-% Last Modified by GUIDE v2.5 27-Apr-2017 23:41:14
+% Last Modified by GUIDE v2.5 08-May-2017 20:16:23
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -47,7 +47,7 @@ gui_State = struct('gui_Name',       mfilename, ...
     'gui_Singleton',  gui_Singleton, ...
     'gui_OpeningFcn', @LFD_MPIV_Interface_OpeningFcn, ...
     'gui_OutputFcn',  @LFD_MPIV_Interface_OutputFcn, ...
-    'gui_LayoutFcn',  [], ...
+    'gui_LayoutFcn',  @LFD_MPIV_Interface_LayoutFcn, ...
     'gui_Callback',   []);
 
 if nargin && ischar(varargin{1})
@@ -103,7 +103,7 @@ update_import_options(handles);
 update_PIV_options(handles);
 update_synchro_options(handles);
 update_images_options(handles);
-update_export_options(handles);
+update_options(handles);
 
 % Update handles structure
 guidata(hObject, handles);
@@ -172,7 +172,7 @@ handles.cxd=cell(1,numel(d));
 for i=1:numel(d)
     handles.cxd{i}=d(i).name;
 end
-set(handles.list_cxd,'String',handles.cxd,'Max',numel(d));
+set(handles.list_cxd,'String',handles.cxd,'Max',numel(d),'Value',1);
 idx = get(handles.list_cxd,'Value');
 idx=idx(1);
 display_image(fullfile(handles.cxd_folder,handles.cxd{idx}),handles.current_parameters,...
@@ -367,11 +367,11 @@ function export_bttn_Callback(hObject, eventdata, handles)
 % hObject    handle to im_setting_bttn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-Inter_export(handles.current_parameters);
-update_export_options(handles);
+Inter(handles.current_parameters);
+update_options(handles);
 guidata(hObject,handles);
 
-function update_export_options(handles);
+function update_options(handles);
 text_PIV=handles.current_parameters.display('export');
 set(handles.export_list,'String',text_PIV);
 
@@ -493,3 +493,5 @@ idx=idx(1);
 display_image(fullfile(handles.cxd_folder,handles.cxd{idx}),handles.current_parameters,...
     handles.axes1,2*handles.current_frame+4*get(handles.show_mask_box,'Value')+8*get(handles.showroi_box,'Value'));
 guidata(hObject,handles);
+
+
