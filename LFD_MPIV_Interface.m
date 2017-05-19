@@ -172,7 +172,7 @@ handles.cxd=cell(1,numel(d));
 for i=1:numel(d)
     handles.cxd{i}=d(i).name;
 end
-set(handles.list_cxd,'String',handles.cxd,'Max',numel(d));
+set(handles.list_cxd,'String',handles.cxd,'Max',numel(d),'Value',1);
 idx = get(handles.list_cxd,'Value');
 idx=idx(1);
 display_image(fullfile(handles.cxd_folder,handles.cxd{idx}),handles.current_parameters,...
@@ -367,7 +367,7 @@ function export_bttn_Callback(hObject, eventdata, handles)
 % hObject    handle to im_setting_bttn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-Inter(handles.current_parameters);
+Inter_export(handles.current_parameters);
 update_options(handles);
 guidata(hObject,handles);
 
