@@ -52,12 +52,30 @@ function  data_PIV=LFD_MPIV_CommandLine(the_input,varargin)
 
 
 %% three cases for THE_INPUT: structure, structure+options, file+options
+GetFrames=0;
+if nargin>1
+    if any(strcmpi(varargin,'GetFrames'));
+        GetFrames=1;
+       
+        idx=find(strcmpi(varargin,'GetFrames'));
+        varargin=varargin(setdiff(1:length(varargin),idx));
 
+    end
+end
 
 if ischar(the_input) % if THE_INPUT is a CXD file route
     parameters=LFD_MPIV_parameters;
     parameters.cxd_file=the_input;
     parameters.update(varargin{:});
+    
+    if GetFrames
+        images=LFD_MPIV_read_images(the_input,parameters.image_indices,0);
+        images=prepare_frames(images,parameters);
+        data_PIV.images=images;
+        data_PIV.parameters=parameters;
+        return
+    end
+    
 elseif isa(the_input,'LFD_MPIV_parameters') % THE_INPUT is an array of LFD_MPIV objects
     for i=1:numel(the_input)
         % THE_INPUT is used as default so it can be overridden by specified
