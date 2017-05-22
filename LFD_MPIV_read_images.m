@@ -120,11 +120,21 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_images(fil
     
     %% main loop (default mode)   
     if verb==-1;h=waitbar(0,msg);end
+    the_verb=verb;
     for i=1:last_image
-        if verb==-1;h=waitbar(i/last_image,h);end
+        if verb==-1;
+            h=waitbar(i/last_image,h);
+        else
+            if intersect(indices,i)
+                verb=the_verb;
+            else
+                verb=0;
+            end
+        end
         sample=fread(fid,block_size,'uint16=>uint16','l')';
         while detect_pattern(sample) || bullshit(sample) || detect_zero(sample)
             if verb>3
+                figure(665)
                 plot(sample)
                 title('pattern')
                 pause
@@ -217,6 +227,7 @@ image_size=[str2double(capt(idxvir(2)+1:...             %% |
 sample=fread(fid,block_size,'uint16=>uint16','l')';
         while detect_pattern(sample) || bullshit(sample)
             if verb>3
+                figure(665)
                 plot(sample)
                 title('pattern')
                 pause
@@ -252,13 +263,14 @@ function [image]=obtain_image(fid,A,image_size,block_size,nb_frames,verb)
     % break for small images (smaller than 200000 elements);
     A=[A fread(fid,nb_frames*prod(image_size)-length(A),'uint16=>uint16','l')'];
    
-    if any(strfind(A,zeros([1 block_size]))) % Detect possible WTF block of block_size null elements.
+    while any(strfind(A,zeros([1 block_size]))) % Detect possible WTF block of block_size null elements. 
         A=[A fread(fid,block_size,'uint16=>uint16','l')'];
         idx=strfind(A,zeros([1 block_size])); % in the image
         A=[A(1:idx-1) A(idx+block_size:end)]; % and bypass it
     end
     
     if verb>3
+        figure(665)
         plot(A)
         title('image')
         pause
@@ -266,7 +278,9 @@ function [image]=obtain_image(fid,A,image_size,block_size,nb_frames,verb)
         
     image=reshape(A(1:nb_frames*prod(image_size)),image_size(1)*nb_frames,image_size(2))';
     if verb>2
-    figure(2)
+    figure(666)
+    warning('off','images:initSize:adjustingMag')
+
     imshow(imadjust(image));drawnow
     end
    
