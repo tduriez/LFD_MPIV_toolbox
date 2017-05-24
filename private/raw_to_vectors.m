@@ -70,11 +70,20 @@ t1=now;
 % file location is given, default parameters apply. Any parameter entered manually
 % will overwrite default or LFD_MPIV object given parameter.
 
+FlagImages=0;
 if isa(cxd_info,'char')
     parameters=LFD_MPIV_parameters; %load default_parameters
     parameters.cxd_file=cxd_info;
     parameters=parameters.update(varargin{:});    %implement options
 elseif isa(cxd_info,'LFD_MPIV_parameters');
+    
+    if any(strcmpi(varargin,'images'))
+        FlagImages=1;
+        idx=find(strcmpi(varargin,'images'));
+        all_images=varargin{idx+1};
+        varargin=varargin(setdiff(1:length(varargin),[idx idx+1]));
+    end 
+    
     parameters=cxd_info.update(varargin{:});  %implement options
 else
     error('I don''t know what to do with a parameter of class %s.',class(cxd_info));
@@ -85,6 +94,7 @@ end
 
 
 %% Start PIV
+if ~FlagImages
 if parameters.Verbose
 fprintf('case: %s, z= %d (mum)\n',parameters.case_name,parameters.height);
 end
@@ -104,6 +114,7 @@ if parameters.Verbose>1;fprintf('ok (%.3f s)\n',toc);end
 if parameters.Verbose>1;fprintf('Preparing frames:                     ');tic;end
 all_images=prepare_frames(all_images,parameters);
 if parameters.Verbose>1;fprintf('ok (%.3f s)\n',toc);end
+end
 if parameters.cumulcross
 if ~isempty(parameters.ttl_folder)
     d=dir(parameters.ttl_folder);
