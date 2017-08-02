@@ -160,9 +160,10 @@ if ~isempty(parameters)
         end
         
         
-        
-        save(sprintf('%s.mat',case_name_collection{i_case}),'data_PIV');
-        
+        save_name=fullfile(data_PIV.parameters(1).export_folder,data_PIV.parameters(1).export_filename);
+        if ~isempty(save_name)
+        save(sprintf('%s.mat',save_name),'data_PIV');
+        end
         
         
     end
