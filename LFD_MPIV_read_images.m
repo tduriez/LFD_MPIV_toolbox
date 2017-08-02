@@ -54,7 +54,10 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_images(fil
 %% MAIN FUNCTION 
     % The main idea is to read the file little by little so the memory is
     % not swamped. A buffer is filled and emptied as features are detected.
-
+    
+    
+    
+    
     if nargin<3 
         verb=1; % set default
     end
@@ -70,6 +73,12 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_images(fil
     if nargin<5
         msg='loading';
     end
+    
+    if strfind(lower(file_name),'mov')
+        [images,image_size,nb_frames,number_of_images]=read_movies(file_name,indices,verb,mode);
+        return;
+    end
+    
     
     header_block_size=2048*5;
     block_size=512;

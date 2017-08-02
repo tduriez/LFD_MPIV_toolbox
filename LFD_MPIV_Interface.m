@@ -47,7 +47,7 @@ gui_State = struct('gui_Name',       mfilename, ...
     'gui_Singleton',  gui_Singleton, ...
     'gui_OpeningFcn', @LFD_MPIV_Interface_OpeningFcn, ...
     'gui_OutputFcn',  @LFD_MPIV_Interface_OutputFcn, ...
-    'gui_LayoutFcn',  @LFD_MPIV_Interface_LayoutFcn, ...
+    'gui_LayoutFcn',  [], ...
     'gui_Callback',   []);
 
 if nargin && ischar(varargin{1})
@@ -167,7 +167,9 @@ function set_cxd_button_Callback(hObject, eventdata, handles)
 handles.cxd_folder=uigetdir(handles.dflt_folder);
 d1=dir(fullfile(handles.cxd_folder,'*.cxd'));
 d2=dir(fullfile(handles.cxd_folder,'*.CXD'));
-d=[d1 d2];
+d3=dir(fullfile(handles.cxd_folder,'*.MOV'));
+d4=dir(fullfile(handles.cxd_folder,'*.mov'));
+d=[d1 d2 d3 d4];
 handles.cxd=cell(1,numel(d));
 for i=1:numel(d)
     handles.cxd{i}=d(i).name;
@@ -367,7 +369,7 @@ function export_bttn_Callback(hObject, eventdata, handles)
 % hObject    handle to im_setting_bttn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-Inter(handles.current_parameters);
+Inter_export(handles.current_parameters);
 update_options(handles);
 guidata(hObject,handles);
 
