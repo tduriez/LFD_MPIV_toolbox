@@ -53,6 +53,7 @@ function  data_PIV=LFD_MPIV_CommandLine(the_input,varargin)
 
 %% three cases for THE_INPUT: structure, structure+options, file+options
 GetFrames=0;
+FlagImage=0;
 if nargin>1
     if any(strcmpi(varargin,'GetFrames'));
         GetFrames=1;
@@ -83,6 +84,13 @@ elseif isa(the_input,'LFD_MPIV_parameters') % THE_INPUT is an array of LFD_MPIV 
         parameters(i)=the_input(i).copy;
         parameters(i).update(varargin{:});
     end  
+elseif isa(the_input,'struct')
+    if isfield(the_input,'frameA') && isfield(the_input,'frameB')
+        FlagImage=1;
+        parameters=LFD_MPIV_parameters;
+        parameters.update(varargin{:});
+    end
+        
 end
 
 %% Check if new version is available
@@ -126,8 +134,11 @@ if ~isempty(parameters)
         
         for i_height = 1:numel(this_z)
             setappdata(0,'LFD_MPIV_gui',gcf);
-            
-            data=raw_to_vectors(this_case_parameters(i_height));
+            if FlagImage
+                data=raw_to_vectors(this_case_parameters(i_height),'images',the_input);
+            else
+                data=raw_to_vectors(this_case_parameters(i_height));
+            end
             if i_height==1
                 try
                     clear data_PIV
@@ -149,9 +160,10 @@ if ~isempty(parameters)
         end
         
         
-        
-        save(sprintf('%s.mat',case_name_collection{i_case}),'data_PIV');
-        
+        save_name=fullfile(data_PIV.parameters(1).export_folder,data_PIV.parameters(1).export_filename);
+        if ~isempty(save_name)
+        save(sprintf('%s.mat',save_name),'data_PIV');
+        end
         
         
     end
