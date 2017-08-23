@@ -77,7 +77,10 @@ elseif strcmp(mode,'std') && nargin == 6
     images(:,:,2)=(images(:,:,2)./avg)/number_of_images;
 end
 
-system('rm -r temp');
+cd('temp')
+delete('*.*');
+cd ..
+rmdir temp
 
 image_size=[size(images,2) size(images,1)];
 if verb==-1;close(h);end
