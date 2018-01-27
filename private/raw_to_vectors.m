@@ -149,6 +149,7 @@ else
    nb_phases=phase(end);
 end
 
+phase=phase(1:numel(all_images));
 
 for pha=1:nb_phases
     images=all_images(phase==pha);

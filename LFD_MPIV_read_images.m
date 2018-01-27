@@ -17,6 +17,7 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_images(fil
 %   VERB = 2: Displays progression;
 %   VERB = 3: Displays images as they get extracted;
 %   VERB = 4: Debugging (step by step detection of features);
+%   VERB = 5: Debugging (interactive);
 %
 %   See also LFD_MPIV_COMMANDLINE, LFD_MPIV_INTERFACE
 %   Copyright (c) 2017, Thomas Duriez (Distributed under GPLv3)
@@ -120,8 +121,14 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_images(fil
     k=0;
     
     %% Pass the header
-    fread(fid,header_block_size,'uint16=>uint16','l'); 
-    
+    garbage=fread(fid,header_block_size,'uint16=>uint16','l'); 
+    if numel(strfind(garbage','Time_From_Start'))>0 && verb>3
+            fprintf('ok: %d found\n',numel(strfind(garbage','Time_From_Start')));
+        end
+    if verb==5
+        keyboard;
+    end
+    clear garbage
     
     
     
@@ -141,23 +148,35 @@ function [images,image_size,nb_frames,number_of_images]=LFD_MPIV_read_images(fil
             end
         end
         sample=fread(fid,block_size,'uint16=>uint16','l')';
+        if numel(strfind(sample,'Time_From_Start'))>0 && verb>3
+            fprintf('ok: %d found\n',numel(strfind(sample,'Time_From_Start')));
+        end
         while detect_pattern(sample) || bullshit(sample) || detect_zero(sample)
             if verb>3
                 figure(665)
                 plot(sample)
                 title('pattern')
-                pause
+                if verb==5
+                    keyboard
+                else
+                    char(sample)
+                    pause
+                end
             end
             sample=fread(fid,block_size,'uint16=>uint16','l')';
+            if numel(strfind(sample,'Time_From_Start'))>0 && verb>3
+                fprintf('ok: %d found\n',numel(strfind(sample,'Time_From_Start')));
+            end
+        
             if isempty(sample)
                 break
             end
         end
-        B=sample;    
+            
          
         % A is also a buffer, it contains 10% image_size of what follows.
         try
-        [im]=obtain_image(fid,B,image_size,block_size,nb_frames,  verb);
+        [im]=obtain_image(fid,sample,image_size,block_size,nb_frames,  verb);
         if find(indices==i);
             k=k+1;
             if strcmp(mode,'normal') || k==1

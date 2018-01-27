@@ -94,10 +94,10 @@ elseif isa(the_input,'struct')
 end
 
 %% Check if new version is available
-msg=check_last_version(parameters(1));
-if parameters(1).Verbose
-    fprintf('%s',msg)
-end
+%msg=check_last_version(parameters(1));
+%if parameters(1).Verbose
+%    fprintf('%s',msg)
+%end
 
 %% Start of tomography
 
