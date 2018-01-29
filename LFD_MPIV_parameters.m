@@ -173,6 +173,7 @@ classdef LFD_MPIV_parameters < handle
     image_indices
     dire
     background
+    faulty_cxd=0;
     
     %% Frames display options
     roi
@@ -227,10 +228,10 @@ classdef LFD_MPIV_parameters < handle
             
             
            output_text=parameters_display(obj,mode,inputname(1));
-            
+           
             
             if nargout<1
-                fprintf(output_text);
+                fprintf(strrep(output_text,'\','\\'));
             else
                 varargout{1}=output_text;
             end

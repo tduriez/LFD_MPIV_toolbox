@@ -24,12 +24,20 @@ images=flipud(images); % Images first element is lower left corner of matrix
                        % This flip makes all image <-> data transactions
                        % more trivial.
 
+                       
 switch parameters.source_frames
     case 1
         [new_images,apparrent_mask]=single_to_double_frame(images,parameters);
     case 2
         [new_images,apparrent_mask]=cut_images_to_double_frames(images,parameters);
+        if parameters.faulty_cxd~=0
+            idx_frames2=order_frames(images,parameters.faulty_cxd);
+            for i=1:numel(idx_frames2)
+                new_images(i).frameB=new_images(idx_frames2(i)).frameB;
+            end
+        end
         new_images=reorder_frame_to_frame(new_images,parameters.frame_skip,parameters.frame_mode);
 end
+
 
 parameters.apparrent_mask=apparrent_mask;

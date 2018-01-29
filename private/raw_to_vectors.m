@@ -117,19 +117,23 @@ if parameters.Verbose>1;fprintf('ok (%.3f s)\n',toc);end
 end
 if parameters.cumulcross
 if ~isempty(parameters.ttl_folder)
-    d=dir(parameters.ttl_folder);
-
-    pattern=lower(pattern);
-    pattern=strip_string(pattern);
-    simi=zeros(1,numel(d));
-    for i=1:length(d);
-        name=strip_string(d(i).name);
-        simi(i)=stringsimilarity(pattern,name);
+    if strcmp(parameters.ttl_folder,'cxd')
+        if parameters.Verbose>1;fprintf('Using timestamps from cxd.');end
+        T_acquired=get_times(parameters.cxd_file);
+    else
+        d=dir(parameters.ttl_folder);
+        pattern=lower(pattern);
+        pattern=strip_string(pattern);
+        simi=zeros(1,numel(d));
+        for i=1:length(d);
+            name=strip_string(d(i).name);
+            simi(i)=stringsimilarity(pattern,name);
+        end
+        [~,k]=max(simi);
+        if parameters.Verbose>1;fprintf('Using synchronisation file: %s\n',d(k).name);end
+        load(fullfile(parameters.ttl_folder,d(k).name),'tframe');
+        T_acquired=tframe;
     end
-    [~,k]=max(simi);
-    if parameters.Verbose>1;fprintf('Using synchronisation file: %s\n',d(k).name);end
-    load(fullfile(parameters.ttl_folder,d(k).name),'tframe');
-    T_acquired=tframe;
 else
     T_acquired=(0:numel(all_images)-1)/parameters.acq_freq;
 end

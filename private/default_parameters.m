@@ -22,6 +22,7 @@ function [allowed_args,default_args,allowed_types]=default_parameters(indices);
     
     %% Image import options
     args(:,i)={'cxd_file','','char'};i=i+1;
+    args(:,i)={'faulty_cxd',0,'numeric'};i=i+1;
     args(:,i)={'frame_skip',1,'numeric'};i=i+1;
     args(:,i)={'frame_mode','AB','char'};i=i+1;
     args(:,i)={'source_frames',2,'numeric'};i=i+1;

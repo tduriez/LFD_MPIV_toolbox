@@ -160,9 +160,10 @@ if ~isempty(parameters)
         end
         
         
-        save_name=fullfile(data_PIV.parameters(1).export_folder,data_PIV.parameters(1).export_filename);
-        if ~isempty(save_name)
-        save(sprintf('%s.mat',save_name),'data_PIV');
+        
+        if ~isempty(data_PIV.parameters(1).export_filename)
+            save_name=fullfile(data_PIV.parameters(1).export_folder,data_PIV.parameters(1).export_filename);
+            save(sprintf('%s.mat',save_name),'data_PIV');
         end
         
         
