@@ -8,6 +8,9 @@ default choice reflect that. This toolbox is heavily inspired by (and some files
 are portion of) the PIVlab Toolbox (http://pivlab.blogspot.com/), which might be
 a better choice as a generic solution for PIV.
 
+This work has been funded through the CONICET grant PIP 112 201501 00243 CO.
+This work has been realized at the Nano and Microfluidic Laboraory of the Universidad de la Marina Mercante, Buenos Aires Argentina.
+
 ## Features
 The main features that commended the development of this package over the use
 of PIVlab are:
@@ -38,7 +41,7 @@ of PIVlab are:
 
 ## Copyright and License
 
-  All files in this toolbox are Copyright (c) 2017, Thomas Duriez at the
+  All files in this toolbox are Copyright (c) 2017, Thomas Duriez, CONICET and UDEMM at the
   exception of:
 
 - dctn.m (Damien Garcia -- 2008/06)
