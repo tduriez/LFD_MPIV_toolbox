@@ -14,7 +14,7 @@ if exist(check_file,'file');
         check_needed=0;
     end
 end
-
+check_needed=0;
 if check_needed 
     fprintf('Checking last available stable version... ');
     actual_version=get_last_version;

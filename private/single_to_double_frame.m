@@ -76,7 +76,7 @@ idxFrameB=idxFrameA+step;
 if isempty(parameters.mask)
     parameters.mask=ones(size(sgl_frame(:,:,1)));
 else
-        if ~all(size(parameters.mask)~=size(sgl_frame(:,:,1)))
+        if ~all(size(parameters.mask)==size(sgl_frame(:,:,1)))        
             parameters.mask=ones(size(sgl_frame(:,:,1)));
         end
 end
@@ -140,6 +140,5 @@ for i=1:length(idxFrameA);
     
 end
 apparent_mask=uint16(masked_image~=uint16(2^16));
-
 end
 
