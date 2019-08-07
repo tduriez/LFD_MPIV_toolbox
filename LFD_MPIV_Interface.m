@@ -167,7 +167,9 @@ function set_cxd_button_Callback(hObject, eventdata, handles)
 handles.cxd_folder=uigetdir(handles.dflt_folder);
 d1=dir(fullfile(handles.cxd_folder,'*.cxd'));
 d2=dir(fullfile(handles.cxd_folder,'*.CXD'));
-d=[d1 d2];
+d3=dir(fullfile(handles.cxd_folder,'*.avi'));
+d4=dir(fullfile(handles.cxd_folder,'*.AVI'));
+d=[d1 d2 d3 d4];
 handles.cxd=cell(1,numel(d));
 for i=1:numel(d)
     handles.cxd{i}=d(i).name;
