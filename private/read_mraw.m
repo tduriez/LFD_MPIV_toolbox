@@ -65,14 +65,17 @@ function [images,image_size,nb_frames,number_of_images]=read_mraw(file_name,indi
                 verb=0;
             end
          end
+         A=extractframe(fid,image_size);
          if strcmp(mode,'normal') || i==1
-            images(:,:,i)=extractframe(fid,image_size);
+            images(:,:,i)=A;
          end
          
          if strcmp(mode,'std') && nargin<6
-             avg=avg+double(extractframe(fid,image_size));
+             
+             avg=avg+double(A);
+             
          elseif strcmp(mode,'std') && nargin==6
-             std_dev=std_dev+abs(double(extractframe(fid,image_size))-avg);
+             std_dev=std_dev+abs(double(A)-avg);
          end
          
          if verb>1;fprintf('obtained image %d\n',i);end

@@ -64,14 +64,15 @@ function [images,image_size,nb_frames,number_of_images]=read_avi(file_name,indic
                 verb=0;
             end
          end
+         A=Movie.readFrame;
          if strcmp(mode,'normal') || i==1
-            images(:,:,i)=Movie.readFrame;
+            images(:,:,i)=A;
          end
          
          if strcmp(mode,'std') && nargin<6
-             avg=avg+double(Movie.readFrame);
+             avg=avg+double(A);
          elseif strcmp(mode,'std') && nargin==6
-             std_dev=std_dev+abs(double(Movie.readFrame)-avg);
+             std_dev=std_dev+abs(double(A)-avg);
          end
          
          if verb>1;fprintf('obtained image %d\n',i);end
