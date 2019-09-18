@@ -24,6 +24,9 @@ if strcmpi(EXT,'.cxd')
 elseif strcmpi(EXT,'.avi')
     fprintf('avi file detected.\n')
     [images,image_size,nb_frames,number_of_images]=read_avi(varargin{:});
+elseif strcmpi(EXT,'.mraw')
+    fprintf('mraw file detected.\n')
+    [images,image_size,nb_frames,number_of_images]=read_mraw(varargin{:});
 else 
     keyboard
 end
