@@ -43,6 +43,9 @@ function removed_background=remove_background(images,method)
                 background=min(images,[],3);
             case 'avg'
                 background=mean(images,3);
+            case 'enh'
+                disp('Enhancing...!')
+                removed_background = enhance_image(images); return 
         end
       
         background=repmat(background,[1 1 size(images,3)]);
